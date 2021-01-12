@@ -9,9 +9,9 @@ export const GET_GAMES: DocumentNode = gql`
   }
 `;
 
-export const ADD_GAME: DocumentNode = gql`
-  mutation AddGame($name: String!) {
-    addGame(name: $name) {
+export const CREATE_GAME: DocumentNode = gql`
+  mutation CreateGame($name: String!) {
+    createGame(name: $name) {
       _id
       name
       createdAt

@@ -1,6 +1,5 @@
 import React from "react";
 import { useQuery } from "@apollo/client";
-import io from "socket.io-client";
 import styled from "styled-components";
 
 import { GET_GAMES } from "../service/games";
@@ -10,13 +9,6 @@ import AddTodo from "../components/Home/AddTodo";
 
 const Home: React.FC<{}> = (): JSX.Element => {
   const { loading, error, data } = useQuery(GET_GAMES);
-
-  // React.useEffect(() => {
-  //   const socket = io("http://localhost:4000/");
-  //   socket.on("connect", () => {
-  //     console.log(socket.id);
-  //   });
-  // }, []);
 
   if (loading) return <div>Loading...</div>;
   if (error) return <div>{`Error! ${error.message}`}</div>;
