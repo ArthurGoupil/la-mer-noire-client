@@ -2,12 +2,13 @@
 * {
   box-sizing: border-box;
 }
+
 html,
 input,
 textarea,
 button {
-  font-weight: 500;
-  color: #302e2e;
+  font-family: "ABeeZee", sans-serif;
+  color: #0d3b66;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
@@ -19,6 +20,10 @@ button,
 textarea {
   font-size: 18px;
   line-height: 25px;
+}
+
+button {
+  cursor: pointer;
 }
 
 /* FONTS */
@@ -40,16 +45,19 @@ a:visited {
 
 /* TITLES */
 h1 {
+  font-family: "Boogaloo", cursive;
   font-size: 50px;
   line-height: 55px;
   font-weight: bold;
 }
 h2 {
+  font-family: "Boogaloo", cursive;
   font-size: 22px;
   line-height: 27px;
   font-weight: bold;
 }
 h3 {
+  font-family: "Boogaloo", cursive;
   font-size: 20px;
   line-height: 25px;
   font-weight: bold;
