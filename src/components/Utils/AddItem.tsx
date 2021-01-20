@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import { mainOrange, mainTurquoise } from "../../styles/StylingVariables";
+import { mainOrange } from "../../styles/StylingVariables";
 
 interface AddItemProps {
   handleSubmit: (name: string) => void;

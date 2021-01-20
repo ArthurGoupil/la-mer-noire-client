@@ -2,7 +2,6 @@ import React from "react";
 import { useParams } from "react-router-dom";
 import { useQuery } from "@apollo/client";
 import { GET_GAME, GAME_PLAYERS_CHANGED_SUBSCRIPTION } from "../service/games";
-import styled from "styled-components";
 import { Id } from "../models/Game";
 
 const Home: React.FC<{}> = (): JSX.Element => {
