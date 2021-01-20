@@ -18,7 +18,7 @@ const App: React.FC<{}> = (): JSX.Element => {
   });
 
   const wsLink = new WebSocketLink({
-    uri: "ws://la-mer-noire-server.herokuapp.com/graphql",
+    uri: "wss://la-mer-noire-server.herokuapp.com/graphql",
     options: {
       reconnect: true,
     },
