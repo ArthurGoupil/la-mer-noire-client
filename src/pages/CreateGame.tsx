@@ -16,7 +16,7 @@ const CreateGame: React.FC<{}> = (): JSX.Element => {
   const handleSubmit = async (name: string) => {
     const createdGame = (await createGame({ variables: { name } })).data
       .createGame;
-    history.push(`/games/${createdGame._id}`);
+    history.push(`/games/${createdGame._id}/host`);
   };
 
   return (

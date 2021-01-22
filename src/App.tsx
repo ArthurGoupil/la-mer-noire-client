@@ -19,8 +19,8 @@ const App: React.FC<{}> = (): JSX.Element => {
   });
 
   const wsLink = new WebSocketLink({
-    // uri: "ws://localhost:4000/graphql",
-    uri: "wss://la-mer-noire-server.herokuapp.com/graphql",
+    uri: "ws://localhost:4000/graphql",
+    // uri: "wss://la-mer-noire-server.herokuapp.com/graphql",
     options: {
       reconnect: true,
     },
@@ -48,7 +48,7 @@ const App: React.FC<{}> = (): JSX.Element => {
       <Router>
         <Main>
           <Switch>
-            <Route path="/games/:shortId">
+            <Route path="/games/:shortId/:userType">
               <Game />
             </Route>
             <Route path="/create">

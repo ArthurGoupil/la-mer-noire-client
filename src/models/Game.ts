@@ -4,7 +4,3 @@ export interface Game {
   createdAt: string;
   updatedAd?: string;
 }
-
-export interface shortId {
-  shortId: string;
-}

@@ -80,6 +80,7 @@ const SVGContainer = styled.div.attrs(
   }),
 )`
   width: ${(props) => props.width || "200px"};
+  max-width: 100%;
   margin: ${(props) => props.margin || 0};
 `;
 

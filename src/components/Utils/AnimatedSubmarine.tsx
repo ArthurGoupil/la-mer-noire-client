@@ -1,20 +1,25 @@
 import React from "react";
 import styled from "styled-components";
-import { mainDarkBlue } from "../../styles/StylingVariables";
+import {
+  mainDarkBlue,
+  mobileBreakPoint,
+  tabletBreakPoint,
+} from "../../styles/StylingVariables";
 
 const AnimatedSubmarine: React.FC<{}> = (): JSX.Element => {
   return (
     <SubmarineContainer>
       <SubmarineLightWrapper className="d-flex align-center">
-        <Submarine src={"/submarine-fox.svg"} />
-        <LightWrapper>
-          <Light />
+        <Submarine>
           <Bubble1 />
           <Bubble2 />
           <Bubble3 />
           <Bubble4 />
           <Bubble5 />
           <Bubble6 />
+        </Submarine>
+        <LightWrapper>
+          <Light />
         </LightWrapper>
       </SubmarineLightWrapper>
     </SubmarineContainer>
@@ -28,11 +33,28 @@ const SubmarineContainer = styled.div`
   width: 100vw;
   left: 0;
   pointer-events: none;
+
   animation: translate 15s infinite linear;
+  @media only screen and (max-width: ${tabletBreakPoint}) {
+    animation: translateTablet 15s infinite linear;
+  }
+  @media only screen and (max-width: ${mobileBreakPoint}) {
+    animation: translateMobile 10s infinite linear;
+  }
 
   @keyframes translate {
     to {
-      transform: translatex(150%);
+      transform: translatex(120vw);
+    }
+  }
+  @keyframes translateTablet {
+    to {
+      transform: translatex(150vw);
+    }
+  }
+  @keyframes translateMobile {
+    to {
+      transform: translatex(200vw);
     }
   }
   @keyframes upDown {
@@ -63,14 +85,27 @@ const SubmarineLightWrapper = styled.div`
   animation: upDown 1.5s alternate infinite ease-in-out;
 `;
 
-const Submarine = styled.img`
-  z-index: 1;
+const Submarine = styled.div`
   position: absolute;
   width: 180px;
-  left: -600px;
+  height: 150px;
+  background-image: url("/submarine-fox.svg");
+  background-repeat: no-repeat;
+  background-size: cover;
+  z-index: 1;
+
+  left: -20vw;
+  @media only screen and (max-width: ${tabletBreakPoint}) {
+    left: -40vw;
+  }
+  @media only screen and (max-width: ${mobileBreakPoint}) {
+    left: -80vw;
+  }
 `;
 
 const LightWrapper = styled.div`
+  position: relative;
+
   transform: rotate(-30deg);
 `;
 
@@ -79,8 +114,6 @@ const Light = styled.div`
   position: absolute;
   width: 0;
   height: 0;
-  top: -250px;
-  left: -650px;
   opacity: 0.15;
   transform: rotate(-10deg);
   transform-origin: top;
@@ -89,6 +122,15 @@ const Light = styled.div`
   border-right: 200px solid transparent;
   filter: blur(20px);
   animation: rotate 3s alternate infinite ease-in-out, opacity 15s infinite;
+
+  left: -28vw;
+  @media only screen and (max-width: ${tabletBreakPoint}) {
+    left: -48vw;
+  }
+  @media only screen and (max-width: ${mobileBreakPoint}) {
+    left: -88vw;
+    animation: rotate 3s alternate infinite ease-in-out, opacity 15s infinite;
+  }
 `;
 
 const BubbleBase = styled.div`
@@ -101,17 +143,17 @@ const Bubble1 = styled(BubbleBase)`
   width: 10px;
   height: 10px;
   border-radius: 5px;
-  left: -550px;
-  top: -300px;
 
+  top: 125px;
+  right: 185px;
   animation: bubbleOpacity 0.2s 0.1s alternate infinite ease-in-out;
 `;
 const Bubble2 = styled(BubbleBase)`
   width: 20px;
   height: 20px;
   border-radius: 10px;
-  left: -570px;
-  top: -300px;
+  top: 100px;
+  right: 190px;
 
   animation: bubbleOpacity 0.2s alternate infinite ease-in-out;
 `;
@@ -119,8 +161,8 @@ const Bubble3 = styled(BubbleBase)`
   width: 10px;
   height: 10px;
   border-radius: 5px;
-  left: -590px;
-  top: -300px;
+  top: 110px;
+  right: 210px;
 
   animation: bubbleOpacity 0.2s 0.15s alternate infinite ease-in-out;
 `;
@@ -128,8 +170,8 @@ const Bubble4 = styled(BubbleBase)`
   width: 18px;
   height: 18px;
   border-radius: 10px;
-  left: -560px;
-  top: -280px;
+  top: 125px;
+  right: 200px;
 
   animation: bubbleOpacity 0.2s 0.12s alternate infinite ease-in-out;
 `;
@@ -137,8 +179,8 @@ const Bubble5 = styled(BubbleBase)`
   width: 5px;
   height: 5px;
   border-radius: 5px;
-  left: -575px;
-  top: -270px;
+  top: 120px;
+  right: 225px;
 
   animation: bubbleOpacity 0.2s 0.18s alternate infinite ease-in-out;
 `;
@@ -146,8 +188,8 @@ const Bubble6 = styled(BubbleBase)`
   width: 8px;
   height: 8px;
   border-radius: 5px;
-  left: -570px;
-  top: -320px;
+  top: 120px;
+  right: 236px;
 
   animation: bubbleOpacity 0.2s 0.11s alternate infinite ease-in-out;
 `;

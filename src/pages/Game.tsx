@@ -8,7 +8,6 @@ import {
   GAME_PLAYERS_CHANGED_SUBSCRIPTION,
   ADD_PLAYER_TO_GAME,
 } from "../service/games";
-import { shortId } from "../models/Game";
 import FullContainer from "../components/Utils/FullContainer";
 import LMNLogo from "../components/Utils/LMNLogo";
 import {
@@ -27,9 +26,14 @@ import InputAndButton from "../components/Utils/InputAndButton";
 import { CREATE_PLAYER } from "../service/players";
 import Button from "../components/Utils/Button";
 
+interface Params {
+  shortId: string;
+  userType: string;
+}
+
 const Home: React.FC<{}> = (): JSX.Element => {
   const history = useHistory();
-  const { shortId } = useParams<shortId>();
+  const { shortId, userType } = useParams<Params>();
   const [launchCounter, setLaunchCounter] = React.useState<number | null>(null);
 
   const [
@@ -97,35 +101,41 @@ const Home: React.FC<{}> = (): JSX.Element => {
   if (gameError) return <div>{`Error! ${gameError.message}`}</div>;
 
   return (
-    <FullContainer className="d-flex flex-column align-center">
+    <FullContainer className="d-flex flex-column align-center space-around">
       {!gameLoading ? (
         <>
           <LMNLogo width="400px" margin={`${smallSpace} 0 ${smallSpace} 0`} />
           <GameName>{gameData.getGame.name.toUpperCase()}</GameName>
-          <GameCodeBloc gameCode={gameData.getGame.shortId} />
-          <InputAndButton
-            handleSubmit={handleSubmit}
-            buttonLabel="Rejoindre la partie"
-            placeholder="My lovely name"
-          />
-          <ItemsList
-            list={gameData.getGame.players}
-            labelKey="name"
-            className="d-flex justify-center flex-wrap"
-            maxWidth="600px"
-            margin={`0 0 ${normalSpace} 0`}
-          />
-          <Button
-            onClick={handleLaunch}
-            label={
-              launchCounter
-                ? `Lancement dans ... ${launchCounter.toString()}s (cliquez pour annuler)`
-                : "Tout le monde est prêt !"
-            }
-            color={mainDarkBlue}
-            backgroundColor={mainTurquoise}
-            hoverColor={darken_mainTurquoise}
-          />
+          <div className="d-flex flex-column align-center">
+            <GameCodeBloc gameCode={gameData.getGame.shortId} />
+            {userType === "subscribe" && (
+              <InputAndButton
+                handleSubmit={handleSubmit}
+                buttonLabel="Rejoindre la partie"
+                placeholder="My lovely name"
+              />
+            )}
+            <ItemsList
+              list={gameData.getGame.players}
+              labelKey="name"
+              className="d-flex justify-center flex-wrap"
+              maxWidth="600px"
+              margin={`0 0 ${normalSpace} 0`}
+            />
+          </div>
+          {userType === "host" && (
+            <Button
+              onClick={handleLaunch}
+              label={
+                launchCounter
+                  ? `Lancement dans ... ${launchCounter.toString()}s (cliquez pour annuler)`
+                  : "Tout le monde est prêt !"
+              }
+              color={mainDarkBlue}
+              backgroundColor={mainTurquoise}
+              hoverColor={darken_mainTurquoise}
+            />
+          )}
         </>
       ) : (
         <Loader containerHeight="100vh" />

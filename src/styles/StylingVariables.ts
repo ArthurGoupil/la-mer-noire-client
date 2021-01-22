@@ -36,5 +36,5 @@ export const shadow = "2px 2px 10px rgba(0, 0, 0, 0.1)";
 
 // RESPONSIVE BREAKPOINTS
 export const homeFormBreakPoint = "950px";
-export const mobileBreakPoint = "360px";
-export const tabletBreakPoint = "768px";
+export const mobileBreakPoint = "420px";
+export const tabletBreakPoint = "770px";

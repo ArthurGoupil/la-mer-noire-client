@@ -29,6 +29,7 @@ const InputAndButton: React.FC<InputAndButtonProps> = ({
         }
       }}
       margin={margin}
+      className="d-flex justify-center align-center"
     >
       <Input
         ref={(node) => {
@@ -36,6 +37,7 @@ const InputAndButton: React.FC<InputAndButtonProps> = ({
         }}
         inputWidth={inputWidth}
         placeholder={placeholder}
+        className="d-flex"
       />
       <Button type="submit">{buttonLabel}</Button>
     </Form>
