@@ -11,6 +11,7 @@ import "./styles/index.css";
 import Home from "./pages/Home";
 import Game from "./pages/Game";
 import CreateGame from "./pages/CreateGame";
+import { mainBlue, mainDarkBlue } from "./styles/StylingVariables";
 
 const App: React.FC<{}> = (): JSX.Element => {
   const httpLink = new HttpLink({
@@ -18,6 +19,7 @@ const App: React.FC<{}> = (): JSX.Element => {
   });
 
   const wsLink = new WebSocketLink({
+    // uri: "ws://localhost:4000/graphql",
     uri: "wss://la-mer-noire-server.herokuapp.com/graphql",
     options: {
       reconnect: true,
@@ -46,7 +48,7 @@ const App: React.FC<{}> = (): JSX.Element => {
       <Router>
         <Main>
           <Switch>
-            <Route path="/games/:id">
+            <Route path="/games/:shortId">
               <Game />
             </Route>
             <Route path="/create">
@@ -67,5 +69,5 @@ export default App;
 const Main = styled.main`
   width: 100%;
   min-height: 100vh;
-  background-image: linear-gradient(135deg, #3a86ff, #72efdd);
+  background: linear-gradient(to bottom, ${mainBlue} 0%, ${mainDarkBlue} 100%);
 `;

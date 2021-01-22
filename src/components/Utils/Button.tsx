@@ -1,28 +1,69 @@
 import React from "react";
 import styled from "styled-components";
+import { mainOrange, darken_mainOrange } from "../../styles/StylingVariables";
 
 interface ButtonProps {
+  onClick: () => void;
   label: string;
   margin?: string;
-  onClick: () => void;
+  color?: string;
+  backgroundColor?: string;
+  hoverColor?: string;
+  border?: string;
 }
 
 const Button: React.FC<ButtonProps> = ({
-  label,
-  margin,
   onClick,
+  label,
+  margin = "10px",
+  color = "white",
+  backgroundColor = mainOrange,
+  hoverColor = darken_mainOrange,
+  border = "none",
 }): JSX.Element => {
   return (
-    <ButtonContainer margin={margin}>
-      <button onClick={onClick}>{label}</button>
-    </ButtonContainer>
+    <StyledButton
+      onClick={onClick}
+      margin={margin}
+      color={color}
+      backgroundColor={backgroundColor}
+      hoverColor={hoverColor}
+      border={border}
+    >
+      {label}
+    </StyledButton>
   );
 };
 
-const ButtonContainer = styled.div.attrs((props: { margin: string }) => ({
-  margin: props.margin,
-}))`
-  margin: ${(props) => (props.margin ? props.margin : 0)};
+const StyledButton = styled.button.attrs(
+  (props: {
+    margin: string;
+    color: string;
+    backgroundColor: string;
+    hoverColor: string;
+    border: string;
+  }) => ({
+    margin: props.margin,
+    color: props.color,
+    backgroundColor: props.backgroundColor,
+    hoverColor: props.hoverColor,
+    border: props.border,
+  }),
+)`
+  min-width: 70px;
+  color: ${(props) => props.color};
+  background-color: ${(props) => props.backgroundColor};
+  text-align: center;
+  padding: 15px;
+  margin: ${(props) => props.margin};
+  border-radius: 100px;
+  border: ${(props) => props.border};
+  outline: none;
+  transition: 0.2s background-color;
+
+  &:hover {
+    background-color: ${(props) => props.hoverColor};
+  }
 `;
 
 export default Button;

@@ -1,11 +1,21 @@
 // COLORS
 export const mainDarkBlue = "#0d3b66";
-export const mainBlue = "#3a86ff";
+export const mainBlue = "#056CF2";
+export const mainLightBlue = "#05AFF2";
 export const mainTurquoise = "#18dcbf";
-export const mainLightTurquoise = "#72efdd";
-export const mainYellow = "#ffd166";
-export const mainRed = "#e63946";
+export const mainYellow = "#F2CB05";
+export const mainRed = "#A62103";
+export const mainRedOrange = "#D03C29";
 export const mainOrange = "#F9564F";
+
+export const darken_mainDarkBlue = "#0c345a";
+export const darken_mainBlue = "#0462dc";
+export const darken_mainLightBlue = "#049fdc";
+export const darken_mainTurquoise = "#16caaf";
+export const darken_mainYellow = "#dcb804";
+export const darken_mainRed = "#a02003";
+export const darken_mainRedOrange = "#cc3c28";
+export const darken_mainOrange = "#f8403a";
 
 // SIZES
 export const mainContainerWidth = "1024px";

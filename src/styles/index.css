@@ -40,7 +40,7 @@ a {
   color: #302e2e;
 }
 a:visited {
-  color: #302e2e;
+  color: inherit;
 }
 
 /* TITLES */

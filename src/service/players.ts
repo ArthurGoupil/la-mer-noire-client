@@ -11,7 +11,7 @@ export const GET_PLAYER: DocumentNode = gql`
 
 export const CREATE_PLAYER: DocumentNode = gql`
   mutation CreatePlayer($name: String!) {
-    createGame(name: $name) {
+    createPlayer(name: $name) {
       _id
       name
     }

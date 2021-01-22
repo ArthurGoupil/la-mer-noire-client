@@ -1,10 +1,6 @@
-export interface Game {
+export interface Player {
   _id: string;
   name: string;
   createdAt: string;
   updatedAd?: string;
-}
-
-export interface shortId {
-  shortId: string;
 }

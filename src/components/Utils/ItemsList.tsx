@@ -1,14 +1,16 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
-import { mainDarkBlue, mainOrange } from "../../styles/StylingVariables";
+import { mainDarkBlue, mainBlue } from "../../styles/StylingVariables";
 
 interface ItemsListProps {
-  list: any[];
+  list: Record<string, React.ReactNode>[];
   labelKey: string;
   linkBase?: string;
   linkParamKey?: string;
+  className?: string;
   margin?: string;
+  maxWidth?: string;
 }
 
 const ItemsList: React.FC<ItemsListProps> = ({
@@ -16,11 +18,13 @@ const ItemsList: React.FC<ItemsListProps> = ({
   labelKey,
   linkBase,
   linkParamKey,
-  margin,
+  className = "",
+  margin = "0",
+  maxWidth = "auto",
 }): JSX.Element => {
   return (
-    <List margin={margin}>
-      {list.map((item: any, index: number) =>
+    <List className={className} margin={margin} maxWidth={maxWidth}>
+      {list.map((item: Record<string, React.ReactNode>, index: number) =>
         linkBase ? (
           <Link
             key={`item_${index}`}
@@ -36,21 +40,23 @@ const ItemsList: React.FC<ItemsListProps> = ({
   );
 };
 
-const List = styled.ul.attrs((props: { margin: string }) => ({
+const List = styled.ul.attrs((props: { margin: string; maxWidth: string }) => ({
   margin: props.margin,
+  maxWidth: props.maxWidth,
 }))`
-  margin: ${(props) => props.margin || 0};
+  margin: ${(props) => props.margin};
+  max-width: ${(props) => props.maxWidth};
 `;
 
 const Item = styled.li`
-  width: 200px;
   background-color: ${mainDarkBlue};
   color: white;
   text-align: center;
-  padding: 10px;
+  padding: 10px 15px;
   margin: 10px;
   border-radius: 100px;
-  border: 5px solid ${mainOrange};
+  border: 3px solid ${mainBlue};
+  cursor: default;
 
   &:hover {
     filter: brightness(1.2);
