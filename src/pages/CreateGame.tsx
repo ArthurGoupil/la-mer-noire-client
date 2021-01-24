@@ -5,14 +5,12 @@ import { useHistory } from "react-router-dom";
 import InputAndButton from "components/Utils/InputAndButton";
 import FullContainer from "components/Utils/FullContainer";
 import LMNLogo from "components/Utils/LMNLogo";
-import { CREATE_GAME, GET_GAMES } from "service/games.service";
+import { CREATE_GAME } from "service/games.service";
 import AnimatedSubmarine from "components/Utils/AnimatedSubmarine";
 
 const CreateGame: React.FC<{}> = (): JSX.Element => {
   const history = useHistory();
-  const [createGame] = useMutation(CREATE_GAME, {
-    refetchQueries: [{ query: GET_GAMES }],
-  });
+  const [createGame] = useMutation(CREATE_GAME);
   const handleSubmit = async (name: string) => {
     const createdGame = (await createGame({ variables: { name } })).data
       .createGame;

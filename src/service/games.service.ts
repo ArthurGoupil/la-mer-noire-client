@@ -43,21 +43,6 @@ const currentState = `
   }
 `;
 
-export const GET_GAMES: DocumentNode = gql`
-  query GetGames {
-    getGames {
-      _id
-      shortId
-      name
-      players {
-        _id
-        name
-      }
-      createdAt
-    }
-  }
-`;
-
 export const GET_GAME: DocumentNode = gql`
   query GetGame($shortId: String!) {
     getGame(shortId: $shortId) {
@@ -79,13 +64,6 @@ export const CREATE_GAME: DocumentNode = gql`
     createGame(name: $name) {
       _id
       shortId
-      name
-      players {
-        _id
-        name
-      }
-      ${currentState}
-      createdAt
     }
   }
 `;
@@ -111,17 +89,6 @@ export const UPDATE_GAME_CURRENT_STATE: DocumentNode = gql`
     $shortId: String!
   ) {
     updateGameCurrentState(currentState: $currentState, shortId: $shortId) {
-      _id
-      shortId
-      name
-      createdAt
-    }
-  }
-`;
-
-export const GAME_CREATED_SUBSCRIPTION: DocumentNode = gql`
-  subscription OnGameCreated {
-    gameCreated {
       _id
       shortId
       name

@@ -71,7 +71,7 @@ const GameJoin: React.FC<GameJoinProps> = ({
           variables: {
             currentState: {
               stage: EGameCurrentStateStage.question,
-              playersTurn: gameData.getGame.players,
+              playersTurn: gameData.getGame.players.map((player) => player._id),
               question: {
                 quiz: quizData.getRandomQuiz._id,
                 level: "beginner",
