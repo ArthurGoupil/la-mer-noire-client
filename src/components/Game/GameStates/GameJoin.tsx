@@ -38,14 +38,13 @@ const GameJoin: React.FC<GameJoinProps> = ({
 }): JSX.Element => {
   const history = useHistory();
   const [launchCounter, setLaunchCounter] = React.useState<number | null>(null);
+  const [createPlayer] = useMutation(CREATE_PLAYER);
+  const [addPlayerToGame] = useMutation(ADD_PLAYER_TO_GAME);
   const [updateGameCurrentState] = useMutation(UPDATE_GAME_CURRENT_STATE);
 
   console.log(gameData);
 
   const handleSubmit = async (name: string) => {
-    const [createPlayer] = useMutation(CREATE_PLAYER);
-    const [addPlayerToGame] = useMutation(ADD_PLAYER_TO_GAME);
-
     const createdPlayer = (await createPlayer({ variables: { name } })).data
       .createPlayer;
     await addPlayerToGame({
