@@ -58,7 +58,7 @@ const Home: React.FC<{}> = (): JSX.Element => {
     currentState: CurrentState;
   }) => {
     switch (currentState.type) {
-      case "join":
+      case "playersRegistration":
         return (
           <GameJoin shortId={shortId} userType={userType} gameData={gameData} />
         );
