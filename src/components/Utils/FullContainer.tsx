@@ -1,6 +1,7 @@
 import React from "react";
 import styled from "styled-components";
-import { normalSpace } from "../../styles/StylingVariables";
+
+import EStyles from "constants/Styling.constants";
 
 interface FullContainerProps {
   children: React.ReactNode;
@@ -21,5 +22,5 @@ const Container = styled.div`
   min-height: 100vh;
   overflow: hidden;
   position: relative;
-  padding: ${normalSpace};
+  padding: 40px;
 `;

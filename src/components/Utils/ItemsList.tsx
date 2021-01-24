@@ -1,10 +1,12 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
-import { mainDarkBlue, mainBlue } from "../../styles/StylingVariables";
+
+import EStyles from "constants/Styling.constants";
 
 interface ItemsListProps {
-  list: Record<string, React.ReactNode>[];
+  list: Record<string, any>[];
   labelKey: string;
   linkBase?: string;
   linkParamKey?: string;
@@ -24,7 +26,7 @@ const ItemsList: React.FC<ItemsListProps> = ({
 }): JSX.Element => {
   return (
     <List className={className} margin={margin} maxWidth={maxWidth}>
-      {list.map((item: Record<string, React.ReactNode>, index: number) =>
+      {list.map((item: Record<string, any>, index: number) =>
         linkBase ? (
           <Link
             key={`item_${index}`}
@@ -49,13 +51,13 @@ const List = styled.ul.attrs((props: { margin: string; maxWidth: string }) => ({
 `;
 
 const Item = styled.li`
-  background-color: ${mainDarkBlue};
+  background-color: ${EStyles.mainDarkBlue};
   color: white;
   text-align: center;
   padding: 10px 15px;
   margin: 10px;
   border-radius: 100px;
-  border: 3px solid ${mainBlue};
+  border: 3px solid ${EStyles.mainBlue};
   cursor: default;
 
   &:hover {

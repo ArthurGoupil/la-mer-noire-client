@@ -1,14 +1,20 @@
-import React from "react";
+import { Player } from "./Player";
+import { Quiz } from "./Quiz";
 
 export interface CurrentState {
-  type: string;
-  _id: string;
+  stage: string;
+  question: {
+    quiz: Quiz;
+    level: string;
+    itemId: number;
+  };
+  playersTurn: Player[];
 }
 export interface Game {
   _id: string;
   shortId: string;
   name: string;
-  players: Record<string, React.ReactNode>[];
+  players: Player[];
   currentState: CurrentState;
   createdAt: string;
   updatedAd?: string;

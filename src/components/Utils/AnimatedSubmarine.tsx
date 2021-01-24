@@ -1,10 +1,7 @@
 import React from "react";
 import styled from "styled-components";
-import {
-  mainDarkBlue,
-  mobileBreakPoint,
-  tabletBreakPoint,
-} from "../../styles/StylingVariables";
+
+import EStyles from "constants/Styling.constants";
 
 const AnimatedSubmarine: React.FC<{}> = (): JSX.Element => {
   return (
@@ -17,10 +14,10 @@ const AnimatedSubmarine: React.FC<{}> = (): JSX.Element => {
           <Bubble4 />
           <Bubble5 />
           <Bubble6 />
+          <LightWrapper>
+            <Light />
+          </LightWrapper>
         </Submarine>
-        <LightWrapper>
-          <Light />
-        </LightWrapper>
       </SubmarineLightWrapper>
     </SubmarineContainer>
   );
@@ -35,10 +32,10 @@ const SubmarineContainer = styled.div`
   pointer-events: none;
 
   animation: translate 15s infinite linear;
-  @media only screen and (max-width: ${tabletBreakPoint}) {
+  @media only screen and (max-width: ${EStyles.tabletBreakPoint}) {
     animation: translateTablet 15s infinite linear;
   }
-  @media only screen and (max-width: ${mobileBreakPoint}) {
+  @media only screen and (max-width: ${EStyles.mobileBreakPoint}) {
     animation: translateMobile 10s infinite linear;
   }
 
@@ -95,18 +92,19 @@ const Submarine = styled.div`
   z-index: 1;
 
   left: -20vw;
-  @media only screen and (max-width: ${tabletBreakPoint}) {
+  @media only screen and (max-width: ${EStyles.tabletBreakPoint}) {
     left: -40vw;
   }
-  @media only screen and (max-width: ${mobileBreakPoint}) {
+  @media only screen and (max-width: ${EStyles.mobileBreakPoint}) {
     left: -80vw;
   }
 `;
 
 const LightWrapper = styled.div`
   position: relative;
-
   transform: rotate(-30deg);
+  top: 110px;
+  right: 120px;
 `;
 
 const Light = styled.div`
@@ -114,7 +112,7 @@ const Light = styled.div`
   position: absolute;
   width: 0;
   height: 0;
-  opacity: 0.15;
+  opacity: 0.2;
   transform: rotate(-10deg);
   transform-origin: top;
   border-bottom: 2000px solid white;
@@ -122,22 +120,13 @@ const Light = styled.div`
   border-right: 200px solid transparent;
   filter: blur(20px);
   animation: rotate 3s alternate infinite ease-in-out, opacity 15s infinite;
-
-  left: -28vw;
-  @media only screen and (max-width: ${tabletBreakPoint}) {
-    left: -48vw;
-  }
-  @media only screen and (max-width: ${mobileBreakPoint}) {
-    left: -88vw;
-    animation: rotate 3s alternate infinite ease-in-out, opacity 15s infinite;
-  }
 `;
 
 const BubbleBase = styled.div`
   position: absolute;
   background-color: #99d3f5;
   opacity: 1;
-  box-shadow: 2px 2px 0 ${mainDarkBlue};
+  box-shadow: 2px 2px 0 ${EStyles.mainDarkBlue};
 `;
 const Bubble1 = styled(BubbleBase)`
   width: 10px;

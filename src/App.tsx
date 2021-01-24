@@ -6,21 +6,26 @@ import { getMainDefinition } from "@apollo/client/utilities";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import styled from "styled-components";
 
-import "./styles/reset.css";
-import "./styles/index.css";
-import Home from "./pages/Home";
-import Game from "./pages/Game";
-import CreateGame from "./pages/CreateGame";
-import { mainBlue, mainDarkBlue } from "./styles/StylingVariables";
+import "constants/Styling.constants.ts";
+import "styles/reset.css";
+import "styles/index.css";
+import EStyles from "constants/Styling.constants";
+import Home from "pages/Home";
+import Game from "pages/Game";
+import CreateGame from "pages/CreateGame";
 
 const App: React.FC<{}> = (): JSX.Element => {
   const httpLink = new HttpLink({
     uri: process.env.REACT_APP_GRAPHQL_URL,
   });
 
+  const wsServer =
+    process.env.NODE_ENV === "development"
+      ? "ws://localhost:4000/graphql"
+      : "wss://la-mer-noire-server.herokuapp.com/graphql";
+
   const wsLink = new WebSocketLink({
-    // uri: "ws://localhost:4000/graphql",
-    uri: "wss://la-mer-noire-server.herokuapp.com/graphql",
+    uri: wsServer,
     options: {
       reconnect: true,
     },
@@ -69,5 +74,9 @@ export default App;
 const Main = styled.main`
   width: 100%;
   min-height: 100vh;
-  background: linear-gradient(to bottom, ${mainBlue} 0%, ${mainDarkBlue} 100%);
+  background: linear-gradient(
+    to bottom,
+    ${EStyles.mainBlue} 0%,
+    ${EStyles.mainDarkBlue} 100%
+  );
 `;

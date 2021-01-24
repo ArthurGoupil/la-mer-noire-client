@@ -1,6 +1,7 @@
 import React from "react";
 import styled from "styled-components";
-import { mainOrange, darken_mainOrange } from "../../styles/StylingVariables";
+
+import EStyles from "constants/Styling.constants";
 
 interface ButtonProps {
   onClick: () => void;
@@ -17,8 +18,8 @@ const Button: React.FC<ButtonProps> = ({
   label,
   margin = "10px",
   color = "white",
-  backgroundColor = mainOrange,
-  hoverColor = darken_mainOrange,
+  backgroundColor = EStyles.mainOrange,
+  hoverColor = EStyles.darken_mainOrange,
   border = "none",
 }): JSX.Element => {
   return (

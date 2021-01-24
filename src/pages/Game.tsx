@@ -6,13 +6,12 @@ import {
   GET_GAME,
   GAME_PLAYERS_CHANGED_SUBSCRIPTION,
   GAME_CURRENT_STATE_SUBSCRIPTION,
-} from "../service/games";
-import FullContainer from "../components/Utils/FullContainer";
-import LMNLogo from "../components/Utils/LMNLogo";
-import { smallSpace } from "../styles/StylingVariables";
-import Loader from "../components/Utils/Loader";
-import GameJoin from "../components/Game/GameStates/GameJoin";
-import { CurrentState } from "../models/Game";
+} from "service/games.service";
+import Loader from "components/Utils/Loader";
+import GameJoin from "components/Game/GameStates/GameJoin";
+import { CurrentState } from "models/Game";
+import { EGameCurrentStateStage } from "constants/GameCurrentState.constants";
+import Quiz from "components/Game/GameStates/Quiz";
 
 interface Params {
   shortId: string;
@@ -57,32 +56,27 @@ const Home: React.FC<{}> = (): JSX.Element => {
   }: {
     currentState: CurrentState;
   }) => {
-    switch (currentState.type) {
-      case "playersRegistration":
+    switch (currentState.stage) {
+      case EGameCurrentStateStage.playersRegistration:
         return (
           <GameJoin shortId={shortId} userType={userType} gameData={gameData} />
         );
-      case "question": {
-        return <div>{currentState.type}</div>;
+      case EGameCurrentStateStage.question: {
+        return (
+          <Quiz shortId={shortId} userType={userType} gameData={gameData} />
+        );
       }
       default:
-        console.log("Unknown current state.");
+        return <div>Error ! Unknown game current state.</div>;
     }
   };
 
   if (gameError) return <div>{`Error! ${gameError.message}`}</div>;
 
-  return (
-    <FullContainer className="d-flex flex-column align-center space-around">
-      {!gameLoading ? (
-        <>
-          <LMNLogo width="400px" margin={`${smallSpace} 0 ${smallSpace} 0`} />
-          {getCurrentComponent({ currentState: gameData.getGame.currentState })}
-        </>
-      ) : (
-        <Loader containerHeight="100vh" />
-      )}
-    </FullContainer>
+  return !gameLoading && gameData ? (
+    getCurrentComponent({ currentState: gameData.getGame.currentState })
+  ) : (
+    <Loader containerHeight="100vh" />
   );
 };
 

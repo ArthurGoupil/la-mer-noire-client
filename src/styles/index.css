@@ -79,11 +79,9 @@ h3 {
 .align-center {
   align-items: center;
 }
-
 .align-end {
   align-items: flex-end;
 }
-
 .flex-column {
   flex-direction: column;
 }

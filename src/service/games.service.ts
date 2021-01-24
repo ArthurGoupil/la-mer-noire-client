@@ -1,5 +1,48 @@
 import { DocumentNode, gql } from "@apollo/client";
 
+const currentState = `
+  currentState {
+    stage
+    question {
+      quiz {
+        category { name }
+        theme
+        subTheme
+        difficulty
+        quizItems {
+          beginner {
+              _id
+              question
+              choices 
+              answer
+              anecdote
+          }
+          intermediate {
+              _id
+              question
+              choices 
+              answer
+              anecdote
+          }
+          expert {
+              _id
+              question
+              choices 
+              answer
+              anecdote
+          }
+        }
+      }
+      level
+      itemId
+    }
+    playersTurn {
+      _id
+      name
+    }
+  }
+`;
+
 export const GET_GAMES: DocumentNode = gql`
   query GetGames {
     getGames {
@@ -25,10 +68,7 @@ export const GET_GAME: DocumentNode = gql`
         _id
         name
       }
-      currentState {
-        type
-        _id
-      }
+      ${currentState}
       createdAt
     }
   }
@@ -44,6 +84,7 @@ export const CREATE_GAME: DocumentNode = gql`
         _id
         name
       }
+      ${currentState}
       createdAt
     }
   }
@@ -73,10 +114,6 @@ export const UPDATE_GAME_CURRENT_STATE: DocumentNode = gql`
       _id
       shortId
       name
-      players {
-        _id
-        name
-      }
       createdAt
     }
   }
@@ -88,10 +125,6 @@ export const GAME_CREATED_SUBSCRIPTION: DocumentNode = gql`
       _id
       shortId
       name
-      players {
-        _id
-        name
-      }
       createdAt
     }
   }
@@ -106,10 +139,6 @@ export const GAME_PLAYERS_CHANGED_SUBSCRIPTION: DocumentNode = gql`
       players {
         _id
         name
-      }
-      currentState {
-        type
-        _id
       }
       createdAt
     }
@@ -126,10 +155,7 @@ export const GAME_CURRENT_STATE_SUBSCRIPTION: DocumentNode = gql`
         _id
         name
       }
-      currentState {
-        type
-        _id
-      }
+      ${currentState} 
       createdAt
     }
   }
