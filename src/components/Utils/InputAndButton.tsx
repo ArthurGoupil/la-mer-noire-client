@@ -1,6 +1,10 @@
 import React from "react";
 import styled from "styled-components";
-import { mainOrange, darken_mainOrange } from "../../styles/StylingVariables";
+import {
+  mainOrange,
+  darken_mainOrange,
+  mobileBreakPoint,
+} from "../../styles/StylingVariables";
 
 interface InputAndButtonProps {
   handleSubmit: (name: string) => void;
@@ -48,6 +52,10 @@ const Form = styled.form.attrs((props: { margin: string }) => ({
   margin: props.margin,
 }))`
   margin: ${(props) => props.margin};
+
+  @media only screen and (max-width: ${mobileBreakPoint}) {
+    flex-direction: column;
+  }
 `;
 
 const Input = styled.input.attrs((props: { inputWidth: number }) => ({
@@ -81,6 +89,7 @@ const Button = styled.button`
   outline: none;
   border: 5px solid ${mainOrange};
   transition: 0.2s background-color;
+  white-space: nowrap;
 
   &:hover {
     background-color: ${darken_mainOrange};

@@ -1,30 +1,18 @@
 import React from "react";
-import styled from "styled-components";
-import { useHistory, useParams } from "react-router-dom";
-import { useMutation, useQuery } from "@apollo/client";
+import { useParams } from "react-router-dom";
+import { useQuery } from "@apollo/client";
 
 import {
   GET_GAME,
   GAME_PLAYERS_CHANGED_SUBSCRIPTION,
-  ADD_PLAYER_TO_GAME,
+  GAME_CURRENT_STATE_SUBSCRIPTION,
 } from "../service/games";
 import FullContainer from "../components/Utils/FullContainer";
 import LMNLogo from "../components/Utils/LMNLogo";
-import {
-  smallSpace,
-  mainYellow,
-  mainRedOrange,
-  normalSpace,
-  mainTurquoise,
-  darken_mainTurquoise,
-  mainDarkBlue,
-} from "../styles/StylingVariables";
+import { smallSpace } from "../styles/StylingVariables";
 import Loader from "../components/Utils/Loader";
-import GameCodeBloc from "../components/Game/GameCodeBloc";
-import ItemsList from "../components/Utils/ItemsList";
-import InputAndButton from "../components/Utils/InputAndButton";
-import { CREATE_PLAYER } from "../service/players";
-import Button from "../components/Utils/Button";
+import GameJoin from "../components/Game/GameStates/GameJoin";
+import { CurrentState } from "../models/Game";
 
 interface Params {
   shortId: string;
@@ -32,18 +20,7 @@ interface Params {
 }
 
 const Home: React.FC<{}> = (): JSX.Element => {
-  const history = useHistory();
   const { shortId, userType } = useParams<Params>();
-  const [launchCounter, setLaunchCounter] = React.useState<number | null>(null);
-
-  const [
-    createPlayer,
-    { loading: playerLoading, error: playerError },
-  ] = useMutation(CREATE_PLAYER);
-  const [
-    addPlayerToGame,
-    { loading: addPlayerLoading, error: addPlayerError },
-  ] = useMutation(ADD_PLAYER_TO_GAME);
 
   const {
     subscribeToMore,
@@ -64,37 +41,32 @@ const Home: React.FC<{}> = (): JSX.Element => {
         return newFeedItem;
       },
     });
+    subscribeToMore({
+      document: GAME_CURRENT_STATE_SUBSCRIPTION,
+      variables: { shortId },
+      updateQuery: (prev, { subscriptionData }) => {
+        if (!subscriptionData.data) return prev;
+        const newFeedItem = subscriptionData.data.gameCurrentStateChanged;
+        return newFeedItem;
+      },
+    });
   }, [subscribeToMore, shortId]);
 
-  const handleSubmit = async (name: string) => {
-    const createdPlayer = (await createPlayer({ variables: { name } })).data
-      .createPlayer;
-    await addPlayerToGame({
-      variables: { playerId: createdPlayer._id, shortId },
-    });
-    history.push(`/games/${shortId}/${createdPlayer._id}`);
-  };
-
-  React.useEffect(() => {
-    console.log(launchCounter);
-    let timeout: NodeJS.Timeout;
-
-    if (launchCounter && launchCounter > 0) {
-      timeout = setTimeout(() => {
-        setLaunchCounter(launchCounter - 1);
-      }, 1000);
-    } else if (launchCounter === 0) {
-      alert("yo");
-    }
-
-    return () => clearTimeout(timeout);
-  }, [launchCounter]);
-
-  const handleLaunch = () => {
-    if (!launchCounter) {
-      setLaunchCounter(5);
-    } else {
-      setLaunchCounter(null);
+  const getCurrentComponent = ({
+    currentState,
+  }: {
+    currentState: CurrentState;
+  }) => {
+    switch (currentState.type) {
+      case "join":
+        return (
+          <GameJoin shortId={shortId} userType={userType} gameData={gameData} />
+        );
+      case "question": {
+        return <div>{currentState.type}</div>;
+      }
+      default:
+        console.log("Unknown current state.");
     }
   };
 
@@ -105,37 +77,7 @@ const Home: React.FC<{}> = (): JSX.Element => {
       {!gameLoading ? (
         <>
           <LMNLogo width="400px" margin={`${smallSpace} 0 ${smallSpace} 0`} />
-          <GameName>{gameData.getGame.name.toUpperCase()}</GameName>
-          <div className="d-flex flex-column align-center">
-            <GameCodeBloc gameCode={gameData.getGame.shortId} />
-            {userType === "subscribe" && (
-              <InputAndButton
-                handleSubmit={handleSubmit}
-                buttonLabel="Rejoindre la partie"
-                placeholder="My lovely name"
-              />
-            )}
-            <ItemsList
-              list={gameData.getGame.players}
-              labelKey="name"
-              className="d-flex justify-center flex-wrap"
-              maxWidth="600px"
-              margin={`0 0 ${normalSpace} 0`}
-            />
-          </div>
-          {userType === "host" && (
-            <Button
-              onClick={handleLaunch}
-              label={
-                launchCounter
-                  ? `Lancement dans ... ${launchCounter.toString()}s (cliquez pour annuler)`
-                  : "Tout le monde est prêt !"
-              }
-              color={mainDarkBlue}
-              backgroundColor={mainTurquoise}
-              hoverColor={darken_mainTurquoise}
-            />
-          )}
+          {getCurrentComponent({ currentState: gameData.getGame.currentState })}
         </>
       ) : (
         <Loader containerHeight="100vh" />
@@ -143,11 +85,5 @@ const Home: React.FC<{}> = (): JSX.Element => {
     </FullContainer>
   );
 };
-
-const GameName = styled.h1`
-  color: ${mainYellow};
-  text-shadow: 3px 3px 0 ${mainRedOrange};
-  margin-bottom: ${normalSpace};
-`;
 
 export default Home;

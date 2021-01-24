@@ -13,7 +13,7 @@ const Home: React.FC<{}> = (): JSX.Element => {
   const history = useHistory();
 
   const handleJoinGame = (shortId: string) => {
-    history.push(`/games/${shortId.toUpperCase()}/subscribe`);
+    history.push(`/games/${shortId.toUpperCase()}/join`);
   };
 
   return (

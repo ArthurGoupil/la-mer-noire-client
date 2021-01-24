@@ -25,6 +25,10 @@ export const GET_GAME: DocumentNode = gql`
         _id
         name
       }
+      currentState {
+        type
+        _id
+      }
       createdAt
     }
   }
@@ -48,6 +52,24 @@ export const CREATE_GAME: DocumentNode = gql`
 export const ADD_PLAYER_TO_GAME: DocumentNode = gql`
   mutation AddPlayerToGame($playerId: ID!, $shortId: String!) {
     addPlayerToGame(playerId: $playerId, shortId: $shortId) {
+      _id
+      shortId
+      name
+      players {
+        _id
+        name
+      }
+      createdAt
+    }
+  }
+`;
+
+export const UPDATE_GAME_CURRENT_STATE: DocumentNode = gql`
+  mutation UpdateGameCurrentState(
+    $currentState: CurrentStateInput!
+    $shortId: String!
+  ) {
+    updateGameCurrentState(currentState: $currentState, shortId: $shortId) {
       _id
       shortId
       name
@@ -84,6 +106,29 @@ export const GAME_PLAYERS_CHANGED_SUBSCRIPTION: DocumentNode = gql`
       players {
         _id
         name
+      }
+      currentState {
+        type
+        _id
+      }
+      createdAt
+    }
+  }
+`;
+
+export const GAME_CURRENT_STATE_SUBSCRIPTION: DocumentNode = gql`
+  subscription OnCurrentStateChanged($shortId: String!) {
+    gameCurrentStateChanged(shortId: $shortId) {
+      _id
+      shortId
+      name
+      players {
+        _id
+        name
+      }
+      currentState {
+        type
+        _id
       }
       createdAt
     }
