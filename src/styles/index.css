@@ -52,8 +52,8 @@ h1 {
 }
 h2 {
   font-family: "Boogaloo", cursive;
-  font-size: 22px;
-  line-height: 27px;
+  font-size: 40px;
+  line-height: 45px;
   font-weight: bold;
 }
 h3 {
@@ -87,4 +87,7 @@ h3 {
 }
 .flex-wrap {
   flex-wrap: wrap;
+}
+.flex-grow {
+  flex-grow: 1;
 }

@@ -13,6 +13,7 @@ interface ItemsListProps {
   className?: string;
   margin?: string;
   maxWidth?: string;
+  show?: boolean;
 }
 
 const ItemsList: React.FC<ItemsListProps> = ({
@@ -23,9 +24,10 @@ const ItemsList: React.FC<ItemsListProps> = ({
   className = "",
   margin = "0",
   maxWidth = "auto",
+  show = true,
 }): JSX.Element => {
   return (
-    <List className={className} margin={margin} maxWidth={maxWidth}>
+    <List className={className} margin={margin} maxWidth={maxWidth} show={show}>
       {list.map((item: Record<string, any>, index: number) =>
         linkBase ? (
           <Link
@@ -42,12 +44,10 @@ const ItemsList: React.FC<ItemsListProps> = ({
   );
 };
 
-const List = styled.ul.attrs((props: { margin: string; maxWidth: string }) => ({
-  margin: props.margin,
-  maxWidth: props.maxWidth,
-}))`
+const List = styled.ul<{ margin: string; maxWidth: string; show: boolean }>`
   margin: ${(props) => props.margin};
   max-width: ${(props) => props.maxWidth};
+  display: ${(props) => (props.show ? "flex" : "none")};
 `;
 
 const Item = styled.li`

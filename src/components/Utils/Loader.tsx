@@ -22,11 +22,7 @@ const Loader: React.FC<LoaderProps> = ({
 
 export default Loader;
 
-const LoaderContainer = styled.div.attrs(
-  (props: { containerHeight: string }) => ({
-    containerHeight: props.containerHeight,
-  }),
-)`
+const LoaderContainer = styled.div<{ containerHeight: string }>`
   position: relative;
   width: 100%;
   height: ${(props) => props.containerHeight};

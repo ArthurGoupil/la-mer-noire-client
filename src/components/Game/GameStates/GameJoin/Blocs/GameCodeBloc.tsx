@@ -5,13 +5,15 @@ import EStyles from "constants/Styling.constants";
 
 interface GameCodeBlocProps {
   gameCode: string;
+  show?: boolean;
 }
 
 const GameCodeBloc: React.FC<GameCodeBlocProps> = ({
   gameCode,
+  show = true,
 }): JSX.Element => {
   return (
-    <GameCodeBlocContainer className="d-flex align-center">
+    <GameCodeBlocContainer show={show} className="d-flex align-center">
       <SmartphoneIcon src="/icons/phone-quiz.svg" />
       <CodeText className="d-flex align-end">
         Donnez le code de la partie à vos amis :<GameCode>{gameCode}</GameCode>
@@ -20,11 +22,11 @@ const GameCodeBloc: React.FC<GameCodeBlocProps> = ({
   );
 };
 
-const GameCodeBlocContainer = styled.div`
+const GameCodeBlocContainer = styled.div<{ show: boolean }>`
   border-radius: ${EStyles.radius};
   padding: 20px;
-  margin-bottom: 40px;
   border: 5px solid ${EStyles.blue};
+  display: ${(props) => (props.show ? "flex" : "none")};
 `;
 
 const SmartphoneIcon = styled.img`

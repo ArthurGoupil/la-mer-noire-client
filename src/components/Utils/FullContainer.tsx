@@ -1,8 +1,6 @@
 import React from "react";
 import styled from "styled-components";
 
-import EStyles from "constants/Styling.constants";
-
 interface FullContainerProps {
   children: React.ReactNode;
   className: string;
@@ -19,6 +17,7 @@ export default FullContainer;
 
 const Container = styled.div`
   width: 100%;
+  height: 100%;
   min-height: ${window.innerHeight}px;
   overflow: hidden;
   position: relative;

@@ -9,6 +9,7 @@ interface InputAndButtonProps {
   inputWidth?: number;
   margin?: string;
   placeholder?: string;
+  show?: boolean;
 }
 
 const InputAndButton: React.FC<InputAndButtonProps> = ({
@@ -17,6 +18,7 @@ const InputAndButton: React.FC<InputAndButtonProps> = ({
   inputWidth = 250,
   margin = "0",
   placeholder = "",
+  show = true,
 }): JSX.Element => {
   let inputValue: HTMLInputElement | null;
 
@@ -30,6 +32,7 @@ const InputAndButton: React.FC<InputAndButtonProps> = ({
         }
       }}
       margin={margin}
+      show={show}
       className="d-flex justify-center align-center"
     >
       <Input
@@ -45,19 +48,16 @@ const InputAndButton: React.FC<InputAndButtonProps> = ({
   );
 };
 
-const Form = styled.form.attrs((props: { margin: string }) => ({
-  margin: props.margin,
-}))`
+const Form = styled.form<{ margin: string; show: boolean }>`
   margin: ${(props) => props.margin};
+  display: ${(props) => (props.show ? "flex" : "none")};
 
   @media only screen and (max-width: ${EStyles.mobileBreakPoint}) {
     flex-direction: column;
   }
 `;
 
-const Input = styled.input.attrs((props: { inputWidth: number }) => ({
-  inputWidth: props.inputWidth,
-}))`
+const Input = styled.input<{ inputWidth: number }>`
   width: ${(props) => props.inputWidth}px;
   text-align: center;
   padding: 10px;

@@ -11,6 +11,7 @@ interface ButtonProps {
   backgroundColor?: string;
   hoverColor?: string;
   border?: string;
+  show?: boolean;
 }
 
 const Button: React.FC<ButtonProps> = ({
@@ -21,6 +22,7 @@ const Button: React.FC<ButtonProps> = ({
   backgroundColor = EStyles.orange,
   hoverColor = EStyles.darken_orange,
   border = "none",
+  show = true,
 }): JSX.Element => {
   return (
     <StyledButton
@@ -30,27 +32,21 @@ const Button: React.FC<ButtonProps> = ({
       backgroundColor={backgroundColor}
       hoverColor={hoverColor}
       border={border}
+      show={show}
     >
       {label}
     </StyledButton>
   );
 };
 
-const StyledButton = styled.button.attrs(
-  (props: {
-    margin: string;
-    color: string;
-    backgroundColor: string;
-    hoverColor: string;
-    border: string;
-  }) => ({
-    margin: props.margin,
-    color: props.color,
-    backgroundColor: props.backgroundColor,
-    hoverColor: props.hoverColor,
-    border: props.border,
-  }),
-)`
+const StyledButton = styled.button<{
+  margin: string;
+  color: string;
+  backgroundColor: string;
+  hoverColor: string;
+  border: string;
+  show: boolean;
+}>`
   min-width: 70px;
   color: ${(props) => props.color};
   background-color: ${(props) => props.backgroundColor};
@@ -61,6 +57,7 @@ const StyledButton = styled.button.attrs(
   border: ${(props) => props.border};
   outline: none;
   transition: 0.2s background-color;
+  display: ${(props) => (props.show ? "flex" : "none")};
 
   &:hover {
     background-color: ${(props) => props.hoverColor};

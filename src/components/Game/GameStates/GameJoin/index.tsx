@@ -2,6 +2,7 @@ import React from "react";
 import { useHistory } from "react-router-dom";
 import styled from "styled-components";
 import { useMutation, useQuery } from "@apollo/client";
+import Cookies from "js-cookie";
 
 import EStyles from "constants/Styling.constants";
 import {
@@ -47,7 +48,8 @@ const GameJoin: React.FC<GameJoinProps> = ({
     await addPlayerToGame({
       variables: { playerId: createdPlayer._id, shortId },
     });
-    history.push(`/games/${shortId}/${createdPlayer._id}`);
+    Cookies.set(shortId, createdPlayer._id, { expires: 7 });
+    history.push(`/games/${shortId.toUpperCase()}/play`);
   };
 
   const handleLaunch = () => {
@@ -89,28 +91,37 @@ const GameJoin: React.FC<GameJoinProps> = ({
   }, [launchCounter]);
 
   return (
-    <FullContainer className="d-flex flex-column align-center space-around">
+    <FullContainer className="d-flex flex-column align-center">
       <LMNLogo width="400px" margin={`20px 0 20px 0`} />
-      <GameName>{gameData.getGame.name.toUpperCase()}</GameName>
-      <div className="d-flex flex-column align-center">
-        <GameCodeBloc gameCode={gameData.getGame.shortId} />
-        {userType === "join" && (
-          <InputAndButton
-            handleSubmit={handleSubmit}
-            buttonLabel="Rejoindre la partie"
-            placeholder="My lovely name"
-            margin={`0 0 20px 0`}
-          />
-        )}
-        <ItemsList
-          list={gameData.getGame.players}
-          labelKey="name"
-          className="d-flex justify-center flex-wrap"
-          maxWidth="600px"
-          margin={`0 0 40px 0`}
+      <div className="d-flex flex-column align-center space-around flex-grow">
+        <GameName>{gameData.getGame.name.toUpperCase()}</GameName>
+        <GameCodeBloc
+          gameCode={gameData.getGame.shortId}
+          show={userType === "host"}
         />
-      </div>
-      {userType === "host" && (
+        <InputAndButton
+          handleSubmit={handleSubmit}
+          buttonLabel="Rejoindre la partie"
+          placeholder="My lovely name"
+          margin={`0 0 20px 0`}
+          show={userType === "join"}
+        />
+        <div>
+          <PlayersTitle
+            className="d-flex"
+            show={gameData.getGame.players.length > 0}
+          >
+            Dans les starting blocks
+          </PlayersTitle>
+          <ItemsList
+            list={gameData.getGame.players}
+            labelKey="name"
+            className="d-flex justify-center flex-wrap"
+            maxWidth="600px"
+            margin={`0 0 40px 0`}
+            show={gameData.getGame.players.length > 0}
+          />
+        </div>
         <Button
           onClick={handleLaunch}
           label={
@@ -121,8 +132,9 @@ const GameJoin: React.FC<GameJoinProps> = ({
           color={EStyles.darkBlue}
           backgroundColor={EStyles.turquoise}
           hoverColor={EStyles.darken_turquoise}
+          show={userType === "host"}
         />
-      )}
+      </div>
     </FullContainer>
   );
 };
@@ -130,8 +142,15 @@ const GameJoin: React.FC<GameJoinProps> = ({
 const GameName = styled.h1`
   color: ${EStyles.yellow};
   text-shadow: 3px 3px 0 ${EStyles.redOrange};
-  margin-bottom: 40px;
   text-align: center;
+  margin-bottom: 20px;
+`;
+const PlayersTitle = styled.h2<{ show: boolean }>`
+  color: ${EStyles.orange};
+  text-shadow: 3px 3px 0 ${EStyles.blue};
+  text-align: center;
+  margin-bottom: 10px;
+  display: ${(props) => (props.show ? "flex" : "none")};
 `;
 
 export default GameJoin;

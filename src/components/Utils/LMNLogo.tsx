@@ -4,11 +4,14 @@ import styled from "styled-components";
 import EStyles from "constants/Styling.constants";
 
 interface LMNLogoProps {
-  width?: string;
+  width: string;
   margin?: string;
 }
 
-const LMNLogo: React.FC<LMNLogoProps> = ({ width, margin }): JSX.Element => {
+const LMNLogo: React.FC<LMNLogoProps> = ({
+  width,
+  margin = "0",
+}): JSX.Element => {
   return (
     <SVGContainer margin={margin} width={width}>
       <SVG viewBox="0 0 100 20">
@@ -69,12 +72,7 @@ const LMNLogo: React.FC<LMNLogoProps> = ({ width, margin }): JSX.Element => {
   );
 };
 
-const SVGContainer = styled.div.attrs(
-  (props: { width: string; margin: string }) => ({
-    width: props.width,
-    margin: props.margin,
-  }),
-)`
+const SVGContainer = styled.div<{ width: string; margin: string }>`
   width: ${(props) => props.width || "200px"};
   max-width: 100%;
   margin: ${(props) => props.margin || 0};

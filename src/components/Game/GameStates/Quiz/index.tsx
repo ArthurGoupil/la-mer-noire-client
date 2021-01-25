@@ -90,9 +90,7 @@ const PlayerViewContainer = styled.div`
   padding: 10px;
 `;
 
-const ResponseContainer = styled.div.attrs((props: { color: string }) => ({
-  color: props.color,
-}))`
+const ResponseContainer = styled.div<{ color: string }>`
   width: calc(100% - 20px);
   height: 100%;
   margin: 10px;
