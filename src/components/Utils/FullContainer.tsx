@@ -17,6 +17,8 @@ const FullContainer: React.FC<FullContainerProps> = ({
 
 export default FullContainer;
 
+console.log(window.innerHeight);
+
 const Container = styled.div`
   width: 100%;
   min-height: 100vh;
@@ -25,6 +27,6 @@ const Container = styled.div`
   padding: 40px;
 
   @media only screen and (max-width: ${EStyles.mobileBreakPoint}) {
-    min-height: ${window.innerHeight};
+    min-height: ${window.innerHeight}px;
   }
 `;
