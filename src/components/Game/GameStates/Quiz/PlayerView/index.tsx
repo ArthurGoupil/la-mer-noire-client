@@ -17,25 +17,25 @@ const PlayerView: React.FC<PlayerViewProps> = ({
         color={EStyles.darkBlue}
         className="d-flex justify-center align-center"
       >
-        {currentQuizItem?.choices[0] || "Erreur ! Le quiz n'a pas été trouvé."}
+        {currentQuizItem?.choices[0]}
       </ResponseContainer>
       <ResponseContainer
         color={EStyles.yellow}
         className="d-flex justify-center align-center"
       >
-        {currentQuizItem?.choices[1] || "Erreur ! Le quiz n'a pas été trouvé."}
+        {currentQuizItem?.choices[1]}
       </ResponseContainer>
       <ResponseContainer
         color={EStyles.orange}
         className="d-flex justify-center align-center"
       >
-        {currentQuizItem?.choices[2] || "Erreur ! Le quiz n'a pas été trouvé."}
+        {currentQuizItem?.choices[2]}
       </ResponseContainer>
       <ResponseContainer
         color={EStyles.turquoise}
         className="d-flex justify-center align-center"
       >
-        {currentQuizItem?.choices[3] || "Erreur ! Le quiz n'a pas été trouvé."}
+        {currentQuizItem?.choices[3]}
       </ResponseContainer>
     </PlayerViewContainer>
   );

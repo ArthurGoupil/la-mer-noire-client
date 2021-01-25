@@ -1,5 +1,6 @@
 import React from "react";
 import Cookies from "js-cookie";
+import styled from "styled-components";
 
 import { Game } from "models/Game";
 import FullContainer from "components/Utils/FullContainer";
@@ -35,7 +36,15 @@ const Quiz: React.FC<QuizProps> = ({
     }
   }
 
-  return <FullContainer>Erreur ! Quiz non trouvé.</FullContainer>;
+  return (
+    <FullContainer>
+      <ErrorWrapper>Erreur ! Quiz non trouvé.</ErrorWrapper>
+    </FullContainer>
+  );
 };
+
+const ErrorWrapper = styled.span`
+  color: white;
+`;
 
 export default Quiz;
