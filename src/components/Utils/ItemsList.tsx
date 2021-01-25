@@ -55,7 +55,7 @@ const Item = styled.li`
   color: white;
   text-align: center;
   padding: 10px 15px;
-  margin: 10px;
+  margin: 7px;
   border-radius: 100px;
   border: 3px solid ${EStyles.blue};
   cursor: default;

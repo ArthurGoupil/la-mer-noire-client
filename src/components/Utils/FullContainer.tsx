@@ -3,12 +3,12 @@ import styled from "styled-components";
 
 interface FullContainerProps {
   children: React.ReactNode;
-  className: string;
+  className?: string;
 }
 
 const FullContainer: React.FC<FullContainerProps> = ({
   children,
-  className,
+  className = "d-flex justify-center align-center",
 }): JSX.Element => {
   return <Container className={className}>{children}</Container>;
 };

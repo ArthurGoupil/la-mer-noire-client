@@ -1,6 +1,7 @@
 import React from "react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { useQuery } from "@apollo/client";
+import styled from "styled-components";
 
 import {
   GET_GAME,
@@ -12,6 +13,7 @@ import GameJoin from "components/Game/GameStates/GameJoin";
 import { CurrentState } from "models/Game";
 import { EGameCurrentStateStage } from "constants/GameCurrentState.constants";
 import Quiz from "components/Game/GameStates/Quiz";
+import FullContainer from "components/Utils/FullContainer";
 
 interface Params {
   shortId: string;
@@ -71,7 +73,17 @@ const Home: React.FC<{}> = (): JSX.Element => {
     }
   };
 
-  if (gameError) return <div>{`Error! ${gameError.message}`}</div>;
+  if (gameError)
+    return (
+      <FullContainer className="d-flex flex-column align-center justify-center">
+        <ErrorWrapper>
+          Partie non trouvée ! Vérifiez le code et réessayez.
+        </ErrorWrapper>
+        <LinkWrapper>
+          <Link to="/">Revenir au menu principal</Link>
+        </LinkWrapper>
+      </FullContainer>
+    );
 
   return !gameLoading && gameData ? (
     getCurrentComponent({ currentState: gameData.getGame.currentState })
@@ -79,5 +91,15 @@ const Home: React.FC<{}> = (): JSX.Element => {
     <Loader containerHeight="100vh" />
   );
 };
+
+const ErrorWrapper = styled.div`
+  color: white;
+  font-size: 20px;
+  margin-bottom: 10px;
+`;
+const LinkWrapper = styled.div`
+  color: white;
+  text-decoration: underline;
+`;
 
 export default Home;
