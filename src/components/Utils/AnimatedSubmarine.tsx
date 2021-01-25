@@ -126,7 +126,7 @@ const BubbleBase = styled.div`
   position: absolute;
   background-color: #99d3f5;
   opacity: 1;
-  box-shadow: 2px 2px 0 ${EStyles.mainDarkBlue};
+  box-shadow: 2px 2px 0 ${EStyles.darkBlue};
 `;
 const Bubble1 = styled(BubbleBase)`
   width: 10px;

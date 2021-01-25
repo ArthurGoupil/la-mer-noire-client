@@ -18,8 +18,8 @@ const Button: React.FC<ButtonProps> = ({
   label,
   margin = "10px",
   color = "white",
-  backgroundColor = EStyles.mainOrange,
-  hoverColor = EStyles.darken_mainOrange,
+  backgroundColor = EStyles.orange,
+  hoverColor = EStyles.darken_orange,
   border = "none",
 }): JSX.Element => {
   return (

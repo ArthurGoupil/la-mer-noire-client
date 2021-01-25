@@ -35,8 +35,8 @@ const LMNLogo: React.FC<LMNLogoProps> = ({ width, margin }): JSX.Element => {
 
         <defs>
           <linearGradient id="gradient" x1="0" x2="0" y1="0" y2="1">
-            <stop offset="5%" stopColor={EStyles.mainOrange} />
-            <stop offset="95%" stopColor={EStyles.mainYellow} />
+            <stop offset="5%" stopColor={EStyles.orange} />
+            <stop offset="95%" stopColor={EStyles.yellow} />
           </linearGradient>
           <pattern
             id="wave"
@@ -50,7 +50,7 @@ const LMNLogo: React.FC<LMNLogoProps> = ({ width, margin }): JSX.Element => {
               id="wavePath"
               d="M-40 9 Q-30 7 -20 9 T0 9 T20 9 T40 9 T60 9 T80 9 T100 9 T120 9 V20 H-40z"
               mask="url(#mask)"
-              fill={EStyles.mainTurquoise}
+              fill={EStyles.turquoise}
             >
               <animateTransform
                 attributeName="transform"

@@ -76,7 +76,7 @@ const Main = styled.main`
   min-height: 100vh;
   background: linear-gradient(
     to bottom,
-    ${EStyles.mainBlue} 0%,
-    ${EStyles.mainDarkBlue} 100%
+    ${EStyles.blue} 0%,
+    ${EStyles.darkBlue} 100%
   );
 `;

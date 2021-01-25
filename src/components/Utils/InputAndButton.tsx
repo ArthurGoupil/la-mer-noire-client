@@ -62,7 +62,7 @@ const Input = styled.input.attrs((props: { inputWidth: number }) => ({
   text-align: center;
   padding: 10px;
   border-radius: 100px;
-  border: 5px solid ${EStyles.mainOrange};
+  border: 5px solid ${EStyles.orange};
   outline: none;
   transition: 0.2s border;
 
@@ -72,24 +72,24 @@ const Input = styled.input.attrs((props: { inputWidth: number }) => ({
   }
 
   &:focus {
-    border: 5px solid ${EStyles.darken_mainOrange};
+    border: 5px solid ${EStyles.darken_orange};
   }
 `;
 
 const Button = styled.button`
   color: white;
-  background-color: ${EStyles.mainOrange};
+  background-color: ${EStyles.orange};
   text-align: center;
   padding: 10px;
   margin: 10px;
   border-radius: 100px;
   outline: none;
-  border: 5px solid ${EStyles.mainOrange};
+  border: 5px solid ${EStyles.orange};
   transition: 0.2s background-color;
   white-space: nowrap;
 
   &:hover {
-    background-color: ${EStyles.darken_mainOrange};
+    background-color: ${EStyles.darken_orange};
   }
 `;
 

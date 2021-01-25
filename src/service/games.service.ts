@@ -92,6 +92,11 @@ export const UPDATE_GAME_CURRENT_STATE: DocumentNode = gql`
       _id
       shortId
       name
+      players {
+        _id
+        name
+      }
+      ${currentState}
       createdAt
     }
   }
@@ -107,6 +112,7 @@ export const GAME_PLAYERS_CHANGED_SUBSCRIPTION: DocumentNode = gql`
         _id
         name
       }
+      ${currentState}
       createdAt
     }
   }

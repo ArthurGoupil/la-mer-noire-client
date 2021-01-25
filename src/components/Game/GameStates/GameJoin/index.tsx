@@ -9,7 +9,7 @@ import {
   UPDATE_GAME_CURRENT_STATE,
 } from "service/games.service";
 import { CREATE_PLAYER } from "service/players.service";
-import GameCodeBloc from "components/Game/GameStates/GameJoin/Utils/GameCodeBloc";
+import GameCodeBloc from "components/Game/GameStates/GameJoin/Blocs/GameCodeBloc";
 import ItemsList from "components/Utils/ItemsList";
 import InputAndButton from "components/Utils/InputAndButton";
 import Button from "components/Utils/Button";
@@ -118,9 +118,9 @@ const GameJoin: React.FC<GameJoinProps> = ({
               ? `Lancement dans ... ${launchCounter.toString()}s (cliquez pour annuler)`
               : "Tout le monde est prêt !"
           }
-          color={EStyles.mainDarkBlue}
-          backgroundColor={EStyles.mainTurquoise}
-          hoverColor={EStyles.darken_mainTurquoise}
+          color={EStyles.darkBlue}
+          backgroundColor={EStyles.turquoise}
+          hoverColor={EStyles.darken_turquoise}
         />
       )}
     </FullContainer>
@@ -128,8 +128,8 @@ const GameJoin: React.FC<GameJoinProps> = ({
 };
 
 const GameName = styled.h1`
-  color: ${EStyles.mainYellow};
-  text-shadow: 3px 3px 0 ${EStyles.mainRedOrange};
+  color: ${EStyles.yellow};
+  text-shadow: 3px 3px 0 ${EStyles.redOrange};
   margin-bottom: 40px;
   text-align: center;
 `;

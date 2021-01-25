@@ -1,9 +1,9 @@
 import { Category } from "./Category";
 
-interface QuizItem {
+export interface QuizItem {
   _id: number;
   question: string;
-  choices: [string];
+  choices: string[];
   answer: string;
   anecdote?: string;
 }
@@ -15,8 +15,8 @@ export interface Quiz {
   subTheme: string;
   difficulty: number;
   quizItems: {
-    [beginner: string]: [QuizItem];
-    intermediate: [QuizItem];
-    expert: [QuizItem];
+    [beginner: string]: QuizItem[];
+    intermediate: QuizItem[];
+    expert: QuizItem[];
   };
 }

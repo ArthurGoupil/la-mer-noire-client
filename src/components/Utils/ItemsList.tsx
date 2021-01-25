@@ -51,13 +51,13 @@ const List = styled.ul.attrs((props: { margin: string; maxWidth: string }) => ({
 `;
 
 const Item = styled.li`
-  background-color: ${EStyles.mainDarkBlue};
+  background-color: ${EStyles.darkBlue};
   color: white;
   text-align: center;
   padding: 10px 15px;
   margin: 10px;
   border-radius: 100px;
-  border: 3px solid ${EStyles.mainBlue};
+  border: 3px solid ${EStyles.blue};
   cursor: default;
 
   &:hover {

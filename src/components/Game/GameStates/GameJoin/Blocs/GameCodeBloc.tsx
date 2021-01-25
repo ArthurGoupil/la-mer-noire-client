@@ -24,7 +24,7 @@ const GameCodeBlocContainer = styled.div`
   border-radius: ${EStyles.radius};
   padding: 20px;
   margin-bottom: 40px;
-  border: 5px solid ${EStyles.mainBlue};
+  border: 5px solid ${EStyles.blue};
 `;
 
 const SmartphoneIcon = styled.img`
@@ -45,7 +45,7 @@ const CodeText = styled.div`
 
 const GameCode = styled.div`
   font-family: "Boogaloo", cursive;
-  color: ${EStyles.mainOrange};
+  color: ${EStyles.orange};
   font-size: 30px;
   line-height: 30px;
   margin-left: 10px;
