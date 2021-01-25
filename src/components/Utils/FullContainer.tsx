@@ -23,4 +23,8 @@ const Container = styled.div`
   overflow: hidden;
   position: relative;
   padding: 40px;
+
+  @media only screen and (max-width: ${EStyles.mobileBreakPoint}) {
+    min-height: ${window.innerHeight};
+  }
 `;
