@@ -8,15 +8,15 @@ import EStyles from "constants/Styling.constants";
 import {
   ADD_PLAYER_TO_GAME,
   UPDATE_GAME_CURRENT_STATE,
-} from "service/games.service";
-import { CREATE_PLAYER } from "service/players.service";
+} from "services/games.service";
+import { CREATE_PLAYER } from "services/players.service";
 import GameCodeBloc from "components/Game/GameStates/GameJoin/Blocs/GameCodeBloc";
 import ItemsList from "components/Utils/ItemsList";
 import InputAndButton from "components/Utils/InputAndButton";
 import Button from "components/Utils/Button";
 import { Game } from "models/Game";
 import { EGameCurrentStateStage } from "constants/GameCurrentState.constants";
-import { GET_RANDOM_QUIZ } from "service/quizzes.service";
+import { GET_RANDOM_QUIZ } from "services/quizzes.service";
 import LMNLogo from "components/Utils/LMNLogo";
 import FullContainer from "components/Utils/FullContainer";
 

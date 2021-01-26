@@ -102,6 +102,15 @@ export const UPDATE_GAME_CURRENT_STATE: DocumentNode = gql`
   }
 `;
 
+export const GIVE_ANSWER: DocumentNode = gql`
+  mutation GiveAnswer($shortId: String!, $playerId: ID!, $answer: String!) {
+    giveAnswer(shortId: $shortId, playerId: $playerId, answer: $answer) {
+      playerId
+      answer
+    }
+  }
+`;
+
 export const GAME_PLAYERS_CHANGED_SUBSCRIPTION: DocumentNode = gql`
   subscription OnPlayerAdded($shortId: String!) {
     gamePlayersChanged(shortId: $shortId) {
@@ -130,6 +139,15 @@ export const GAME_CURRENT_STATE_SUBSCRIPTION: DocumentNode = gql`
       }
       ${currentState} 
       createdAt
+    }
+  }
+`;
+
+export const PLAYER_ANSWERED_SUBSCRIPTION: DocumentNode = gql`
+  subscription OnPlayerAnswere($shortId: String!) {
+    playerAnswered(shortId: $shortId) {
+      playerId
+      answer
     }
   }
 `;

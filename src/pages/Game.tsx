@@ -7,7 +7,7 @@ import {
   GET_GAME,
   GAME_PLAYERS_CHANGED_SUBSCRIPTION,
   GAME_CURRENT_STATE_SUBSCRIPTION,
-} from "service/games.service";
+} from "services/games.service";
 import Loader from "components/Utils/Loader";
 import GameJoin from "components/Game/GameStates/GameJoin";
 import { CurrentState } from "models/Game";

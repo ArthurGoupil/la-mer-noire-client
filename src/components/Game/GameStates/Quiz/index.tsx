@@ -27,12 +27,33 @@ const Quiz: React.FC<QuizProps> = ({
   const playerId = Cookies.get(shortId);
 
   if (currentQuizItem) {
-    if (userType === "play" && playerId) {
-      return <PlayerView currentQuizItem={currentQuizItem} />;
+    if (userType === "play") {
+      if (playerId) {
+        return (
+          <PlayerView
+            shortId={shortId}
+            playerId={playerId}
+            currentQuizItem={currentQuizItem}
+          />
+        );
+      } else {
+        <FullContainer>
+          <ErrorWrapper>
+            Erreur ! Vous n'avez pas pu être identifié par vos cookies.
+            Assurez-vous de ne pas être en navigation privée.
+          </ErrorWrapper>
+        </FullContainer>;
+      }
     }
 
     if (userType === "host") {
-      return <HostView currentQuizItem={currentQuizItem} />;
+      return (
+        <HostView
+          shortId={shortId}
+          currentQuizItem={currentQuizItem}
+          currentPlayers={gameData.getGame.currentState.playersTurn}
+        />
+      );
     }
   }
 

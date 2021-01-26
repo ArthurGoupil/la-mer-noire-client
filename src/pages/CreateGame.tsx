@@ -5,7 +5,7 @@ import { useHistory } from "react-router-dom";
 import InputAndButton from "components/Utils/InputAndButton";
 import FullContainer from "components/Utils/FullContainer";
 import LMNLogo from "components/Utils/LMNLogo";
-import { CREATE_GAME } from "service/games.service";
+import { CREATE_GAME } from "services/games.service";
 import AnimatedSubmarine from "components/Utils/AnimatedSubmarine";
 
 const CreateGame: React.FC<{}> = (): JSX.Element => {
