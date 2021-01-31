@@ -45,12 +45,12 @@ const AnswerChoice: React.FC<AnswerChoiceProps> = ({
       className="d-flex justify-center align-center"
       color={color}
       answerIsSelected={
-        selectedAnswer?.answer === answer && selectedAnswer.quizId === quizId
+        selectedAnswer?.answer === answer && selectedAnswer?.quizId === quizId
       }
       anotherAnswerIsSelected={
         selectedAnswer !== null &&
-        selectedAnswer.answer !== answer &&
-        selectedAnswer.quizId === quizId
+        selectedAnswer?.answer !== answer &&
+        selectedAnswer?.quizId === quizId
       }
       onClick={async () => {
         if (!selectedAnswer && currentAnswer?.quizId !== quizId) {
