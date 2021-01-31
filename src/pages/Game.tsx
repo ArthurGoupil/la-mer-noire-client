@@ -25,6 +25,8 @@ const Home: React.FC<{}> = (): JSX.Element => {
     cookieName: ECookieName.stage,
   });
 
+  console.log(gameStage);
+
   const getCurrentComponent = ({
     gameStage,
   }: {

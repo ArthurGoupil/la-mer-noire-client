@@ -6,11 +6,19 @@ import FullContainer from "components/Utils/FullContainer";
 import LMNLogo from "components/Utils/LMNLogo";
 import InputAndButton from "components/Utils/InputAndButton";
 import AnimatedSubmarine from "components/Utils/AnimatedSubmarine";
+import { setGameCookie } from "utils/cookies.utils";
+import { ECookieName } from "constants/Cookies.constants";
+import { EGameStage } from "constants/GameCurrentState.constants";
 
 const Home: React.FC<{}> = (): JSX.Element => {
   const history = useHistory();
 
   const handleJoinGame = (shortId: string) => {
+    setGameCookie({
+      prefix: shortId,
+      cookieName: ECookieName.stage,
+      cookieValue: EGameStage.playersRegistration,
+    });
     history.push(`/games/${shortId.toUpperCase()}/join`);
   };
 
