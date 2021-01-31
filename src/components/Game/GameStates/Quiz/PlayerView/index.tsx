@@ -1,87 +1,94 @@
 import React from "react";
 import styled from "styled-components";
-import { useMutation } from "@apollo/client";
 
-import { QuizItem } from "models/Quiz";
 import EStyles from "constants/Styling.constants";
-import { GIVE_ANSWER } from "services/games.service";
+import ResponseChoice from "./ResponseContainer";
+import FullScreenError from "components/Utils/FullScreenError";
+import { ECookieName } from "constants/Cookies.constants";
+import { GAME_CURRENT_QUIZ_ITEM_UPDATED } from "services/games.service";
+import { getQuiz } from "services/quizzes.service";
+import { QuizItem } from "models/Quiz";
+import Loader from "components/Utils/Loader";
+import useUpdatedData from "hooks/useUpdatedData";
 
 interface PlayerViewProps {
   shortId: string;
   playerId: string;
-  currentQuizItem: QuizItem;
+}
+
+interface CurrentQuizItem {
+  quizId: string;
+  level: string;
+  quizItemId: number;
 }
 
 const PlayerView: React.FC<PlayerViewProps> = ({
   shortId,
   playerId,
-  currentQuizItem,
 }): JSX.Element => {
-  const [giveAnswer] = useMutation(GIVE_ANSWER);
+  const [selectedAnswer, setSelectedAnswer] = React.useState<string | null>(
+    null,
+  );
+  const { quizId, level, quizItemId } = useUpdatedData<CurrentQuizItem>({
+    shortId,
+    subscription: GAME_CURRENT_QUIZ_ITEM_UPDATED,
+    subscriptionName: "gameCurrentQuizItemUpdated",
+    cookieName: ECookieName.currentQuizItem,
+  });
 
-  return (
+  const { quizLoading, quizError, quizData } = getQuiz({
+    quizId: quizId,
+  });
+
+  const currentQuizItem = quizData?.quiz.quizItems[level].find(
+    (quiz: QuizItem) => quiz._id === Number(quizItemId),
+  );
+
+  if (quizError) {
+    return <FullScreenError errorLabel="Erreur ! Quiz non trouvé." />;
+  }
+
+  return !quizLoading && quizData ? (
     <PlayerViewContainer className="d-flex flex-column">
-      <ResponseContainer
+      <ResponseChoice
         color={EStyles.darkBlue}
-        className="d-flex justify-center align-center"
-        onClick={async () => {
-          await giveAnswer({
-            variables: {
-              shortId,
-              playerId,
-              answer: currentQuizItem?.choices[0],
-            },
-          });
-        }}
-      >
-        {currentQuizItem?.choices[0]}
-      </ResponseContainer>
-      <ResponseContainer
+        answer={currentQuizItem.choices[0]}
+        shortId={shortId}
+        quizId={quizId}
+        playerId={playerId}
+        selectedAnswer={selectedAnswer}
+        setSelectedAnswer={setSelectedAnswer}
+      />
+      <ResponseChoice
         color={EStyles.yellow}
-        className="d-flex justify-center align-center"
-        onClick={async () =>
-          await giveAnswer({
-            variables: {
-              shortId,
-              playerId,
-              answer: currentQuizItem?.choices[1],
-            },
-          })
-        }
-      >
-        {currentQuizItem?.choices[1]}
-      </ResponseContainer>
-      <ResponseContainer
+        answer={currentQuizItem.choices[1]}
+        shortId={shortId}
+        quizId={quizId}
+        playerId={playerId}
+        selectedAnswer={selectedAnswer}
+        setSelectedAnswer={setSelectedAnswer}
+      />
+      <ResponseChoice
         color={EStyles.orange}
-        className="d-flex justify-center align-center"
-        onClick={async () =>
-          await giveAnswer({
-            variables: {
-              shortId,
-              playerId,
-              answer: currentQuizItem?.choices[2],
-            },
-          })
-        }
-      >
-        {currentQuizItem?.choices[2]}
-      </ResponseContainer>
-      <ResponseContainer
+        answer={currentQuizItem.choices[2]}
+        shortId={shortId}
+        quizId={quizId}
+        playerId={playerId}
+        selectedAnswer={selectedAnswer}
+        setSelectedAnswer={setSelectedAnswer}
+      />
+      <ResponseChoice
         color={EStyles.turquoise}
-        className="d-flex justify-center align-center"
-        onClick={async () =>
-          await giveAnswer({
-            variables: {
-              shortId,
-              playerId,
-              answer: currentQuizItem?.choices[3],
-            },
-          })
-        }
-      >
-        {currentQuizItem?.choices[3]}
-      </ResponseContainer>
+        answer={currentQuizItem.choices[3]}
+        shortId={shortId}
+        quizId={quizId}
+        playerId={playerId}
+        selectedAnswer={selectedAnswer}
+        setSelectedAnswer={setSelectedAnswer}
+      />
     </PlayerViewContainer>
+  ) : (
+    <Loader containerHeight="100vh" />
   );
 };
 
@@ -90,18 +97,6 @@ const PlayerViewContainer = styled.div`
   height: 100%;
   position: absolute;
   padding: 10px;
-`;
-
-const ResponseContainer = styled.button<{ color: string }>`
-  width: calc(100% - 20px);
-  height: 100%;
-  margin: 10px;
-  color: white;
-  text-shadow: 2px 2px 0px ${EStyles.darkBlue};
-  font-weight: bold;
-  background-color: ${(props) => props.color};
-  border-radius: ${EStyles.miniRadius};
-  border: none;
 `;
 
 export default PlayerView;

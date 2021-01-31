@@ -1,5 +1,5 @@
-export const EGameUserType = {
-  join: "join",
-  question: "question",
-  play: "play",
-};
+export enum EGameUserType {
+  join = "join",
+  question = "question",
+  play = "play",
+}

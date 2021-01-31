@@ -1,19 +1,14 @@
 import React from "react";
-import { Link, useParams } from "react-router-dom";
-import { useQuery } from "@apollo/client";
-import styled from "styled-components";
+import { useParams } from "react-router-dom";
 
-import {
-  GET_GAME,
-  GAME_PLAYERS_CHANGED_SUBSCRIPTION,
-  GAME_CURRENT_STATE_SUBSCRIPTION,
-} from "services/games.service";
+import { GAME_STAGE_UPDATED } from "services/games.service";
 import Loader from "components/Utils/Loader";
-import GameJoin from "components/Game/GameStates/GameJoin";
-import { CurrentState } from "models/Game";
-import { EGameCurrentStateStage } from "constants/GameCurrentState.constants";
+import GamePreparation from "components/Game/GameStates/GamePreparation";
+import { EGameStage } from "constants/GameCurrentState.constants";
 import Quiz from "components/Game/GameStates/Quiz";
-import FullContainer from "components/Utils/FullContainer";
+import { ECookieName } from "constants/Cookies.constants";
+import useUpdatedData from "hooks/useUpdatedData";
+import FullScreenError from "components/Utils/FullScreenError";
 
 interface Params {
   shortId: string;
@@ -22,84 +17,41 @@ interface Params {
 
 const Home: React.FC<{}> = (): JSX.Element => {
   const { shortId, userType } = useParams<Params>();
-
-  const {
-    subscribeToMore,
-    loading: gameLoading,
-    error: gameError,
-    data: gameData,
-  } = useQuery(GET_GAME, {
-    variables: { shortId },
+  const gameStage = useUpdatedData<string>({
+    shortId,
+    subscription: GAME_STAGE_UPDATED,
+    subscriptionName: "gameStageUpdated",
+    subscriptionReturnVariable: "stage",
+    cookieName: ECookieName.stage,
   });
 
-  React.useEffect(() => {
-    subscribeToMore({
-      document: GAME_PLAYERS_CHANGED_SUBSCRIPTION,
-      variables: { shortId },
-      updateQuery: (prev, { subscriptionData }) => {
-        if (!subscriptionData.data) return prev;
-        const newFeedItem = subscriptionData.data.gamePlayersChanged;
-        return newFeedItem;
-      },
-    });
-    subscribeToMore({
-      document: GAME_CURRENT_STATE_SUBSCRIPTION,
-      variables: { shortId },
-      updateQuery: (prev, { subscriptionData }) => {
-        if (!subscriptionData.data) return prev;
-        const newFeedItem = subscriptionData.data.gameCurrentStateChanged;
-        return newFeedItem;
-      },
-    });
-  }, [subscribeToMore, shortId]);
-
   const getCurrentComponent = ({
-    currentState,
+    gameStage,
   }: {
-    currentState: CurrentState;
-  }) => {
-    switch (currentState.stage) {
-      case EGameCurrentStateStage.playersRegistration:
-        return (
-          <GameJoin shortId={shortId} userType={userType} gameData={gameData} />
-        );
-      case EGameCurrentStateStage.question: {
-        return (
-          <Quiz shortId={shortId} userType={userType} gameData={gameData} />
-        );
+    gameStage: string;
+  }): JSX.Element => {
+    switch (gameStage) {
+      case EGameStage.playersRegistration:
+        return <GamePreparation shortId={shortId} userType={userType} />;
+      case EGameStage.question: {
+        return <Quiz shortId={shortId} userType={userType} />;
       }
       default:
-        return <div>Error ! Unknown game current state.</div>;
+        return (
+          <FullScreenError
+            errorLabel={`Erreur de type "unknown game current state."`}
+            link="/"
+            linkLabel="Revenir au menu principal"
+          />
+        );
     }
   };
 
-  if (gameError)
-    return (
-      <FullContainer className="d-flex flex-column align-center justify-center">
-        <ErrorWrapper>
-          Partie non trouvée ! Vérifiez le code et réessayez.
-        </ErrorWrapper>
-        <LinkWrapper>
-          <Link to="/">Revenir au menu principal</Link>
-        </LinkWrapper>
-      </FullContainer>
-    );
-
-  return !gameLoading && gameData ? (
-    getCurrentComponent({ currentState: gameData.getGame.currentState })
+  return gameStage ? (
+    getCurrentComponent({ gameStage })
   ) : (
     <Loader containerHeight="100vh" />
   );
 };
-
-const ErrorWrapper = styled.div`
-  color: white;
-  font-size: 20px;
-  margin-bottom: 10px;
-`;
-const LinkWrapper = styled.div`
-  color: white;
-  text-decoration: underline;
-`;
 
 export default Home;

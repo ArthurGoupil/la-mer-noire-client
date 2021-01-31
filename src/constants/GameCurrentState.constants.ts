@@ -1,4 +1,4 @@
-export const EGameCurrentStateStage = {
-  playersRegistration: "playersRegistration",
-  question: "question",
-};
+export enum EGameStage {
+  playersRegistration = "playersRegistration",
+  question = "question",
+}

@@ -1,51 +1,14 @@
-import { DocumentNode, gql } from "@apollo/client";
+import { DocumentNode, gql, useQuery, useSubscription } from "@apollo/client";
 
-const currentState = `
-  currentState {
-    stage
-    question {
-      quiz {
-        category { name }
-        theme
-        subTheme
-        difficulty
-        quizItems {
-          beginner {
-              _id
-              question
-              choices 
-              answer
-              anecdote
-          }
-          intermediate {
-              _id
-              question
-              choices 
-              answer
-              anecdote
-          }
-          expert {
-              _id
-              question
-              choices 
-              answer
-              anecdote
-          }
-        }
-      }
-      level
-      itemId
-    }
-    playersTurn {
-      _id
-      name
-    }
-  }
-`;
+interface ShortId {
+  shortId: string;
+}
 
-export const GET_GAME: DocumentNode = gql`
-  query GetGame($shortId: String!) {
-    getGame(shortId: $shortId) {
+// QUERIES
+
+const GET_GAME: DocumentNode = gql`
+  query Game($shortId: String!) {
+    game(shortId: $shortId) {
       _id
       shortId
       name
@@ -53,11 +16,24 @@ export const GET_GAME: DocumentNode = gql`
         _id
         name
       }
-      ${currentState}
       createdAt
     }
   }
 `;
+export const getGame = ({ shortId }: ShortId) => {
+  const {
+    subscribeToMore,
+    loading: gameLoading,
+    error: gameError,
+    data: gameData,
+  } = useQuery(GET_GAME, {
+    variables: { shortId },
+  });
+
+  return { subscribeToMore, gameLoading, gameError, gameData };
+};
+
+// MUTATIONS
 
 export const CREATE_GAME: DocumentNode = gql`
   mutation CreateGame($name: String!) {
@@ -69,51 +45,40 @@ export const CREATE_GAME: DocumentNode = gql`
 `;
 
 export const ADD_PLAYER_TO_GAME: DocumentNode = gql`
-  mutation AddPlayerToGame($playerId: ID!, $shortId: String!) {
-    addPlayerToGame(playerId: $playerId, shortId: $shortId) {
-      _id
-      shortId
-      name
-      players {
-        _id
-        name
-      }
-      createdAt
-    }
+  mutation AddPlayerToGame($shortId: String!, $playerId: ID!) {
+    addPlayerToGame(shortId: $shortId, playerId: $playerId)
   }
 `;
 
-export const UPDATE_GAME_CURRENT_STATE: DocumentNode = gql`
-  mutation UpdateGameCurrentState(
-    $currentState: CurrentStateInput!
+export const UPDATE_GAME_STAGE: DocumentNode = gql`
+  mutation UpdateGameStage($shortId: String!, $stage: String!) {
+    updateGameStage(shortId: $shortId, stage: $stage)
+  }
+`;
+
+export const UPDATE_GAME_CURRENT_QUIZ_ITEM: DocumentNode = gql`
+  mutation UpdateGameCurrentQuizItem(
     $shortId: String!
+    $currentQuizItem: CurrentQuizItem!
   ) {
-    updateGameCurrentState(currentState: $currentState, shortId: $shortId) {
-      _id
-      shortId
-      name
-      players {
-        _id
-        name
-      }
-      ${currentState}
-      createdAt
-    }
+    updateGameCurrentQuizItem(
+      shortId: $shortId
+      currentQuizItem: $currentQuizItem
+    )
   }
 `;
 
 export const GIVE_ANSWER: DocumentNode = gql`
   mutation GiveAnswer($shortId: String!, $playerId: ID!, $answer: String!) {
-    giveAnswer(shortId: $shortId, playerId: $playerId, answer: $answer) {
-      playerId
-      answer
-    }
+    giveAnswer(shortId: $shortId, playerId: $playerId, answer: $answer)
   }
 `;
 
-export const GAME_PLAYERS_CHANGED_SUBSCRIPTION: DocumentNode = gql`
-  subscription OnPlayerAdded($shortId: String!) {
-    gamePlayersChanged(shortId: $shortId) {
+// SUBSCRIPTIONS
+
+export const GAME_PLAYERS_UPDATED: DocumentNode = gql`
+  subscription OnGamePlayersUpdated($shortId: String!) {
+    gamePlayersUpdated(shortId: $shortId) {
       _id
       shortId
       name
@@ -121,33 +86,42 @@ export const GAME_PLAYERS_CHANGED_SUBSCRIPTION: DocumentNode = gql`
         _id
         name
       }
-      ${currentState}
       createdAt
     }
   }
 `;
 
-export const GAME_CURRENT_STATE_SUBSCRIPTION: DocumentNode = gql`
-  subscription OnCurrentStateChanged($shortId: String!) {
-    gameCurrentStateChanged(shortId: $shortId) {
-      _id
-      shortId
-      name
-      players {
-        _id
-        name
-      }
-      ${currentState} 
-      createdAt
+export const GAME_STAGE_UPDATED: DocumentNode = gql`
+  subscription OnGameStageUpdated($shortId: String!) {
+    gameStageUpdated(shortId: $shortId) {
+      stage
     }
   }
 `;
 
-export const PLAYER_ANSWERED_SUBSCRIPTION: DocumentNode = gql`
-  subscription OnPlayerAnswere($shortId: String!) {
+export const GAME_CURRENT_QUIZ_ITEM_UPDATED: DocumentNode = gql`
+  subscription OnGameCurrentQuizItemUpdated($shortId: String!) {
+    gameCurrentQuizItemUpdated(shortId: $shortId) {
+      quizId
+      level
+      quizItemId
+    }
+  }
+`;
+
+export const PLAYER_ANSWERED: DocumentNode = gql`
+  subscription OnPlayerAnswered($shortId: String!) {
     playerAnswered(shortId: $shortId) {
       playerId
       answer
     }
   }
 `;
+
+export const subscribeToPlayerAnswered = ({ shortId }: ShortId) => {
+  const { data: answerData } = useSubscription(PLAYER_ANSWERED, {
+    variables: { shortId },
+  });
+
+  return answerData;
+};
