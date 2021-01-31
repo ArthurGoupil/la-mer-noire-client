@@ -2,7 +2,7 @@ import React from "react";
 import styled from "styled-components";
 
 import EStyles from "constants/Styling.constants";
-import ResponseChoice from "./ResponseContainer";
+import AnswerChoice from "./AnswerChoice";
 import FullScreenError from "components/Utils/FullScreenError";
 import { ECookieName } from "constants/Cookies.constants";
 import { GAME_CURRENT_QUIZ_ITEM_UPDATED } from "services/games.service";
@@ -10,6 +10,7 @@ import { getQuiz } from "services/quizzes.service";
 import { QuizItem } from "models/Quiz";
 import Loader from "components/Utils/Loader";
 import useUpdatedData from "hooks/useUpdatedData";
+import { Answer } from "models/Game";
 
 interface PlayerViewProps {
   shortId: string;
@@ -26,9 +27,10 @@ const PlayerView: React.FC<PlayerViewProps> = ({
   shortId,
   playerId,
 }): JSX.Element => {
-  const [selectedAnswer, setSelectedAnswer] = React.useState<string | null>(
+  const [selectedAnswer, setSelectedAnswer] = React.useState<Answer | null>(
     null,
   );
+
   const { quizId, level, quizItemId } = useUpdatedData<CurrentQuizItem>({
     shortId,
     subscription: GAME_CURRENT_QUIZ_ITEM_UPDATED,
@@ -44,13 +46,18 @@ const PlayerView: React.FC<PlayerViewProps> = ({
     (quiz: QuizItem) => quiz._id === Number(quizItemId),
   );
 
+  React.useEffect(() => {
+    if (currentQuizItem?.quizId !== selectedAnswer?.quizId)
+      setSelectedAnswer(null);
+  }, [currentQuizItem]);
+
   if (quizError) {
     return <FullScreenError errorLabel="Erreur ! Quiz non trouvé." />;
   }
 
   return !quizLoading && quizData ? (
     <PlayerViewContainer className="d-flex flex-column">
-      <ResponseChoice
+      <AnswerChoice
         color={EStyles.darkBlue}
         answer={currentQuizItem.choices[0]}
         shortId={shortId}
@@ -59,7 +66,7 @@ const PlayerView: React.FC<PlayerViewProps> = ({
         selectedAnswer={selectedAnswer}
         setSelectedAnswer={setSelectedAnswer}
       />
-      <ResponseChoice
+      <AnswerChoice
         color={EStyles.yellow}
         answer={currentQuizItem.choices[1]}
         shortId={shortId}
@@ -68,7 +75,7 @@ const PlayerView: React.FC<PlayerViewProps> = ({
         selectedAnswer={selectedAnswer}
         setSelectedAnswer={setSelectedAnswer}
       />
-      <ResponseChoice
+      <AnswerChoice
         color={EStyles.orange}
         answer={currentQuizItem.choices[2]}
         shortId={shortId}
@@ -77,7 +84,7 @@ const PlayerView: React.FC<PlayerViewProps> = ({
         selectedAnswer={selectedAnswer}
         setSelectedAnswer={setSelectedAnswer}
       />
-      <ResponseChoice
+      <AnswerChoice
         color={EStyles.turquoise}
         answer={currentQuizItem.choices[3]}
         shortId={shortId}

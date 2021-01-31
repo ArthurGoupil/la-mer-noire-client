@@ -14,7 +14,7 @@ export interface CurrentQuizItem {
   quizItemId: number;
 }
 
-export interface CurrentAnswer {
+export interface Answer {
   quizId: string;
   answer: string;
 }

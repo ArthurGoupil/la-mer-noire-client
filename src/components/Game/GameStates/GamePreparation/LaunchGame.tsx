@@ -1,5 +1,5 @@
 import React from "react";
-import { useLazyQuery, useMutation } from "@apollo/client";
+import { useMutation } from "@apollo/client";
 
 import { ECookieName } from "constants/Cookies.constants";
 import { EGameStage } from "constants/GameCurrentState.constants";
@@ -10,8 +10,7 @@ import {
   UPDATE_GAME_STAGE,
 } from "services/games.service";
 import Button from "components/Utils/Button";
-import setNewCurrentQuizItem from "utils/quizzes.utils";
-import { GET_RANDOM_QUIZ_ID } from "services/quizzes.service";
+import { getLazyRandomQuizId } from "services/quizzes.service";
 
 interface LaunchGameButtonProps {
   shortId: string;
@@ -27,26 +26,33 @@ const LaunchGame: React.FC<LaunchGameButtonProps> = ({
   const [updateGameCurrentQuizItem] = useMutation(
     UPDATE_GAME_CURRENT_QUIZ_ITEM,
   );
-  const [handleLaunchGame, { refetch }] = useLazyQuery(GET_RANDOM_QUIZ_ID, {
-    onCompleted: async (data) => {
-      const currentQuizItem = {
-        quizId: data.randomQuizId,
-        level: "intermediate",
-        quizItemId: 2,
-      };
-      await updateGameCurrentQuizItem({
-        variables: { shortId, currentQuizItem },
-      });
-      setGameCookie({
-        prefix: shortId,
-        cookieName: ECookieName.currentQuizItem,
-        cookieValue: currentQuizItem,
-      });
-      await updateGameStage({
-        variables: { stage: EGameStage.question, shortId },
-      });
-    },
-  });
+
+  const { triggerGetRandomQuiz, randomQuizIdData } = getLazyRandomQuizId();
+
+  const handleLaunchGame = async ({ quizId }: { quizId: string }) => {
+    const currentQuizItem = {
+      quizId: quizId,
+      level: "intermediate",
+      quizItemId: 2,
+    };
+    await updateGameCurrentQuizItem({
+      variables: { shortId, currentQuizItem },
+    });
+    setGameCookie({
+      prefix: shortId,
+      cookieName: ECookieName.currentQuizItem,
+      cookieValue: currentQuizItem,
+    });
+    await updateGameStage({
+      variables: { stage: EGameStage.question, shortId },
+    });
+  };
+
+  React.useEffect(() => {
+    if (randomQuizIdData) {
+      handleLaunchGame({ quizId: randomQuizIdData.randomQuizId });
+    }
+  }, [randomQuizIdData]);
 
   const handleLaunchCounter = () => {
     if (!launchCounter) {
@@ -63,7 +69,7 @@ const LaunchGame: React.FC<LaunchGameButtonProps> = ({
         setLaunchCounter(launchCounter - 1);
       }, 1000);
     } else if (launchCounter === 0) {
-      handleLaunchGame();
+      triggerGetRandomQuiz();
     }
 
     return () => clearTimeout(timeout);

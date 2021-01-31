@@ -6,20 +6,20 @@ import { GIVE_ANSWER } from "services/games.service";
 import EStyles from "constants/Styling.constants";
 import useGameCookie from "hooks/useGameCookies";
 import { ECookieName } from "constants/Cookies.constants";
-import { CurrentAnswer } from "models/Game";
+import { Answer } from "models/Game";
 import { setGameCookie } from "utils/cookies.utils";
 
-interface ResponseChoiceProps {
+interface AnswerChoiceProps {
   color: string;
   answer: string;
   shortId: string;
   quizId: string;
   playerId: string;
-  selectedAnswer: string | null;
-  setSelectedAnswer: React.Dispatch<React.SetStateAction<string | null>>;
+  selectedAnswer: Answer | null;
+  setSelectedAnswer: React.Dispatch<React.SetStateAction<Answer | null>>;
 }
 
-const ResponseChoice: React.FC<ResponseChoiceProps> = ({
+const AnswerChoice: React.FC<AnswerChoiceProps> = ({
   color,
   answer,
   shortId,
@@ -29,28 +29,32 @@ const ResponseChoice: React.FC<ResponseChoiceProps> = ({
   setSelectedAnswer,
 }): JSX.Element => {
   const [giveAnswer] = useMutation(GIVE_ANSWER);
-  const currentAnswer = useGameCookie<CurrentAnswer>({
+  const currentAnswer = useGameCookie<Answer>({
     prefix: shortId,
     cookieName: ECookieName.currentAnswer,
   });
 
   React.useEffect(() => {
-    if (currentAnswer) {
-      setSelectedAnswer(currentAnswer.answer);
+    if (currentAnswer?.quizId === quizId) {
+      setSelectedAnswer(currentAnswer);
     }
   }, []);
 
   return (
-    <ResponseContainer
+    <AnswerContainer
       className="d-flex justify-center align-center"
       color={color}
-      answerIsSelected={answer === selectedAnswer}
+      answerIsSelected={
+        selectedAnswer?.answer === answer && selectedAnswer.quizId === quizId
+      }
       anotherAnswerIsSelected={
-        selectedAnswer !== null && answer !== selectedAnswer
+        selectedAnswer !== null &&
+        selectedAnswer.answer !== answer &&
+        selectedAnswer.quizId === quizId
       }
       onClick={async () => {
         if (!selectedAnswer && currentAnswer?.quizId !== quizId) {
-          setSelectedAnswer(answer);
+          setSelectedAnswer({ quizId, answer });
           setGameCookie({
             prefix: shortId,
             cookieName: ECookieName.currentAnswer,
@@ -67,11 +71,11 @@ const ResponseChoice: React.FC<ResponseChoiceProps> = ({
       }}
     >
       {answer}
-    </ResponseContainer>
+    </AnswerContainer>
   );
 };
 
-const ResponseContainer = styled.button<{
+const AnswerContainer = styled.button<{
   color: string;
   answerIsSelected: boolean;
   anotherAnswerIsSelected: boolean;
@@ -92,4 +96,4 @@ const ResponseContainer = styled.button<{
     props.answerIsSelected ? `inset 0 0 10px 5px white` : "none"};
 `;
 
-export default ResponseChoice;
+export default AnswerChoice;

@@ -1,4 +1,4 @@
-import { DocumentNode, gql, useQuery } from "@apollo/client";
+import { DocumentNode, gql, useLazyQuery, useQuery } from "@apollo/client";
 
 interface QuizId {
   quizId: string;
@@ -44,7 +44,7 @@ const GET_QUIZ: DocumentNode = gql`
 `;
 export const getQuiz = ({ quizId }: QuizId) => {
   const {
-    refetch,
+    refetch: quizRefetch,
     loading: quizLoading,
     error: quizError,
     data: quizData,
@@ -52,7 +52,7 @@ export const getQuiz = ({ quizId }: QuizId) => {
     variables: { id: quizId },
   });
 
-  return { refetch, quizLoading, quizError, quizData };
+  return { quizRefetch, quizLoading, quizError, quizData };
 };
 
 export const GET_RANDOM_QUIZ_ID: DocumentNode = gql`
@@ -60,3 +60,26 @@ export const GET_RANDOM_QUIZ_ID: DocumentNode = gql`
     randomQuizId
   }
 `;
+export const getLazyRandomQuizId = () => {
+  const [
+    triggerGetRandomQuiz,
+    {
+      data: randomQuizIdData,
+      loading: randomQuizIdLoading,
+      error: randomQuizIdError,
+      refetch: randomQuizIdRefetch,
+      called: randomQuizIdCalled,
+    },
+  ] = useLazyQuery(GET_RANDOM_QUIZ_ID, {
+    fetchPolicy: "network-only",
+  });
+
+  return {
+    triggerGetRandomQuiz,
+    randomQuizIdData,
+    randomQuizIdLoading,
+    randomQuizIdError,
+    randomQuizIdRefetch,
+    randomQuizIdCalled,
+  };
+};
