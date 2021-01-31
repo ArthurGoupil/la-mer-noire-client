@@ -19,7 +19,7 @@ const LMNLogo: React.FC<LMNLogoProps> = ({
           textAnchor="middle"
           x="50"
           y="15"
-          fontSize="17"
+          fontSize="16"
           fill="url(#gradient)"
           fillOpacity="1"
         >
@@ -29,7 +29,7 @@ const LMNLogo: React.FC<LMNLogoProps> = ({
           textAnchor="middle"
           x="50"
           y="15"
-          fontSize="17"
+          fontSize="16"
           fill="url(#wave)"
           fillOpacity="1"
         >
@@ -81,7 +81,7 @@ const SVGContainer = styled.div<{ width: string; margin: string }>`
 const SVG = styled.svg`
   font-family: "Luckiest Guy", cursive;
   font-weight: bold;
-  max-width: 600px;
+  max-width: 100%;
   height: auto;
 `;
 

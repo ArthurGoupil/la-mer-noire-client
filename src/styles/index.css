@@ -37,7 +37,7 @@ i {
 /* LINKS */
 a {
   text-decoration: none;
-  color: #302e2e;
+  color: inherit;
 }
 a:visited {
   color: inherit;

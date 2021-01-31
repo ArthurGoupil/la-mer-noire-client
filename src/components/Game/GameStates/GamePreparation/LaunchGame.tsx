@@ -37,6 +37,11 @@ const LaunchGame: React.FC<LaunchGameButtonProps> = ({
       await updateGameCurrentQuizItem({
         variables: { shortId, currentQuizItem },
       });
+      setGameCookie({
+        prefix: shortId,
+        cookieName: ECookieName.currentQuizItem,
+        cookieValue: currentQuizItem,
+      });
       await updateGameStage({
         variables: { stage: EGameStage.question, shortId },
       });
