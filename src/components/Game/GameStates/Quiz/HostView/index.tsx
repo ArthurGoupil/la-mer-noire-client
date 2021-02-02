@@ -1,81 +1,100 @@
 import React from "react";
 import styled from "styled-components";
-import { useMutation } from "@apollo/client";
 
 import LMNLogo from "components/Utils/LMNLogo";
 import FullContainer from "components/Utils/FullContainer";
 import EStyles from "constants/Styling.constants";
 import {
-  GAME_CURRENT_QUIZ_ITEM_UPDATED,
   getGame,
   subscribeToPlayerAnswered,
   UPDATE_GAME_CURRENT_QUIZ_ITEM,
 } from "services/games.service";
 import FullScreenError from "components/Utils/FullScreenError";
-import { ECookieName } from "constants/Cookies.constants";
 import { QuizItem } from "models/Quiz";
 import Loader from "components/Utils/Loader";
-import { getQuiz, getLazyRandomQuizId } from "services/quizzes.service";
 import { Player } from "models/Player";
-import useUpdatedData from "hooks/useUpdatedData";
-import { CurrentQuizItem } from "models/Game";
 import Button from "components/Utils/Button";
-import { Answer } from "models/Game";
+import { Answer, CurrentQuizItem } from "models/Game";
+import { ECookieName } from "constants/Cookies.constants";
+import { getLazyQuiz, getLazyRandomQuizId } from "services/quizzes.service";
+import useCookie from "hooks/useCookie";
+import { globalUpdateCurrentQuizItem } from "utils/game.utils";
+import { useMutation } from "@apollo/client";
 
 interface HostViewProps {
   shortId: string;
 }
 
 const HostView: React.FC<HostViewProps> = ({ shortId }): JSX.Element => {
+  const { gameLoading, gameError, gameData } = getGame({ shortId });
+  const [updateGameCurrentQuizItem] = useMutation(
+    UPDATE_GAME_CURRENT_QUIZ_ITEM,
+  );
+  const answerData = subscribeToPlayerAnswered({ shortId });
+  const currentQuizItem = useCookie<CurrentQuizItem>({
+    prefix: shortId,
+    cookieName: ECookieName.currentQuizItem,
+  });
+  const {
+    triggerGetRandomQuizId,
+    randomQuizIdData,
+    randomQuizIdRefetch,
+  } = getLazyRandomQuizId();
+  const { triggerGetQuiz, quizData, quizRefetch } = getLazyQuiz({
+    quizId: currentQuizItem?.quizId || randomQuizIdData?.randomQuizId,
+  });
+
+  React.useEffect(() => {
+    if (!currentQuizItem) {
+      triggerGetRandomQuizId();
+    } else {
+      triggerGetQuiz();
+    }
+  }, []);
+
+  React.useEffect(() => {
+    if (randomQuizIdData) {
+      (async () =>
+        await globalUpdateCurrentQuizItem({
+          shortId,
+          currentQuizItem: {
+            quizId: randomQuizIdData.randomQuizId,
+            level: "beginner",
+            quizItemId: 7,
+          },
+          updateMutation: updateGameCurrentQuizItem,
+        }))();
+      if (quizRefetch) {
+        setPlayersAnswers({});
+        quizRefetch();
+      } else {
+        triggerGetQuiz();
+      }
+    }
+  }, [randomQuizIdData]);
+
+  const handleGenerateNewQuestion = async (): Promise<void> => {
+    if (randomQuizIdRefetch) {
+      await randomQuizIdRefetch();
+    } else {
+      triggerGetRandomQuizId();
+    }
+  };
+
+  const currentQuizItemData = quizData?.quiz.quizItems[
+    currentQuizItem.level
+  ].find((quiz: QuizItem) => quiz._id === currentQuizItem.quizItemId);
+
   const [playersAnswers, setPlayersAnswers] = React.useState<
     Record<string, Answer>
   >({});
 
-  const { quizId, level, quizItemId } = useUpdatedData<CurrentQuizItem>({
-    shortId,
-    subscription: GAME_CURRENT_QUIZ_ITEM_UPDATED,
-    subscriptionName: "gameCurrentQuizItemUpdated",
-    cookieName: ECookieName.currentQuizItem,
-  });
-
-  const [updateGameCurrentQuizItem] = useMutation(
-    UPDATE_GAME_CURRENT_QUIZ_ITEM,
-  );
-
-  const {
-    triggerGetRandomQuiz,
-    randomQuizIdData,
-    randomQuizIdRefetch,
-  } = getLazyRandomQuizId();
-
-  const handleNewQuestion = async ({ quizId }: { quizId: string }) => {
-    const currentQuizItem = {
-      quizId: quizId,
-      level: "intermediate",
-      quizItemId: 2,
-    };
-    await updateGameCurrentQuizItem({
-      variables: { shortId, currentQuizItem },
-    });
-    await quizRefetch();
-  };
-
   React.useEffect(() => {
-    if (randomQuizIdData) {
-      handleNewQuestion({ quizId: randomQuizIdData.randomQuizId });
-    }
-  }, [randomQuizIdData]);
-
-  const { gameLoading, gameError, gameData } = getGame({ shortId });
-  const { quizRefetch, quizLoading, quizError, quizData } = getQuiz({ quizId });
-  const answerData = subscribeToPlayerAnswered({ shortId });
-
-  React.useEffect(() => {
-    if (answerData) {
+    if (answerData && quizData) {
       const playerId = answerData.playerAnswered.playerId;
-      if (playersAnswers[playerId]?.quizId !== quizId) {
+      if (playersAnswers[playerId]?.quizId !== quizData.quiz._id) {
         playersAnswers[playerId] = {
-          quizId,
+          quizId: quizData.quiz._id,
           answer: answerData.playerAnswered.answer,
         };
       }
@@ -83,28 +102,11 @@ const HostView: React.FC<HostViewProps> = ({ shortId }): JSX.Element => {
     }
   }, [answerData]);
 
-  const currentQuizItem = quizData?.quiz.quizItems[level].find(
-    (quiz: QuizItem) => quiz._id === quizItemId,
-  );
-
-  console.log(playersAnswers);
-
-  // console.log(
-  //   `${
-  //     gameData?.game.players.find(
-  //       (player: Player) => player._id === answerData?.playerAnswered?.playerId,
-  //     )?.name
-  //   } a répondu ${answerData?.playerAnswered?.answer}`,
-  // );
-
   if (gameError) {
     return <FullScreenError errorLabel="Erreur ! Partie non trouvée." />;
   }
-  if (quizError) {
-    return <FullScreenError errorLabel="Erreur ! Quiz non trouvé." />;
-  }
 
-  return !gameLoading && !quizLoading && gameData && quizData ? (
+  return !gameLoading && gameData && currentQuizItemData ? (
     <FullContainer className="d-flex flex-column align-center">
       <LMNLogo width="400px" margin={`20px 0 20px 0`} />
       <FullWidthContainer className="d-flex flex-column align-center space-between flex-grow">
@@ -116,21 +118,21 @@ const HostView: React.FC<HostViewProps> = ({ shortId }): JSX.Element => {
           </ThemeContainer>
         </div>
         <FullWidthContainer className="d-flex flex-column align-center">
-          <QuizContainer>{currentQuizItem.question}</QuizContainer>
+          <QuizContainer>{currentQuizItemData.question}</QuizContainer>
           <FullWidthContainer className="d-flex justify-center">
             <AnswerContainer color={EStyles.darkBlue}>
-              {currentQuizItem.choices[0]}
+              {currentQuizItemData.choices[0]}
             </AnswerContainer>
             <AnswerContainer color={EStyles.yellow}>
-              {currentQuizItem.choices[1]}
+              {currentQuizItemData.choices[1]}
             </AnswerContainer>
           </FullWidthContainer>
           <FullWidthContainer className="d-flex justify-center">
             <AnswerContainer color={EStyles.orange}>
-              {currentQuizItem.choices[2]}
+              {currentQuizItemData.choices[2]}
             </AnswerContainer>
             <AnswerContainer color={EStyles.turquoise}>
-              {currentQuizItem.choices[3]}
+              {currentQuizItemData.choices[3]}
             </AnswerContainer>
           </FullWidthContainer>
         </FullWidthContainer>
@@ -139,7 +141,7 @@ const HostView: React.FC<HostViewProps> = ({ shortId }): JSX.Element => {
             let color;
             if (playersAnswers[player._id]) {
               if (
-                playersAnswers[player._id].answer === currentQuizItem.answer
+                playersAnswers[player._id].answer === currentQuizItemData.answer
               ) {
                 color = "lime";
               } else {
@@ -155,16 +157,7 @@ const HostView: React.FC<HostViewProps> = ({ shortId }): JSX.Element => {
             );
           })}
         </div>
-        <Button
-          label="Nouvelle question"
-          onClick={async () => {
-            if (randomQuizIdRefetch) {
-              await randomQuizIdRefetch();
-            } else {
-              triggerGetRandomQuiz();
-            }
-          }}
-        />
+        <Button label="Nouvelle question" onClick={handleGenerateNewQuestion} />
       </FullWidthContainer>
     </FullContainer>
   ) : (

@@ -4,7 +4,7 @@ import styled from "styled-components";
 
 import { GIVE_ANSWER } from "services/games.service";
 import EStyles from "constants/Styling.constants";
-import useGameCookie from "hooks/useGameCookies";
+import useCookie from "hooks/useCookie";
 import { ECookieName } from "constants/Cookies.constants";
 import { Answer } from "models/Game";
 import { setGameCookie } from "utils/cookies.utils";
@@ -29,7 +29,7 @@ const AnswerChoice: React.FC<AnswerChoiceProps> = ({
   setSelectedAnswer,
 }): JSX.Element => {
   const [giveAnswer] = useMutation(GIVE_ANSWER);
-  const currentAnswer = useGameCookie<Answer>({
+  const currentAnswer = useCookie<Answer>({
     prefix: shortId,
     cookieName: ECookieName.currentAnswer,
   });

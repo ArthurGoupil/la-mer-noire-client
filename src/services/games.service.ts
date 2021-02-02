@@ -108,6 +108,16 @@ export const GAME_CURRENT_QUIZ_ITEM_UPDATED: DocumentNode = gql`
     }
   }
 `;
+export const subscribeToCurrentQuizItemUpdated = ({ shortId }: ShortId) => {
+  const { data: currentQuizItemUpdatedData } = useSubscription(
+    GAME_CURRENT_QUIZ_ITEM_UPDATED,
+    {
+      variables: { shortId },
+    },
+  );
+
+  return currentQuizItemUpdatedData;
+};
 
 export const PLAYER_ANSWERED: DocumentNode = gql`
   subscription OnPlayerAnswered($shortId: String!) {
@@ -117,7 +127,6 @@ export const PLAYER_ANSWERED: DocumentNode = gql`
     }
   }
 `;
-
 export const subscribeToPlayerAnswered = ({ shortId }: ShortId) => {
   const { data: answerData } = useSubscription(PLAYER_ANSWERED, {
     variables: { shortId },

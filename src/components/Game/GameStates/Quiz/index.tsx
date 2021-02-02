@@ -4,7 +4,7 @@ import PlayerView from "./PlayerView";
 import HostView from "./HostView";
 import { ECookieName } from "constants/Cookies.constants";
 import FullScreenError from "components/Utils/FullScreenError";
-import useGameCookie from "hooks/useGameCookies";
+import useCookie from "hooks/useCookie";
 
 interface QuizProps {
   shortId: string;
@@ -12,7 +12,7 @@ interface QuizProps {
 }
 
 const Quiz: React.FC<QuizProps> = ({ shortId, userType }): JSX.Element => {
-  const playerId = useGameCookie<string>({
+  const playerId = useCookie<string>({
     prefix: shortId,
     cookieName: ECookieName.playerId,
   });
@@ -24,7 +24,7 @@ const Quiz: React.FC<QuizProps> = ({ shortId, userType }): JSX.Element => {
       return (
         <FullScreenError
           errorLabel="Erreur ! Vous n'avez pas pu être identifié par vos cookies.
-      Assurez-vous de ne pas être en navigation privée."
+        Assurez-vous de ne pas être en navigation privée."
         />
       );
     }
@@ -35,7 +35,11 @@ const Quiz: React.FC<QuizProps> = ({ shortId, userType }): JSX.Element => {
   }
 
   return (
-    <FullScreenError errorLabel="Erreur inconnue ! Veuillez relancer la partie." />
+    <FullScreenError
+      errorLabel="Erreur inconnue."
+      linkLabel="Revenir au menu principal"
+      link="/"
+    />
   );
 };
 

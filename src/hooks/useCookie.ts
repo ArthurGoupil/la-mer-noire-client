@@ -2,13 +2,13 @@ import Cookies from "js-cookie";
 
 import { ECookieName } from "constants/Cookies.constants";
 
-interface UseGameCookieProps {
+interface UseCookieProps {
   prefix: string;
   cookieName: ECookieName;
 }
 
-const useGameCookie = <T>({ prefix, cookieName }: UseGameCookieProps): T => {
+const useCookie = <T>({ prefix, cookieName }: UseCookieProps): T => {
   return Cookies.getJSON(`${prefix}-${cookieName}`);
 };
 
-export default useGameCookie;
+export default useCookie;

@@ -1,13 +1,11 @@
 import React from "react";
 import { useParams } from "react-router-dom";
 
-import { GAME_STAGE_UPDATED } from "services/games.service";
 import Loader from "components/Utils/Loader";
 import GamePreparation from "components/Game/GameStates/GamePreparation";
 import { EGameStage } from "constants/GameCurrentState.constants";
 import Quiz from "components/Game/GameStates/Quiz";
-import { ECookieName } from "constants/Cookies.constants";
-import useUpdatedData from "hooks/useUpdatedData";
+import useUpdatedStage from "hooks/useUpdatedStage";
 import FullScreenError from "components/Utils/FullScreenError";
 
 interface Params {
@@ -17,13 +15,7 @@ interface Params {
 
 const Home: React.FC<{}> = (): JSX.Element => {
   const { shortId, userType } = useParams<Params>();
-  const gameStage = useUpdatedData<string>({
-    shortId,
-    subscription: GAME_STAGE_UPDATED,
-    subscriptionName: "gameStageUpdated",
-    subscriptionReturnVariable: "stage",
-    cookieName: ECookieName.stage,
-  });
+  const gameStage = useUpdatedStage({ shortId });
 
   const getCurrentComponent = ({
     gameStage,
