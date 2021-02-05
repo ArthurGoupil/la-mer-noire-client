@@ -2,7 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 
-import FullContainer from "./FullContainer";
+import FullContainer from "components/Utils/FullContainer";
 
 interface FullScreenErrorProps {
   errorLabel: string;

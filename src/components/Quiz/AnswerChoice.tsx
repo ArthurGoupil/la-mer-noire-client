@@ -5,9 +5,9 @@ import styled from "styled-components";
 import { GIVE_ANSWER } from "services/games.service";
 import EStyles from "constants/Styling.constants";
 import useCookie from "hooks/useCookie";
-import { ECookieName } from "constants/Cookies.constants";
+import ECookieName from "constants/Cookies.constants";
 import { Answer } from "models/Game";
-import { setGameCookie } from "utils/cookies.utils";
+import { setCookie } from "utils/cookies.utils";
 
 interface AnswerChoiceProps {
   color: string;
@@ -55,7 +55,7 @@ const AnswerChoice: React.FC<AnswerChoiceProps> = ({
       onClick={async () => {
         if (!selectedAnswer && currentAnswer?.quizId !== quizId) {
           setSelectedAnswer({ quizId, answer });
-          setGameCookie({
+          setCookie({
             prefix: shortId,
             cookieName: ECookieName.currentAnswer,
             cookieValue: { quizId, answer },

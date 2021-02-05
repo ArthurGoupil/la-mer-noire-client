@@ -7,9 +7,6 @@ import FullContainer from "components/Utils/FullContainer";
 import LMNLogo from "components/Utils/LMNLogo";
 import { CREATE_GAME } from "services/games.service";
 import AnimatedSubmarine from "components/Utils/AnimatedSubmarine";
-import { EGameStage } from "constants/GameCurrentState.constants";
-import { ECookieName } from "constants/Cookies.constants";
-import { setGameCookie } from "utils/cookies.utils";
 
 const CreateGame: React.FC<{}> = (): JSX.Element => {
   const history = useHistory();
@@ -18,11 +15,6 @@ const CreateGame: React.FC<{}> = (): JSX.Element => {
   const handleSubmit = async (name: string) => {
     const createdGame = (await createGame({ variables: { name } })).data
       .createGame;
-    setGameCookie({
-      prefix: createdGame.shortId,
-      cookieName: ECookieName.stage,
-      cookieValue: EGameStage.playersRegistration,
-    });
     history.push(`/games/${createdGame.shortId}/host`);
   };
 

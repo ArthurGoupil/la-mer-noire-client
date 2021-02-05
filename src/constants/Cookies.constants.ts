@@ -1,7 +1,7 @@
-export enum ECookieName {
+enum ECookieName {
   playerId = "playerId",
-  stage = "stage",
-  currentQuizItem = "currentQuizItem",
-  currentPlayers = "currentPlayers",
   currentAnswer = "currentAnswer",
+  playersAnswers = "playersAnswers",
 }
+
+export default ECookieName;

@@ -1,9 +1,9 @@
 import React from "react";
 
-import PlayerView from "./PlayerView";
-import HostView from "./HostView";
-import { ECookieName } from "constants/Cookies.constants";
-import FullScreenError from "components/Utils/FullScreenError";
+import HostContainer from "containers/Game/Quiz/Host.container";
+import PlayerContainer from "containers/Game/Quiz/Player.container";
+import ECookieName from "constants/Cookies.constants";
+import FullScreenError from "components/Error/FullScreenError";
 import useCookie from "hooks/useCookie";
 
 interface QuizProps {
@@ -17,9 +17,13 @@ const Quiz: React.FC<QuizProps> = ({ shortId, userType }): JSX.Element => {
     cookieName: ECookieName.playerId,
   });
 
+  if (userType === "host") {
+    return <HostContainer shortId={shortId} />;
+  }
+
   if (userType === "play") {
     if (playerId) {
-      return <PlayerView shortId={shortId} playerId={playerId} />;
+      return <PlayerContainer shortId={shortId} playerId={playerId} />;
     } else {
       return (
         <FullScreenError
@@ -30,8 +34,14 @@ const Quiz: React.FC<QuizProps> = ({ shortId, userType }): JSX.Element => {
     }
   }
 
-  if (userType === "host") {
-    return <HostView shortId={shortId} />;
+  if (userType === "join") {
+    return (
+      <FullScreenError
+        errorLabel="La partie a déjà commencé !"
+        link={`/games/${shortId}/play`}
+        linkLabel="Je le sais et je suis un joueur de cette partie"
+      />
+    );
   }
 
   return (

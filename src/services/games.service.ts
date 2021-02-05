@@ -1,37 +1,31 @@
-import { DocumentNode, gql, useQuery, useSubscription } from "@apollo/client";
-
-interface ShortId {
-  shortId: string;
-}
+import { DocumentNode, gql } from "@apollo/client";
 
 // QUERIES
 
-const GET_GAME: DocumentNode = gql`
+export const GET_GAME: DocumentNode = gql`
   query Game($shortId: String!) {
     game(shortId: $shortId) {
       _id
       shortId
       name
+      stage
       players {
         _id
         name
+      }
+      currentPlayers {
+        _id
+        name
+      }
+      currentQuizItem {
+        quizId
+        level
+        quizItemId
       }
       createdAt
     }
   }
 `;
-export const getGame = ({ shortId }: ShortId) => {
-  const {
-    subscribeToMore,
-    loading: gameLoading,
-    error: gameError,
-    data: gameData,
-  } = useQuery(GET_GAME, {
-    variables: { shortId },
-  });
-
-  return { subscribeToMore, gameLoading, gameError, gameData };
-};
 
 // MUTATIONS
 
@@ -59,7 +53,7 @@ export const UPDATE_GAME_STAGE: DocumentNode = gql`
 export const UPDATE_GAME_CURRENT_QUIZ_ITEM: DocumentNode = gql`
   mutation UpdateGameCurrentQuizItem(
     $shortId: String!
-    $currentQuizItem: CurrentQuizItem!
+    $currentQuizItem: CurrentQuizItemInput!
   ) {
     updateGameCurrentQuizItem(
       shortId: $shortId
@@ -94,7 +88,23 @@ export const GAME_PLAYERS_UPDATED: DocumentNode = gql`
 export const GAME_STAGE_UPDATED: DocumentNode = gql`
   subscription OnGameStageUpdated($shortId: String!) {
     gameStageUpdated(shortId: $shortId) {
+      _id
+      shortId
+      name
       stage
+      players {
+        _id
+        name
+      }
+      currentPlayers {
+        _id
+        name
+      }
+      currentQuizItem {
+        quizId
+        level
+        quizItemId
+      }
     }
   }
 `;
@@ -102,22 +112,26 @@ export const GAME_STAGE_UPDATED: DocumentNode = gql`
 export const GAME_CURRENT_QUIZ_ITEM_UPDATED: DocumentNode = gql`
   subscription OnGameCurrentQuizItemUpdated($shortId: String!) {
     gameCurrentQuizItemUpdated(shortId: $shortId) {
-      quizId
-      level
-      quizItemId
+      _id
+      shortId
+      name
+      stage
+      players {
+        _id
+        name
+      }
+      currentPlayers {
+        _id
+        name
+      }
+      currentQuizItem {
+        quizId
+        level
+        quizItemId
+      }
     }
   }
 `;
-export const subscribeToCurrentQuizItemUpdated = ({ shortId }: ShortId) => {
-  const { data: currentQuizItemUpdatedData } = useSubscription(
-    GAME_CURRENT_QUIZ_ITEM_UPDATED,
-    {
-      variables: { shortId },
-    },
-  );
-
-  return currentQuizItemUpdatedData;
-};
 
 export const PLAYER_ANSWERED: DocumentNode = gql`
   subscription OnPlayerAnswered($shortId: String!) {
@@ -127,10 +141,3 @@ export const PLAYER_ANSWERED: DocumentNode = gql`
     }
   }
 `;
-export const subscribeToPlayerAnswered = ({ shortId }: ShortId) => {
-  const { data: answerData } = useSubscription(PLAYER_ANSWERED, {
-    variables: { shortId },
-  });
-
-  return answerData;
-};

@@ -1,11 +1,19 @@
-import { Category } from "./Category";
+import { Category } from "models/Category";
 
 export interface QuizItem {
-  _id: number;
+  quizItemId: number;
   question: string;
   choices: string[];
   answer: string;
   anecdote?: string;
+}
+
+export interface QuizItemData {
+  quizId: string;
+  category: Category;
+  theme: string;
+  subTheme: string;
+  quiz: QuizItem;
 }
 
 export interface Quiz {

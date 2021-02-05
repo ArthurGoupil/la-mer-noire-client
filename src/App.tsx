@@ -10,9 +10,9 @@ import "constants/Styling.constants.ts";
 import "styles/reset.css";
 import "styles/index.css";
 import EStyles from "constants/Styling.constants";
-import Home from "pages/Home";
-import Game from "pages/Game";
-import CreateGame from "pages/CreateGame";
+import Home from "containers/Home.container";
+import Game from "containers/Game/Game.container";
+import CreateGame from "containers/Game/CreateGame.container";
 
 const App: React.FC<{}> = (): JSX.Element => {
   const httpLink = new HttpLink({
