@@ -1,7 +1,7 @@
 import React from "react";
 import { useMutation } from "@apollo/client";
 
-import { GET_GAME, UPDATE_GAME_STAGE } from "services/games.service";
+import { UPDATE_GAME_STAGE } from "services/games.service";
 import { EGameStage } from "constants/GameCurrentState.constants";
 
 interface HandleLaunchGameProps {
