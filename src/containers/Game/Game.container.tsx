@@ -1,13 +1,12 @@
 import React from "react";
 import { useParams } from "react-router-dom";
-import { useQuery } from "@apollo/client";
 
 import Loader from "components/Utils/Loader";
 import GamePreparationContainer from "containers/Game/GamePreparation/GamePreparation.container";
 import { EGameStage } from "constants/GameCurrentState.constants";
 import QuizContainer from "containers/Game/Quiz/Quiz.container";
 import FullScreenError from "components/Error/FullScreenError";
-import { GAME_STAGE_UPDATED, GET_GAME } from "services/games.service";
+import useGame from "hooks/useGame";
 
 interface Params {
   shortId: string;
@@ -16,26 +15,7 @@ interface Params {
 
 const Game: React.FC<{}> = (): JSX.Element => {
   const { shortId, userType } = useParams<Params>();
-  const {
-    subscribeToMore,
-    loading: gameLoading,
-    error: gameError,
-    data: { game } = {},
-  } = useQuery(GET_GAME, {
-    variables: { shortId },
-  });
-
-  React.useEffect(() => {
-    subscribeToMore({
-      document: GAME_STAGE_UPDATED,
-      variables: { shortId },
-      updateQuery: (prev, { subscriptionData }) => {
-        if (!subscriptionData.data) return prev;
-        const newFeedItem = subscriptionData.data.gameStageUpdated;
-        return newFeedItem;
-      },
-    });
-  }, [subscribeToMore, shortId]);
+  const { game, gameError } = useGame({ shortId, subscribe: { stage: true } });
 
   const getCurrentComponent = ({
     gameStage,
@@ -71,7 +51,7 @@ const Game: React.FC<{}> = (): JSX.Element => {
     );
   }
 
-  return !gameLoading && game ? (
+  return game ? (
     getCurrentComponent({ gameStage: game.stage })
   ) : (
     <Loader containerHeight="100vh" />

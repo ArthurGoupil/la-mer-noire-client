@@ -1,9 +1,7 @@
 import React from "react";
 import styled from "styled-components";
-import { useQuery } from "@apollo/client";
 
 import EStyles from "constants/Styling.constants";
-import { GAME_PLAYERS_UPDATED, GET_GAME } from "services/games.service";
 import GameCodeBloc from "components/GamePreparation/GameCodeBloc";
 import PlayersList from "components/Utils/ItemsList";
 import LMNLogo from "components/Utils/LMNLogo";
@@ -14,6 +12,7 @@ import { handleLaunchGame } from "utils/Game/handleLaunchGame.utils";
 import LaunchGameButton from "components/Utils/Button";
 import CreatePlayer from "components/Utils/InputAndButton";
 import { handleCreatePlayer } from "utils/Game/handleCreatePlayer";
+import useGame from "hooks/useGame";
 
 interface GameJoinProps {
   shortId: string;
@@ -24,26 +23,10 @@ const GamePreparation: React.FC<GameJoinProps> = ({
   shortId,
   userType,
 }): JSX.Element => {
-  const {
-    subscribeToMore,
-    loading: gameLoading,
-    error: gameError,
-    data: { game },
-  } = useQuery(GET_GAME, {
-    variables: { shortId },
+  const { game, gameError } = useGame({
+    shortId,
+    subscribe: { players: true },
   });
-
-  React.useEffect(() => {
-    subscribeToMore({
-      document: GAME_PLAYERS_UPDATED,
-      variables: { shortId },
-      updateQuery: (prev, { subscriptionData }) => {
-        if (!subscriptionData.data) return prev;
-        const newFeedItem = subscriptionData.data.gamePlayersUpdated;
-        return newFeedItem;
-      },
-    });
-  }, [subscribeToMore, shortId]);
 
   const { handleLaunchGameCounter, launchGameButtonLabel } = handleLaunchGame({
     shortId,
@@ -61,7 +44,7 @@ const GamePreparation: React.FC<GameJoinProps> = ({
     );
   }
 
-  return !gameLoading && game ? (
+  return game ? (
     <FullContainer className="d-flex flex-column align-center">
       <LMNLogo width="400px" margin={`20px 0 20px 0`} />
       <div className="d-flex flex-column align-center space-around flex-grow">

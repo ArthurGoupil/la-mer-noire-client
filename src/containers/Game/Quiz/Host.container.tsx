@@ -1,8 +1,8 @@
 import React from "react";
-import { useQuery, useSubscription } from "@apollo/client";
+import { useSubscription } from "@apollo/client";
 import styled from "styled-components";
 
-import { GET_GAME, PLAYER_ANSWERED } from "services/games.service";
+import { PLAYER_ANSWERED } from "services/games.service";
 import Loader from "components/Utils/Loader";
 import { Answer } from "models/Game";
 import { setCookie } from "utils/cookies.utils";
@@ -15,15 +15,14 @@ import EStyles from "constants/Styling.constants";
 import { Player } from "models/Player";
 import Button from "components/Utils/Button";
 import ErrorHandler from "components/Error/ErrorHandler";
+import useGame from "hooks/useGame";
 
 interface HostProps {
   shortId: string;
 }
 
 const Host: React.FC<HostProps> = ({ shortId }): JSX.Element => {
-  const { data: { game } = {}, error: gameError } = useQuery(GET_GAME, {
-    variables: { shortId },
-  });
+  const { game, gameError } = useGame({ shortId });
 
   const { quizItemData, quizLoading, quizError, generateNewQuestion } = useQuiz(
     {

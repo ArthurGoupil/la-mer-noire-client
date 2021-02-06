@@ -1,17 +1,13 @@
 import React from "react";
-import { useQuery } from "@apollo/client";
 import styled from "styled-components";
 
 import EStyles from "constants/Styling.constants";
 import AnswerChoice from "components/Quiz/AnswerChoice";
 import Loader from "components/Utils/Loader";
 import { Answer } from "models/Game";
-import {
-  GAME_CURRENT_QUIZ_ITEM_UPDATED,
-  GET_GAME,
-} from "services/games.service";
 import ErrorHandler from "components/Error/ErrorHandler";
 import useQuiz from "hooks/useQuiz";
+import useGame from "hooks/useGame";
 
 interface PlayerProps {
   shortId: string;
@@ -19,24 +15,10 @@ interface PlayerProps {
 }
 
 const Player: React.FC<PlayerProps> = ({ shortId, playerId }): JSX.Element => {
-  const { subscribeToMore, data: { game } = {}, error: gameError } = useQuery(
-    GET_GAME,
-    {
-      variables: { shortId },
-    },
-  );
-
-  React.useEffect(() => {
-    subscribeToMore({
-      document: GAME_CURRENT_QUIZ_ITEM_UPDATED,
-      variables: { shortId },
-      updateQuery: (prev, { subscriptionData }) => {
-        if (!subscriptionData.data) return prev;
-        const newFeedItem = subscriptionData.data.gameCurrentQuizItemUpdated;
-        return newFeedItem;
-      },
-    });
-  }, [subscribeToMore, shortId]);
+  const { game, gameError } = useGame({
+    shortId,
+    subscribe: { currentQuizItem: true },
+  });
 
   const { quizItemData, quizLoading, quizError } = useQuiz({
     game,
@@ -48,8 +30,13 @@ const Player: React.FC<PlayerProps> = ({ shortId, playerId }): JSX.Element => {
   );
 
   React.useEffect(() => {
-    if (quizItemData?.quizId !== selectedAnswer?.quizId)
+    if (
+      quizItemData &&
+      selectedAnswer &&
+      quizItemData?.quizId !== selectedAnswer?.quizId
+    ) {
       setSelectedAnswer(null);
+    }
   }, [quizItemData]);
 
   if (gameError || quizError) {
