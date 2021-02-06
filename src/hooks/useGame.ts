@@ -1,5 +1,5 @@
 import React from "react";
-import { useQuery } from "@apollo/client";
+import { ApolloError, useQuery } from "@apollo/client";
 
 import {
   GET_GAME,
@@ -7,6 +7,7 @@ import {
   GAME_STAGE_UPDATED,
   GAME_PLAYERS_UPDATED,
 } from "services/games.service";
+import { Game } from "models/Game";
 
 interface UseGameProps {
   shortId: string;
@@ -19,10 +20,15 @@ interface Subscription {
   currentQuizItem?: boolean;
 }
 
+interface UseGameReturn {
+  game: Game;
+  gameError: ApolloError | undefined;
+}
+
 const useGame = ({
   shortId,
   subscribe = { stage: false, players: false, currentQuizItem: false },
-}: UseGameProps) => {
+}: UseGameProps): UseGameReturn => {
   const { subscribeToMore, data: { game } = {}, error: gameError } = useQuery(
     GET_GAME,
     {
