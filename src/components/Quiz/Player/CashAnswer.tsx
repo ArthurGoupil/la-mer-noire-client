@@ -144,82 +144,89 @@ const CashAnswer: React.FC<CashAnswerProps> = ({
   return (
     <FullHeightContainer
       padding={0}
-      className="d-flex flex-column align-center justify-center "
+      className="d-flex flex-column align-center justify-center"
     >
-      <InputsContainer>
-        {answerWords.map((word, wordIndex) => {
-          return (
-            <div key={wordIndex} className="d-flex flex-wrap">
-              {word.split("").map((letter, letterIndex) => {
-                const letterIndexInFullAnswer = getLetterIndexInFullAnswer({
-                  wordIndex,
-                  letterIndex,
-                  answerWords,
-                });
+      <InputsAndButtonContainer>
+        <InputsContainer>
+          {answerWords.map((word, wordIndex) => {
+            return (
+              <div key={wordIndex} className="d-flex flex-wrap">
+                {word.split("").map((letter, letterIndex) => {
+                  const letterIndexInFullAnswer = getLetterIndexInFullAnswer({
+                    wordIndex,
+                    letterIndex,
+                    answerWords,
+                  });
 
-                return (
-                  <Input
-                    readOnly={!isPossibleToAnswer}
-                    ref={answerLettersRefsRecord[letterIndexInFullAnswer]}
-                    key={letterIndex}
-                    className="d-flex justify-center align-center"
-                    value={answerLettersValues[
-                      letterIndexInFullAnswer
-                    ].toUpperCase()}
-                    onClick={() => {
-                      answerLettersRefsRecord[
+                  return (
+                    <Input
+                      readOnly={!isPossibleToAnswer}
+                      ref={answerLettersRefsRecord[letterIndexInFullAnswer]}
+                      key={letterIndex}
+                      className="d-flex justify-center align-center"
+                      value={answerLettersValues[
                         letterIndexInFullAnswer
-                      ].current?.setSelectionRange(1, 1);
-                    }}
-                    onKeyDown={(e) => {
-                      if (isPossibleToAnswer) {
-                        if (e.key.length === 1) {
-                          setAnswerLettersValues({
-                            ...answerLettersValues,
-                            [letterIndexInFullAnswer]: e.key,
-                          });
-                          answerLettersRefsRecord[
-                            letterIndexInFullAnswer + 1
-                          ]?.current?.focus();
-                        } else if (e.key === "Backspace") {
-                          setAnswerLettersValues({
-                            ...answerLettersValues,
-                            [letterIndexInFullAnswer]: "",
-                          });
-                          answerLettersRefsRecord[
-                            letterIndexInFullAnswer - 1
-                          ]?.current?.focus();
-                        } else if (e.key === "Enter") {
-                          handleAnswer();
+                      ].toUpperCase()}
+                      onClick={() => {
+                        answerLettersRefsRecord[
+                          letterIndexInFullAnswer
+                        ].current?.setSelectionRange(1, 1);
+                      }}
+                      onKeyDown={(e) => {
+                        if (isPossibleToAnswer) {
+                          if (e.key.length === 1) {
+                            setAnswerLettersValues({
+                              ...answerLettersValues,
+                              [letterIndexInFullAnswer]: e.key,
+                            });
+                            answerLettersRefsRecord[
+                              letterIndexInFullAnswer + 1
+                            ]?.current?.focus();
+                          } else if (e.key === "Backspace") {
+                            setAnswerLettersValues({
+                              ...answerLettersValues,
+                              [letterIndexInFullAnswer]: "",
+                            });
+                            answerLettersRefsRecord[
+                              letterIndexInFullAnswer - 1
+                            ]?.current?.focus();
+                          } else if (e.key === "Enter") {
+                            handleAnswer();
+                          }
                         }
-                      }
-                    }}
-                    onChange={() => {}}
-                    inputWidth={inputWidth}
-                  />
-                );
-              })}
-            </div>
-          );
-        })}
-      </InputsContainer>
-      <Button
-        label={
-          quizId === currentAnswer?.quizId
-            ? "Déjà répondu !"
-            : isTooLate
-            ? "Too late !"
-            : "Répondre"
-        }
-        onClick={handleAnswer}
-        disabled={!isPossibleToAnswer}
-      />
+                      }}
+                      onChange={() => {}}
+                      inputWidth={inputWidth}
+                      tabIndex={0}
+                    />
+                  );
+                })}
+              </div>
+            );
+          })}
+        </InputsContainer>
+        <Button
+          label={
+            quizId === currentAnswer?.quizId
+              ? "Déjà répondu !"
+              : isTooLate
+              ? "Too late !"
+              : "Répondre"
+          }
+          onClick={handleAnswer}
+          disabled={!isPossibleToAnswer}
+        />
+      </InputsAndButtonContainer>
       <FullWidthContainer className="d-flex flex-start">
         <TimeBar disabled={!isPossibleToAnswer} />
       </FullWidthContainer>
     </FullHeightContainer>
   );
 };
+
+const InputsAndButtonContainer = styled.div`
+  margin-bottom: 80px;
+`;
 
 const Input = styled.input<{ inputWidth: number }>`
   width: ${(props) => props.inputWidth}px;
@@ -249,7 +256,8 @@ const TimeBar = styled.div<{ disabled: boolean }>`
   opacity: ${(props) => (props.disabled ? 0 : 1)};
   transition: opacity 1s;
   position: absolute;
-  bottom: 20px;
+  top: 0;
+
   @keyframes transformX {
     from {
       width: 0%;
