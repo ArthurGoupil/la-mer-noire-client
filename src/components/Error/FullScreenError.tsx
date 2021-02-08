@@ -2,7 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 
-import FullContainer from "components/Utils/FullContainer";
+import FullHeightContainer from "components/Utils/FullHeightContainer";
 
 interface FullScreenErrorProps {
   errorLabel: string;
@@ -16,14 +16,14 @@ const FullScreenError: React.FC<FullScreenErrorProps> = ({
   linkLabel,
 }): JSX.Element => {
   return (
-    <FullContainer className="d-flex flex-column align-center justify-center">
+    <FullHeightContainer className="d-flex flex-column align-center justify-center">
       <ErrorWrapper>{errorLabel}</ErrorWrapper>
       {link && linkLabel && (
         <LinkWrapper>
           <Link to={link}>{linkLabel}</Link>
         </LinkWrapper>
       )}
-    </FullContainer>
+    </FullHeightContainer>
   );
 };
 

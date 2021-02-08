@@ -1,5 +1,7 @@
-export enum EGameUserType {
+enum EUserType {
   join = "join",
-  question = "question",
+  host = "host",
   play = "play",
 }
+
+export default EUserType;

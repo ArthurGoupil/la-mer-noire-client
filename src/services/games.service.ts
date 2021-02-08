@@ -1,28 +1,35 @@
 import { DocumentNode, gql } from "@apollo/client";
 
+const gameData = `
+  _id
+  shortId
+  name
+  stage
+  players {
+    player {
+      _id
+      name
+    }
+    points
+  }
+  currentPlayers {
+    _id
+    name
+  }
+  currentQuizItem {
+    quizId
+    level
+    quizItemId
+  }
+  createdAt
+`;
+
 // QUERIES
 
 export const GET_GAME: DocumentNode = gql`
   query Game($shortId: String!) {
     game(shortId: $shortId) {
-      _id
-      shortId
-      name
-      stage
-      players {
-        _id
-        name
-      }
-      currentPlayers {
-        _id
-        name
-      }
-      currentQuizItem {
-        quizId
-        level
-        quizItemId
-      }
-      createdAt
+      ${gameData}
     }
   }
 `;
@@ -77,8 +84,10 @@ export const GAME_PLAYERS_UPDATED: DocumentNode = gql`
       shortId
       name
       players {
-        _id
-        name
+        player {
+          _id
+          name
+        }
       }
       createdAt
     }
@@ -88,23 +97,7 @@ export const GAME_PLAYERS_UPDATED: DocumentNode = gql`
 export const GAME_STAGE_UPDATED: DocumentNode = gql`
   subscription OnGameStageUpdated($shortId: String!) {
     gameStageUpdated(shortId: $shortId) {
-      _id
-      shortId
-      name
-      stage
-      players {
-        _id
-        name
-      }
-      currentPlayers {
-        _id
-        name
-      }
-      currentQuizItem {
-        quizId
-        level
-        quizItemId
-      }
+    ${gameData}
     }
   }
 `;
@@ -112,23 +105,7 @@ export const GAME_STAGE_UPDATED: DocumentNode = gql`
 export const GAME_CURRENT_QUIZ_ITEM_UPDATED: DocumentNode = gql`
   subscription OnGameCurrentQuizItemUpdated($shortId: String!) {
     gameCurrentQuizItemUpdated(shortId: $shortId) {
-      _id
-      shortId
-      name
-      stage
-      players {
-        _id
-        name
-      }
-      currentPlayers {
-        _id
-        name
-      }
-      currentQuizItem {
-        quizId
-        level
-        quizItemId
-      }
+     ${gameData}
     }
   }
 `;

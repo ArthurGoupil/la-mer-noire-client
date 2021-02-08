@@ -2,7 +2,7 @@ import React from "react";
 import { ApolloError, useLazyQuery, useMutation } from "@apollo/client";
 
 import { GET_QUIZ, GET_RANDOM_QUIZ_ID } from "services/quizzes.service";
-import { CurrentQuizItem, Game } from "models/Game";
+import { CurrentQuizItem, Game, QuizItemId, QuizItemLevel } from "models/Game";
 import {
   GET_GAME,
   UPDATE_GAME_CURRENT_QUIZ_ITEM,
@@ -12,19 +12,23 @@ import { QuizItemData, QuizItem } from "models/Quiz";
 interface UseQuizProps {
   game: Game;
   isHost: boolean;
+  quizItemLevel?: QuizItemLevel;
+  quizItemId?: QuizItemId;
   resetAnswers?: () => void;
 }
 
 interface UseQuizReturn {
-  quizItemData: QuizItemData | null;
+  quizItemData: QuizItemData;
   quizLoading: boolean;
   quizError: ApolloError | undefined;
-  generateNewQuestion: () => void;
+  generateNewQuizItem: () => void;
 }
 
 const useQuiz = ({
   game,
   isHost,
+  quizItemLevel,
+  quizItemId,
   resetAnswers,
 }: UseQuizProps): UseQuizReturn => {
   const [
@@ -32,9 +36,7 @@ const useQuiz = ({
     setCurrentQuizItem,
   ] = React.useState<CurrentQuizItem | null>(null);
 
-  const [quizItemData, setQuizItemData] = React.useState<QuizItemData | null>(
-    null,
-  );
+  const [quizItemData, setQuizItemData] = React.useState<QuizItemData>();
 
   const [
     triggerGetRandomQuizId,
@@ -74,11 +76,11 @@ const useQuiz = ({
   }, [game]);
 
   React.useEffect(() => {
-    if (randomQuizId) {
+    if (isHost && randomQuizId && quizItemLevel && quizItemId) {
       const currentQuizItem: CurrentQuizItem = {
         quizId: randomQuizId,
-        level: "expert",
-        quizItemId: 5,
+        level: quizItemLevel,
+        quizItemId,
       };
       (async () =>
         await updateGameCurrentQuizItem({
@@ -89,7 +91,7 @@ const useQuiz = ({
         }))();
       setCurrentQuizItem(currentQuizItem);
     }
-  }, [randomQuizId]);
+  }, [randomQuizId, quizItemId, quizItemLevel]);
 
   React.useEffect(() => {
     if (currentQuizItem) {
@@ -104,14 +106,15 @@ const useQuiz = ({
         category: quiz.category,
         theme: quiz.theme,
         subTheme: quiz.subTheme,
-        quiz: quiz.quizItems[currentQuizItem.level].find(
-          (quiz: QuizItem) => quiz.quizItemId === currentQuizItem.quizItemId,
+        quiz: quiz.quizItems[quizItemLevel || currentQuizItem.level].find(
+          (quiz: QuizItem) =>
+            quiz.quizItemId === (quizItemId || currentQuizItem.quizItemId),
         ) as QuizItem,
       });
     }
-  }, [quiz]);
+  }, [quiz, currentQuizItem, quizItemId, quizItemLevel]);
 
-  const generateNewQuestion = (): void => {
+  const generateNewQuizItem = (): void => {
     if (randomQuizIdRefetch) {
       randomQuizIdRefetch();
     } else {
@@ -123,10 +126,10 @@ const useQuiz = ({
   };
 
   return {
-    quizItemData,
+    quizItemData: quizItemData as QuizItemData,
     quizLoading,
     quizError: quizError || randomQuizIdError,
-    generateNewQuestion,
+    generateNewQuizItem,
   };
 };
 

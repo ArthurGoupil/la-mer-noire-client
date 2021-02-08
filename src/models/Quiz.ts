@@ -28,3 +28,8 @@ export interface Quiz {
     expert: QuizItem[];
   };
 }
+
+export interface DuoAnswersIndexes {
+  quizId: string;
+  indexes: number[];
+}

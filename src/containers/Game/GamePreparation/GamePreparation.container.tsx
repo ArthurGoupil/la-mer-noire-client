@@ -5,51 +5,39 @@ import EStyles from "constants/Styling.constants";
 import GameCodeBloc from "components/GamePreparation/GameCodeBloc";
 import PlayersList from "components/Utils/ItemsList";
 import LMNLogo from "components/Utils/LMNLogo";
-import FullContainer from "components/Utils/FullContainer";
-import FullScreenError from "components/Error/FullScreenError";
+import FullHeightContainer from "components/Utils/FullHeightContainer";
 import Loader from "components/Utils/Loader";
 import { handleLaunchGame } from "utils/Game/handleLaunchGame.utils";
 import LaunchGameButton from "components/Utils/Button";
 import CreatePlayer from "components/Utils/InputAndButton";
-import { handleCreatePlayer } from "utils/Game/handleCreatePlayer";
-import useGame from "hooks/useGame";
+import { handleCreatePlayer } from "utils/Game/handleCreatePlayer.utils";
+import EUserType from "constants/GameUserType.constants";
+import { Game } from "models/Game";
 
 interface GameJoinProps {
-  shortId: string;
-  userType: string;
+  game: Game;
+  userType: EUserType;
 }
 
 const GamePreparation: React.FC<GameJoinProps> = ({
-  shortId,
+  game,
   userType,
 }): JSX.Element => {
-  const { game, gameError } = useGame({
-    shortId,
-    subscribe: { players: true },
-  });
-
   const { handleLaunchGameCounter, launchGameButtonLabel } = handleLaunchGame({
-    shortId,
+    shortId: game.shortId,
   });
 
-  const handleJoinGame = handleCreatePlayer({ shortId });
-
-  if (gameError) {
-    return (
-      <FullScreenError
-        errorLabel="Partie non trouvée ! Vérifiez votre code de partie et réessayez."
-        link="/"
-        linkLabel="Revenir au menu principal"
-      />
-    );
-  }
+  const handleJoinGame = handleCreatePlayer({ shortId: game.shortId });
 
   return game ? (
-    <FullContainer className="d-flex flex-column align-center">
+    <FullHeightContainer className="d-flex flex-column align-center">
       <LMNLogo width="400px" margin={`20px 0 20px 0`} />
       <div className="d-flex flex-column align-center space-around flex-grow">
         <GameName>{game.name.toUpperCase()}</GameName>
-        <GameCodeBloc gameCode={game.shortId} show={userType === "host"} />
+        <GameCodeBloc
+          gameCode={game.shortId}
+          show={userType === EUserType.host}
+        />
         <CreatePlayer
           handleSubmit={handleJoinGame}
           buttonLabel="Rejoindre la partie"
@@ -62,7 +50,7 @@ const GamePreparation: React.FC<GameJoinProps> = ({
             Dans les starting blocks
           </PlayersTitle>
           <PlayersList
-            list={game.players}
+            list={game.players.map((playerData) => playerData.player)}
             labelKey="name"
             className="d-flex justify-center flex-wrap"
             maxWidth="600px"
@@ -75,11 +63,12 @@ const GamePreparation: React.FC<GameJoinProps> = ({
           label={launchGameButtonLabel}
           color={EStyles.darkBlue}
           backgroundColor={EStyles.turquoise}
+          borderColor={EStyles.turquoise}
           hoverColor={EStyles.darken_turquoise}
           show={userType === "host"}
         />
       </div>
-    </FullContainer>
+    </FullHeightContainer>
   ) : (
     <Loader containerHeight="100vh" />
   );

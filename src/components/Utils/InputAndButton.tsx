@@ -9,6 +9,7 @@ interface InputAndButtonProps {
   inputWidth?: number;
   margin?: string;
   placeholder?: string;
+  valueMaxLength?: number;
   show?: boolean;
 }
 
@@ -18,17 +19,17 @@ const InputAndButton: React.FC<InputAndButtonProps> = ({
   inputWidth = 250,
   margin = "0",
   placeholder = "",
+  valueMaxLength = 100,
   show = true,
 }): JSX.Element => {
-  let inputValue: HTMLInputElement | null;
+  const [value, setValue] = React.useState<string>("");
 
   return (
     <Form
       onSubmit={(e) => {
         e.preventDefault();
-        if (inputValue?.value) {
-          handleSubmit(inputValue.value);
-          inputValue.value = "";
+        if (value.length > 0) {
+          handleSubmit(value);
         }
       }}
       margin={margin}
@@ -36,12 +37,15 @@ const InputAndButton: React.FC<InputAndButtonProps> = ({
       className="d-flex justify-center align-center"
     >
       <Input
-        ref={(node) => {
-          inputValue = node;
+        value={value}
+        onChange={(e) => {
+          if (e.target.value.length <= valueMaxLength) {
+            setValue(e.target.value);
+          }
         }}
         inputWidth={inputWidth}
-        placeholder={placeholder}
         className="d-flex"
+        placeholder={placeholder}
       />
       <Button type="submit">{buttonLabel}</Button>
     </Form>

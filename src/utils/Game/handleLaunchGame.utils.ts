@@ -2,7 +2,7 @@ import React from "react";
 import { useMutation } from "@apollo/client";
 
 import { UPDATE_GAME_STAGE } from "services/games.service";
-import { EGameStage } from "constants/GameCurrentState.constants";
+import EGameStage from "constants/GameStage.constants";
 
 interface HandleLaunchGameProps {
   shortId: string;
@@ -21,7 +21,7 @@ export const handleLaunchGame = ({
 
   const launchGame = async () => {
     await updateGameStage({
-      variables: { stage: EGameStage.question, shortId },
+      variables: { stage: EGameStage.caPasseOuCaCash, shortId },
     });
   };
 

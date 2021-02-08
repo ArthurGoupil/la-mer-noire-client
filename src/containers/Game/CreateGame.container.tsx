@@ -3,7 +3,7 @@ import React from "react";
 import { useHistory } from "react-router-dom";
 
 import InputAndButton from "components/Utils/InputAndButton";
-import FullContainer from "components/Utils/FullContainer";
+import FullHeightContainer from "components/Utils/FullHeightContainer";
 import LMNLogo from "components/Utils/LMNLogo";
 import { CREATE_GAME } from "services/games.service";
 import AnimatedSubmarine from "components/Utils/AnimatedSubmarine";
@@ -19,14 +19,15 @@ const CreateGame: React.FC<{}> = (): JSX.Element => {
   };
 
   return (
-    <FullContainer className="d-flex flex-column align-center justify-center">
+    <FullHeightContainer className="d-flex flex-column align-center justify-center">
       <LMNLogo width="500px" margin={`0 0 20px 0`} />
       <InputAndButton
         handleSubmit={handleSubmit}
         buttonLabel="Créer la partie"
+        valueMaxLength={40}
       />
       <AnimatedSubmarine />
-    </FullContainer>
+    </FullHeightContainer>
   );
 };
 

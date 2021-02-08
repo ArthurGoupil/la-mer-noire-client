@@ -58,14 +58,17 @@ h2 {
 }
 h3 {
   font-family: "Boogaloo", cursive;
-  font-size: 20px;
-  line-height: 25px;
+  font-size: 30px;
+  line-height: 35px;
   font-weight: bold;
 }
 
 /* FLEXBOX */
 .d-flex {
   display: flex;
+}
+.justify-start {
+  justify-content: flex-start;
 }
 .justify-center {
   justify-content: center;

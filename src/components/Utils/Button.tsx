@@ -6,32 +6,35 @@ import EStyles from "constants/Styling.constants";
 interface ButtonProps {
   onClick: () => void;
   label: string;
+  disabled?: boolean;
   margin?: string;
   color?: string;
   backgroundColor?: string;
+  borderColor?: string;
   hoverColor?: string;
-  border?: string;
   show?: boolean;
 }
 
 const Button: React.FC<ButtonProps> = ({
   onClick,
   label,
+  disabled = false,
   margin = "10px",
   color = "white",
   backgroundColor = EStyles.orange,
   hoverColor = EStyles.darken_orange,
-  border = "none",
+  borderColor = EStyles.orange,
   show = true,
 }): JSX.Element => {
   return (
     <StyledButton
+      disabled={disabled}
       onClick={onClick}
       margin={margin}
       color={color}
       backgroundColor={backgroundColor}
       hoverColor={hoverColor}
-      border={border}
+      borderColor={borderColor}
       show={show}
     >
       {label}
@@ -40,11 +43,12 @@ const Button: React.FC<ButtonProps> = ({
 };
 
 const StyledButton = styled.button<{
+  disabled: boolean;
   margin: string;
   color: string;
   backgroundColor: string;
+  borderColor: string;
   hoverColor: string;
-  border: string;
   show: boolean;
 }>`
   min-width: 70px;
@@ -54,10 +58,11 @@ const StyledButton = styled.button<{
   padding: 15px;
   margin: ${(props) => props.margin};
   border-radius: 100px;
-  border: ${(props) => props.border};
+  border: ${(props) => `5px solid ${props.borderColor}`};
   outline: none;
   transition: 0.2s background-color;
   display: ${(props) => (props.show ? "flex" : "none")};
+  opacity: ${(props) => (props.disabled ? 0.7 : 1)};
 
   &:hover {
     background-color: ${(props) => props.hoverColor};
