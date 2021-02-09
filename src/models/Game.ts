@@ -22,6 +22,7 @@ export interface CurrentQuizItem {
   quizId: string;
   level: QuizItemLevel;
   quizItemId: QuizItemId;
+  createdAtTimestamp: number;
 }
 export type QuizItemId = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10;
 export type QuizItemLevel = "beginner" | "intermediate" | "expert";

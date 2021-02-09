@@ -1,17 +1,16 @@
 import React from "react";
-import { useMutation } from "@apollo/client";
 import styled from "styled-components";
 
 import { Answer } from "models/Game";
 import EStyles from "constants/Styling.constants";
 import FullHeightContainer from "components/Utils/FullHeightContainer";
 import Button from "components/Utils/Button";
-import { setCookie } from "utils/cookies.utils";
 import ECookieName from "constants/Cookies.constants";
-import { GIVE_ANSWER } from "services/games.service";
 import useCookie from "hooks/useCookie";
-import getLettersRecordFromString from "utils/Quiz/getLettersRecordFromString";
-import FullWidthContainer from "components/Utils/FullWidthContainer";
+import getLettersRecordFromString from "utils/Quiz/getLettersRecordFromString.utils";
+import isMobile from "utils/isMobile.utils";
+import getLetterIndexInSentence from "utils/Quiz/getLetterIndexInSentence.utils";
+import setAnswer from "utils/Game/setAnswer.utils";
 
 interface CashAnswerProps {
   shortId: string;
@@ -19,30 +18,7 @@ interface CashAnswerProps {
   playerId: string;
   answer: string;
   setSelectedAnswer: (value: React.SetStateAction<Answer | null>) => void;
-  givenTimeInSeconds?: number;
 }
-
-interface GetLetterIndexInFullAnswerProps {
-  wordIndex: number;
-  letterIndex: number;
-  answerWords: string[];
-}
-
-const getLetterIndexInFullAnswer = ({
-  wordIndex,
-  letterIndex,
-  answerWords,
-}: GetLetterIndexInFullAnswerProps): number => {
-  let letterIndexInFullAnswer = 0;
-  for (let i = 0; i <= wordIndex; i++) {
-    if (i === wordIndex) {
-      letterIndexInFullAnswer += letterIndex;
-    } else {
-      letterIndexInFullAnswer += answerWords[i].length;
-    }
-  }
-  return letterIndexInFullAnswer;
-};
 
 const CashAnswer: React.FC<CashAnswerProps> = ({
   shortId,
@@ -50,9 +26,21 @@ const CashAnswer: React.FC<CashAnswerProps> = ({
   playerId,
   answer,
   setSelectedAnswer,
-  givenTimeInSeconds = 20,
 }): JSX.Element => {
-  const [giveAnswer] = useMutation(GIVE_ANSWER);
+  const [
+    answerLettersValuesRecord,
+    setAnswerLettersValuesRecord,
+  ] = React.useState<Record<string, string>>(
+    getLettersRecordFromString({ word: answer, returnsEmptyString: true }),
+  );
+
+  const handleSetAnswer = setAnswer({
+    shortId,
+    quizId,
+    answer: Object.values(answerLettersValuesRecord).join(""),
+    playerId,
+    setSelectedAnswer,
+  });
 
   const currentAnswer = useCookie<Answer>({
     prefix: shortId,
@@ -61,31 +49,14 @@ const CashAnswer: React.FC<CashAnswerProps> = ({
 
   React.useEffect(() => {
     if (currentAnswer?.quizId === quizId) {
-      setAnswerLettersValues(
+      setAnswerLettersValuesRecord(
         getLettersRecordFromString({
           word: currentAnswer.answer,
-          isEmptyString: false,
+          returnsEmptyString: false,
         }),
       );
     }
   }, []);
-
-  const [isTooLate, setIsTooLate] = React.useState<boolean>(false);
-
-  React.useEffect(() => {
-    let timeout: NodeJS.Timeout;
-    if (currentAnswer?.quizId !== quizId) {
-      timeout = setTimeout(() => {
-        setIsTooLate(true);
-      }, givenTimeInSeconds * 1000);
-    }
-    answerLettersRefsRecord[0]?.current?.focus();
-    return () => clearTimeout(timeout);
-  }, []);
-
-  const [answerLettersValues, setAnswerLettersValues] = React.useState<
-    Record<string, string>
-  >(getLettersRecordFromString({ word: answer, isEmptyString: true }));
 
   let longestWordLength = 0;
 
@@ -100,10 +71,10 @@ const CashAnswer: React.FC<CashAnswerProps> = ({
     }
     word.split("").forEach((letter, letterIndex) => {
       const ref = React.createRef();
-      const letterIndexInFullAnswer = getLetterIndexInFullAnswer({
+      const letterIndexInFullAnswer = getLetterIndexInSentence({
+        sentence: answerWords,
         wordIndex,
         letterIndex,
-        answerWords,
       });
       answerLettersRefsRecord[
         letterIndexInFullAnswer
@@ -117,87 +88,77 @@ const CashAnswer: React.FC<CashAnswerProps> = ({
       ? (window.innerWidth - 20 - longestWordLength * 4) / longestWordLength
       : (window.innerWidth - 20 - 4 * 4) / 4;
 
-  const handleAnswer = async () => {
-    setSelectedAnswer({
-      quizId,
-      answer: Object.values(answerLettersValues).join(""),
-    });
-    setCookie({
-      prefix: shortId,
-      cookieName: ECookieName.currentAnswer,
-      cookieValue: {
-        quizId,
-        answer: Object.values(answerLettersValues).join(""),
-      },
-    });
-    await giveAnswer({
-      variables: {
-        shortId,
-        playerId,
-        answer: Object.values(answerLettersValues).join(""),
-      },
-    });
-  };
-
-  const isPossibleToAnswer = quizId !== currentAnswer?.quizId && !isTooLate;
+  const isPossibleToAnswer = quizId !== currentAnswer?.quizId;
+  const isPossibleToSubmit =
+    isPossibleToAnswer &&
+    Object.keys(answerLettersValuesRecord).reduce((acc, cur) => {
+      return (
+        acc &&
+        answerLettersValuesRecord[cur].length === 1 &&
+        answerLettersValuesRecord[cur] !== " "
+      );
+    }, true);
 
   return (
     <FullHeightContainer
       padding={0}
-      className="d-flex flex-column align-center justify-center"
+      className="d-flex flex-column align-center"
     >
-      <InputsAndButtonContainer>
+      <div className="d-flex flex-column">
         <InputsContainer>
           {answerWords.map((word, wordIndex) => {
             return (
               <div key={wordIndex} className="d-flex flex-wrap">
                 {word.split("").map((letter, letterIndex) => {
-                  const letterIndexInFullAnswer = getLetterIndexInFullAnswer({
+                  const letterIndexInFullAnswer = getLetterIndexInSentence({
+                    sentence: answerWords,
                     wordIndex,
                     letterIndex,
-                    answerWords,
                   });
 
                   return (
                     <Input
+                      type="text"
+                      autoFocus={letterIndexInFullAnswer === 0}
                       readOnly={!isPossibleToAnswer}
                       ref={answerLettersRefsRecord[letterIndexInFullAnswer]}
                       key={letterIndex}
                       className="d-flex justify-center align-center"
-                      value={answerLettersValues[
+                      value={answerLettersValuesRecord[
                         letterIndexInFullAnswer
-                      ].toUpperCase()}
+                      ]?.toUpperCase()}
                       onClick={() => {
                         answerLettersRefsRecord[
                           letterIndexInFullAnswer
                         ].current?.setSelectionRange(1, 1);
                       }}
                       onKeyDown={(e) => {
-                        if (isPossibleToAnswer) {
-                          if (e.key.length === 1) {
-                            setAnswerLettersValues({
-                              ...answerLettersValues,
-                              [letterIndexInFullAnswer]: e.key,
-                            });
-                            answerLettersRefsRecord[
-                              letterIndexInFullAnswer + 1
-                            ]?.current?.focus();
-                          } else if (e.key === "Backspace") {
-                            setAnswerLettersValues({
-                              ...answerLettersValues,
-                              [letterIndexInFullAnswer]: "",
-                            });
+                        if (e.key === "Backspace") {
+                          setAnswerLettersValuesRecord({
+                            ...answerLettersValuesRecord,
+                            [letterIndexInFullAnswer]: "",
+                          }),
                             answerLettersRefsRecord[
                               letterIndexInFullAnswer - 1
                             ]?.current?.focus();
-                          } else if (e.key === "Enter") {
-                            handleAnswer();
-                          }
+                        } else if (e.key === "Enter") {
+                          handleSetAnswer();
                         }
                       }}
-                      onChange={() => {}}
+                      onChange={(e) => {
+                        setAnswerLettersValuesRecord({
+                          ...answerLettersValuesRecord,
+                          [letterIndexInFullAnswer]: e.target.value.slice(
+                            e.target.value.length - 1,
+                          ),
+                        });
+                        if (e.target.value.length > 0) {
+                          answerLettersRefsRecord[
+                            letterIndexInFullAnswer + 1
+                          ]?.current?.focus();
+                        }
+                      }}
                       inputWidth={inputWidth}
-                      tabIndex={0}
                     />
                   );
                 })}
@@ -206,27 +167,30 @@ const CashAnswer: React.FC<CashAnswerProps> = ({
           })}
         </InputsContainer>
         <Button
-          label={
-            quizId === currentAnswer?.quizId
-              ? "Déjà répondu !"
-              : isTooLate
-              ? "Too late !"
-              : "Répondre"
-          }
-          onClick={handleAnswer}
-          disabled={!isPossibleToAnswer}
+          label={isPossibleToAnswer ? "Répondre" : "Réponse envoyée !"}
+          onClick={handleSetAnswer}
+          margin="0 10px"
+          disabled={!isPossibleToSubmit}
         />
-      </InputsAndButtonContainer>
-      <FullWidthContainer className="d-flex flex-start">
-        <TimeBar disabled={!isPossibleToAnswer} />
-      </FullWidthContainer>
+      </div>
+      {isMobile() && (
+        <div className="d-flex flex-grow align-center">
+          <Button
+            label="Afficher le clavier"
+            backgroundColor={EStyles.blue}
+            borderColor={EStyles.blue}
+            hoverColor={EStyles.darken_blue}
+            onClick={() => {
+              answerLettersRefsRecord[0]?.current?.focus();
+            }}
+            margin="0 10px"
+            disabled={!isPossibleToAnswer}
+          />
+        </div>
+      )}
     </FullHeightContainer>
   );
 };
-
-const InputsAndButtonContainer = styled.div`
-  margin-bottom: 80px;
-`;
 
 const Input = styled.input<{ inputWidth: number }>`
   width: ${(props) => props.inputWidth}px;
@@ -245,24 +209,6 @@ const Input = styled.input<{ inputWidth: number }>`
 
 const InputsContainer = styled.div`
   margin-bottom: 20px;
-`;
-
-const TimeBar = styled.div<{ disabled: boolean }>`
-  width: 100%;
-  height: 40px;
-  background-color: ${EStyles.red};
-  animation: transformX 20s linear;
-  border-radius: 5px;
-  opacity: ${(props) => (props.disabled ? 0 : 1)};
-  transition: opacity 1s;
-  position: absolute;
-  top: 0;
-
-  @keyframes transformX {
-    from {
-      width: 0%;
-    }
-  }
 `;
 
 export default CashAnswer;

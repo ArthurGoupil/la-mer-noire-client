@@ -10,7 +10,7 @@ import AnimatedSubmarine from "components/Utils/AnimatedSubmarine";
 
 const CreateGame: React.FC<{}> = (): JSX.Element => {
   const history = useHistory();
-  const [createGame] = useMutation(CREATE_GAME);
+  const [createGame, { loading }] = useMutation(CREATE_GAME);
 
   const handleSubmit = async (name: string) => {
     const createdGame = (await createGame({ variables: { name } })).data
@@ -25,6 +25,7 @@ const CreateGame: React.FC<{}> = (): JSX.Element => {
         handleSubmit={handleSubmit}
         buttonLabel="Créer la partie"
         valueMaxLength={40}
+        isLoading={loading}
       />
       <AnimatedSubmarine />
     </FullHeightContainer>

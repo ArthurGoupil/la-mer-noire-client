@@ -24,11 +24,6 @@ const getRandomDuoAnswersIndexes = ({
     duoAnswers.push(answerIndex);
   }
 
-  console.log("answer", answer);
-  console.log("choices", choices);
-  console.log("indexes", indexes);
-  console.log("wrongAnswerIndex", wrongAnswerIndex);
-
   return duoAnswers;
 };
 

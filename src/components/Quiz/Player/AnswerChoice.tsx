@@ -1,13 +1,11 @@
 import React from "react";
-import { useMutation } from "@apollo/client";
 import styled from "styled-components";
 
-import { GIVE_ANSWER } from "services/games.service";
 import EStyles from "constants/Styling.constants";
 import useCookie from "hooks/useCookie";
 import ECookieName from "constants/Cookies.constants";
 import { Answer } from "models/Game";
-import { setCookie } from "utils/cookies.utils";
+import setAnswer from "utils/Game/setAnswer.utils";
 
 interface AnswerChoiceProps {
   color: string;
@@ -28,10 +26,17 @@ const AnswerChoice: React.FC<AnswerChoiceProps> = ({
   selectedAnswer,
   setSelectedAnswer,
 }): JSX.Element => {
-  const [giveAnswer] = useMutation(GIVE_ANSWER);
   const currentAnswer = useCookie<Answer>({
     prefix: shortId,
     cookieName: ECookieName.currentAnswer,
+  });
+
+  const handleSetAnswer = setAnswer({
+    shortId,
+    quizId,
+    answer,
+    playerId,
+    setSelectedAnswer,
   });
 
   React.useEffect(() => {
@@ -54,19 +59,7 @@ const AnswerChoice: React.FC<AnswerChoiceProps> = ({
       }
       onClick={async () => {
         if (!selectedAnswer && currentAnswer?.quizId !== quizId) {
-          setSelectedAnswer({ quizId, answer });
-          setCookie({
-            prefix: shortId,
-            cookieName: ECookieName.currentAnswer,
-            cookieValue: { quizId, answer },
-          });
-          await giveAnswer({
-            variables: {
-              shortId,
-              playerId,
-              answer,
-            },
-          });
+          handleSetAnswer();
         }
       }}
     >

@@ -5,14 +5,17 @@ import Loader from "components/Utils/Loader";
 import { Answer, Game } from "models/Game";
 import useQuiz from "hooks/useQuiz";
 import FullScreenError from "components/Error/FullScreenError";
-// import CarreAnswers from "components/Quiz/Player/CarreAnswers";
+import CarreAnswers from "components/Quiz/Player/CarreAnswers";
 // import DuoAnswers from "components/Quiz/Player/DuoAnswers";
-import getRandomDuoAnswersIndexes from "utils/Quiz/getRandomDuoAnswersIndexes";
+// import CashAnswer from "components/Quiz/Player/CashAnswer";
+import getRandomDuoAnswersIndexes from "utils/Quiz/getRandomDuoAnswersIndexes.utils";
 import { setCookie } from "utils/cookies.utils";
 import ECookieName from "constants/Cookies.constants";
 import useCookie from "hooks/useCookie";
 import { DuoAnswersIndexes } from "models/Quiz";
-import CashAnswer from "components/Quiz/Player/CashAnswer";
+import FullHeightContainer from "components/Utils/FullHeightContainer";
+import TimeBar from "components/Quiz/Others/TimeBar";
+import useRemainingTime from "hooks/useRemainingTime";
 
 interface PlayerProps {
   game: Game;
@@ -33,6 +36,10 @@ const Player: React.FC<PlayerProps> = ({ game, playerId }): JSX.Element => {
       cookieName: ECookieName.duoAnswersIndexes,
     }),
   );
+  const remainingTime = useRemainingTime({
+    timestampReference: quizItemData?.createdAtTimestamp,
+    duration: 20,
+  });
 
   const [selectedAnswer, setSelectedAnswer] = React.useState<Answer | null>(
     null,
@@ -73,14 +80,15 @@ const Player: React.FC<PlayerProps> = ({ game, playerId }): JSX.Element => {
 
   return !quizLoading && quizItemData && duoAnswersIndexes ? (
     <PlayerContainer className="d-flex flex-column">
-      {/* <CarreAnswers
+      <TimeBar totalTime={20} remainingTime={remainingTime} />
+      <CarreAnswers
         shortId={game.shortId}
         quizId={quizItemData.quizId}
         choices={quizItemData.quiz.choices}
         playerId={playerId}
         selectedAnswer={selectedAnswer}
         setSelectedAnswer={setSelectedAnswer}
-      /> */}
+      />
       {/* <DuoAnswers
         shortId={game.shortId}
         quizId={quizItemData.quizId}
@@ -91,16 +99,18 @@ const Player: React.FC<PlayerProps> = ({ game, playerId }): JSX.Element => {
         selectedAnswer={selectedAnswer}
         setSelectedAnswer={setSelectedAnswer}
       /> */}
-      <CashAnswer
+      {/* <CashAnswer
         shortId={game.shortId}
         quizId={quizItemData.quizId}
         playerId={playerId}
         answer={quizItemData.quiz.answer}
         setSelectedAnswer={setSelectedAnswer}
-      />
+      /> */}
     </PlayerContainer>
   ) : (
-    <Loader containerHeight="100vh" />
+    <FullHeightContainer className="d-flex justify-center align-center">
+      <Loader />
+    </FullHeightContainer>
   );
 };
 

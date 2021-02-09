@@ -2,6 +2,7 @@ import React from "react";
 import styled from "styled-components";
 
 import EStyles from "constants/Styling.constants";
+import Loader from "./Loader";
 
 interface InputAndButtonProps {
   handleSubmit: (name: string) => void;
@@ -10,6 +11,7 @@ interface InputAndButtonProps {
   margin?: string;
   placeholder?: string;
   valueMaxLength?: number;
+  isLoading?: boolean;
   show?: boolean;
 }
 
@@ -20,6 +22,7 @@ const InputAndButton: React.FC<InputAndButtonProps> = ({
   margin = "0",
   placeholder = "",
   valueMaxLength = 100,
+  isLoading = false,
   show = true,
 }): JSX.Element => {
   const [value, setValue] = React.useState<string>("");
@@ -47,7 +50,10 @@ const InputAndButton: React.FC<InputAndButtonProps> = ({
         className="d-flex"
         placeholder={placeholder}
       />
-      <Button type="submit">{buttonLabel}</Button>
+      <Button type="submit" className="d-flex justify-center align-center">
+        <LabelContainer isLoading={isLoading}>{buttonLabel}</LabelContainer>
+        {isLoading && <Loader isForButton />}
+      </Button>
     </Form>
   );
 };
@@ -66,7 +72,7 @@ const Input = styled.input<{ inputWidth: number }>`
   text-align: center;
   padding: 10px;
   border-radius: 100px;
-  border: 5px solid ${EStyles.orange};
+  border: 5px solid ${EStyles.lightBlue};
   outline: none;
   transition: 0.2s border;
 
@@ -76,25 +82,30 @@ const Input = styled.input<{ inputWidth: number }>`
   }
 
   &:focus {
-    border: 5px solid ${EStyles.darken_orange};
+    border: 5px solid ${EStyles.darken_lightBlue};
   }
 `;
 
 const Button = styled.button`
   color: white;
-  background-color: ${EStyles.orange};
+  background-color: ${EStyles.lightBlue};
   text-align: center;
   padding: 10px;
   margin: 10px;
   border-radius: 100px;
   outline: none;
-  border: 5px solid ${EStyles.orange};
+  border: 5px solid ${EStyles.lightBlue};
   transition: 0.2s background-color;
   white-space: nowrap;
+  font-weight: 500;
 
   &:hover {
-    background-color: ${EStyles.darken_orange};
+    background-color: ${EStyles.darken_lightBlue};
   }
+`;
+
+const LabelContainer = styled.div<{ isLoading: boolean }>`
+  opacity: ${(props) => (props.isLoading ? 0 : 1)};
 `;
 
 export default InputAndButton;

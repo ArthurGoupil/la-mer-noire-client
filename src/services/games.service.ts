@@ -20,6 +20,7 @@ const gameData = `
     quizId
     level
     quizItemId
+    createdAtTimestamp
   }
   createdAt
 `;

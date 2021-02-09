@@ -13,6 +13,7 @@ export interface QuizItemData {
   category: Category;
   theme: string;
   subTheme: string;
+  createdAtTimestamp: number;
   quiz: QuizItem;
 }
 

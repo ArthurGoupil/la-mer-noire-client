@@ -2,92 +2,46 @@ import React from "react";
 import styled from "styled-components";
 
 interface LoaderProps {
-  containerHeight?: string;
+  isForButton?: boolean;
 }
 
 const Loader: React.FC<LoaderProps> = ({
-  containerHeight = "100%",
+  isForButton = false,
 }): JSX.Element => {
-  return (
-    <LoaderContainer
-      className="d-flex justify-center align-center"
-      containerHeight={containerHeight}
-    >
-      <Bubble />
-      <BubbleAnimate />
-      <BubbleAnimateDelay />
-    </LoaderContainer>
-  );
+  return <LoaderContainer isForButton={isForButton} />;
 };
 
-export default Loader;
-
-const LoaderContainer = styled.div<{ containerHeight: string }>`
-  position: relative;
-  width: 100%;
-  height: ${(props) => props.containerHeight};
-  display: inline-block;
-  margin: 0 auto;
-`;
-
-const Bubble = styled.div`
+const LoaderContainer = styled.div<{ isForButton: boolean }>`
+  width: ${(props) => (props.isForButton ? "25px" : "70px")};
+  height: ${(props) => (props.isForButton ? "25px" : "70px")};
+  background-color: white;
   position: absolute;
-  top: 50%;
-  left: 0;
-  -webkit-transform: translate(-50%, -50%);
-  -moz-transform: translate(-50%, -50%);
-  -ms-transform: translate(-50%, -50%);
-  -o-transform: translate(-50%, -50%);
-  transform: translate(-50%, -50%);
-  right: 0;
-  margin: 0 auto;
-  content: "";
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: white;
-  opacity: 0;
-`;
 
-const BubbleAnimate = styled(Bubble)`
-  -webkit-animation: bubbleEffect 2s ease-out infinite;
-  -moz-animation: bubbleEffect 2s ease-out infinite;
-  -ms-animation: bubbleEffect 2s ease-out infinite;
-  -o-animation: bubbleEffect 2s ease-out infinite;
-  animation: bubbleEffect 2s ease-out infinite;
-`;
+  border-radius: 100%;
+  -webkit-animation: sk-scaleout 1s infinite ease-in-out;
+  animation: sk-scaleout 1s infinite ease-in-out;
 
-const BubbleAnimateDelay = styled(BubbleAnimate)`
-  -webkit-animation: bubbleEffect 2s ease-out 1s infinite;
-  -moz-animation: bubbleEffect 2s ease-out 1s infinite;
-  -ms-animation: bubbleEffect 2s ease-out 1s infinite;
-  -o-animation: bubbleEffect 2s ease-out 1s infinite;
-  animation: bubbleEffect 2s ease-out 1s infinite;
-
-  @-webkit-keyframes bubbleEffect {
+  @-webkit-keyframes sk-scaleout {
     0% {
-      opacity: 1;
+      -webkit-transform: scale(0);
     }
     100% {
-      -webkit-transform: scale(10);
-      -moz-transform: scale(10);
-      -ms-transform: scale(10);
-      -o-transform: scale(10);
-      transform: scale(10);
+      -webkit-transform: scale(1);
       opacity: 0;
     }
   }
-  @keyframes bubbleEffect {
+
+  @keyframes sk-scaleout {
     0% {
-      opacity: 1;
+      -webkit-transform: scale(0);
+      transform: scale(0);
     }
     100% {
-      -webkit-transform: scale(10);
-      -moz-transform: scale(10);
-      -ms-transform: scale(10);
-      -o-transform: scale(10);
-      transform: scale(10);
+      -webkit-transform: scale(1);
+      transform: scale(1);
       opacity: 0;
     }
   }
 `;
+
+export default Loader;

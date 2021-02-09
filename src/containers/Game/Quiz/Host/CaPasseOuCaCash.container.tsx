@@ -7,7 +7,9 @@ import { QuizItemData } from "models/Quiz";
 import QuestionDisplay from "components/Quiz/Host/Question";
 import { Answer, Game, PlayerData } from "models/Game";
 import { GenerateNewQuizItemDataProps } from "./Host.container";
-import isValidAnswer from "utils/Quiz/isValidAnswer";
+import isValidAnswer from "utils/Quiz/isValidAnswer.utils";
+import TimeBar from "components/Quiz/Others/TimeBar";
+import useRemainingTime from "hooks/useRemainingTime";
 
 interface CaPasseOuCaCashProps {
   game: Game;
@@ -24,41 +26,48 @@ const CaPasseOuCaCash: React.FC<CaPasseOuCaCashProps> = ({
   quizItemData,
   playersAnswers,
 }): JSX.Element => {
+  const remainingTime = useRemainingTime({
+    timestampReference: quizItemData?.createdAtTimestamp,
+    duration: 20,
+  });
+
   return (
-    <FullWidthContainer className="d-flex flex-column align-center space-around flex-grow">
-      <div className="d-flex flex-column align-center">
-        <CategoryTheme
-          categoryName={quizItemData.category.name}
-          theme={quizItemData.theme}
-          subTheme={quizItemData.subTheme}
-        />
-        <QuestionDisplay quizItem={quizItemData.quiz} showAnswers={false} />
-      </div>
-      <div className="d-flex">
-        {game.players.map((playerData: PlayerData) => {
-          let color;
-          if (playersAnswers[playerData.player._id]) {
-            if (
-              isValidAnswer({
-                answer: quizItemData.quiz.answer,
-                givenAnswer: playersAnswers[playerData.player._id].answer,
-              })
-            ) {
-              color = "lime";
+    <FullWidthContainer className="d-flex flex-column space-between flex-grow">
+      <div className="d-flex flex-column align-center space-around flex-grow">
+        <div className="d-flex flex-column align-center">
+          <CategoryTheme
+            categoryName={quizItemData.category.name}
+            theme={quizItemData.theme}
+            subTheme={quizItemData.subTheme}
+          />
+          <QuestionDisplay quizItem={quizItemData.quiz} showAnswers={false} />
+        </div>
+        <div className="d-flex">
+          {game.players.map((playerData: PlayerData) => {
+            let color;
+            if (playersAnswers[playerData.player._id]) {
+              if (
+                isValidAnswer({
+                  answer: quizItemData.quiz.answer,
+                  givenAnswer: playersAnswers[playerData.player._id].answer,
+                })
+              ) {
+                color = "lime";
+              } else {
+                color = "red";
+              }
             } else {
-              color = "red";
+              color = "white";
             }
-          } else {
-            color = "white";
-          }
-          return (
-            <PlayerContainer key={playerData.player._id} color={color}>
-              {playerData.player.name}
-            </PlayerContainer>
-          );
-        })}
+            return (
+              <PlayerContainer key={playerData.player._id} color={color}>
+                {playerData.player.name}
+              </PlayerContainer>
+            );
+          })}
+        </div>
       </div>
-      {/* <Button label="Nouvelle question" onClick={generateNewQuestion} /> */}
+      <TimeBar totalTime={20} remainingTime={remainingTime} />
     </FullWidthContainer>
   );
 };

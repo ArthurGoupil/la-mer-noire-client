@@ -81,6 +81,7 @@ const useQuiz = ({
         quizId: randomQuizId,
         level: quizItemLevel,
         quizItemId,
+        createdAtTimestamp: Math.floor(Date.now() / 1000),
       };
       (async () =>
         await updateGameCurrentQuizItem({
@@ -106,6 +107,7 @@ const useQuiz = ({
         category: quiz.category,
         theme: quiz.theme,
         subTheme: quiz.subTheme,
+        createdAtTimestamp: currentQuizItem.createdAtTimestamp,
         quiz: quiz.quizItems[quizItemLevel || currentQuizItem.level].find(
           (quiz: QuizItem) =>
             quiz.quizItemId === (quizItemId || currentQuizItem.quizItemId),

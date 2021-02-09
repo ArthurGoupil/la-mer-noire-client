@@ -14,7 +14,7 @@ import GameName from "components/Quiz/Host/GameName";
 import StageName from "components/Quiz/Host/StageName";
 import getRandomQuizItemId from "utils/Quiz/getRandomQuizItemId.utils";
 import FullScreenError from "components/Error/FullScreenError";
-import getHostCurrentContainer from "utils/Game/getHostCurrentContainer";
+import getHostCurrentContainer from "utils/Game/getHostCurrentContainer.utils";
 
 interface HostProps {
   game: Game;
@@ -106,7 +106,9 @@ const Host: React.FC<HostProps> = ({ game }): JSX.Element => {
       })}
     </FullHeightContainer>
   ) : (
-    <Loader containerHeight="100vh" />
+    <FullHeightContainer className="d-flex justify-center align-center">
+      <Loader />
+    </FullHeightContainer>
   );
 };
 

@@ -21,13 +21,14 @@ const Button: React.FC<ButtonProps> = ({
   disabled = false,
   margin = "10px",
   color = "white",
-  backgroundColor = EStyles.orange,
-  hoverColor = EStyles.darken_orange,
-  borderColor = EStyles.orange,
+  backgroundColor = EStyles.lightBlue,
+  hoverColor = EStyles.darken_lightBlue,
+  borderColor = EStyles.lightBlue,
   show = true,
 }): JSX.Element => {
   return (
     <StyledButton
+      className="d-flex justify-center"
       disabled={disabled}
       onClick={onClick}
       margin={margin}
@@ -63,6 +64,7 @@ const StyledButton = styled.button<{
   transition: 0.2s background-color;
   display: ${(props) => (props.show ? "flex" : "none")};
   opacity: ${(props) => (props.disabled ? 0.7 : 1)};
+  font-weight: 500;
 
   &:hover {
     background-color: ${(props) => props.hoverColor};

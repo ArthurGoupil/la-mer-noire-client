@@ -5,7 +5,8 @@ import Loader from "components/Utils/Loader";
 import FullScreenError from "components/Error/FullScreenError";
 import useGame from "hooks/useGame";
 import EUserType from "constants/GameUserType.constants";
-import getGameCurrentContainer from "utils/Game/getGameCurrentContainer";
+import getGameCurrentContainer from "utils/Game/getGameCurrentContainer.utils";
+import FullHeightContainer from "components/Utils/FullHeightContainer";
 
 interface Params {
   shortId: string;
@@ -32,7 +33,9 @@ const Game: React.FC<{}> = (): JSX.Element => {
   return game ? (
     getGameCurrentContainer({ game, userType })
   ) : (
-    <Loader containerHeight="100vh" />
+    <FullHeightContainer className="d-flex justify-center align-center">
+      <Loader />
+    </FullHeightContainer>
   );
 };
 

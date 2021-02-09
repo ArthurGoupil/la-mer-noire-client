@@ -61,16 +61,14 @@ const GamePreparation: React.FC<GameJoinProps> = ({
         <LaunchGameButton
           onClick={handleLaunchGameCounter}
           label={launchGameButtonLabel}
-          color={EStyles.darkBlue}
-          backgroundColor={EStyles.turquoise}
-          borderColor={EStyles.turquoise}
-          hoverColor={EStyles.darken_turquoise}
           show={userType === "host"}
         />
       </div>
     </FullHeightContainer>
   ) : (
-    <Loader containerHeight="100vh" />
+    <FullHeightContainer className="d-flex justify-center align-center">
+      <Loader />
+    </FullHeightContainer>
   );
 };
 
