@@ -3,10 +3,10 @@ import React from "react";
 import HostContainer from "containers/Game/Quiz/Host/Host.container";
 import PlayerContainer from "containers/Game/Quiz/Player/Player.container";
 import ECookieName from "constants/Cookies.constants";
-import FullScreenError from "components/Error/FullScreenError";
-import useCookie from "hooks/useCookie";
-import { Game } from "models/Game";
+import FullScreenError from "components/Utils/FullScreenError";
+import { Game } from "models/Game.model";
 import EUserType from "constants/GameUserType.constants";
+import { getCookie } from "utils/cookies.util";
 
 interface QuizProps {
   game: Game;
@@ -14,7 +14,7 @@ interface QuizProps {
 }
 
 const Quiz: React.FC<QuizProps> = ({ game, userType }): JSX.Element => {
-  const playerId = useCookie<string>({
+  const playerId = getCookie<string>({
     prefix: game.shortId,
     cookieName: ECookieName.playerId,
   });

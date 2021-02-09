@@ -2,10 +2,10 @@ import React from "react";
 import { useParams } from "react-router-dom";
 
 import Loader from "components/Utils/Loader";
-import FullScreenError from "components/Error/FullScreenError";
-import useGame from "hooks/useGame";
+import FullScreenError from "components/Utils/FullScreenError";
+import useGame from "hooks/useGame.hook";
 import EUserType from "constants/GameUserType.constants";
-import getGameCurrentContainer from "utils/Game/getGameCurrentContainer.utils";
+import getGameCurrentContainer from "utils/Game/getGameCurrentContainer.util";
 import FullHeightContainer from "components/Utils/FullHeightContainer";
 
 interface Params {

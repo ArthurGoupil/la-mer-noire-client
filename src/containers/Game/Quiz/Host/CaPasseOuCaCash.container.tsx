@@ -3,13 +3,13 @@ import styled from "styled-components";
 
 import FullWidthContainer from "components/Utils/FullWidthContainer";
 import CategoryTheme from "components/Quiz/Host/CategoryTheme";
-import { QuizItemData } from "models/Quiz";
+import { QuizItemData } from "models/Quiz.model";
 import QuestionDisplay from "components/Quiz/Host/Question";
-import { Answer, Game, PlayerData } from "models/Game";
+import { Answer, Game, PlayerData } from "models/Game.model";
 import { GenerateNewQuizItemDataProps } from "./Host.container";
-import isValidAnswer from "utils/Quiz/isValidAnswer.utils";
+import isValidAnswer from "utils/Quiz/isValidAnswer.util";
 import TimeBar from "components/Quiz/Others/TimeBar";
-import useRemainingTime from "hooks/useRemainingTime";
+import getQuizRemainingTime from "utils/Quiz/getQuizRemainingTime.util";
 
 interface CaPasseOuCaCashProps {
   game: Game;
@@ -26,7 +26,7 @@ const CaPasseOuCaCash: React.FC<CaPasseOuCaCashProps> = ({
   quizItemData,
   playersAnswers,
 }): JSX.Element => {
-  const remainingTime = useRemainingTime({
+  const remainingTime = getQuizRemainingTime({
     timestampReference: quizItemData?.createdAtTimestamp,
     duration: 20,
   });

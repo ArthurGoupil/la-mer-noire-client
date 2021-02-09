@@ -2,12 +2,17 @@ import React from "react";
 import { ApolloError, useLazyQuery, useMutation } from "@apollo/client";
 
 import { GET_QUIZ, GET_RANDOM_QUIZ_ID } from "services/quizzes.service";
-import { CurrentQuizItem, Game, QuizItemId, QuizItemLevel } from "models/Game";
+import {
+  CurrentQuizItem,
+  Game,
+  QuizItemId,
+  QuizItemLevel,
+} from "models/Game.model";
 import {
   GET_GAME,
   UPDATE_GAME_CURRENT_QUIZ_ITEM,
 } from "services/games.service";
-import { QuizItemData, QuizItem } from "models/Quiz";
+import { QuizItemData, QuizItem } from "models/Quiz.model";
 
 interface UseQuizProps {
   game: Game;

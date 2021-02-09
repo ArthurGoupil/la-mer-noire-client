@@ -3,18 +3,17 @@ import { useSubscription } from "@apollo/client";
 
 import { PLAYER_ANSWERED } from "services/games.service";
 import Loader from "components/Utils/Loader";
-import { Answer, Game, QuizItemId, QuizItemLevel } from "models/Game";
-import { setCookie } from "utils/cookies.utils";
+import { Answer, Game, QuizItemId, QuizItemLevel } from "models/Game.model";
+import { getCookie, setCookie } from "utils/cookies.util";
 import ECookieName from "constants/Cookies.constants";
-import useCookie from "hooks/useCookie";
-import useQuiz from "hooks/useQuiz";
+import useQuiz from "hooks/useQuiz.hook";
 import FullHeightContainer from "components/Utils/FullHeightContainer";
 import LMNLogo from "components/Utils/LMNLogo";
 import GameName from "components/Quiz/Host/GameName";
 import StageName from "components/Quiz/Host/StageName";
-import getRandomQuizItemId from "utils/Quiz/getRandomQuizItemId.utils";
-import FullScreenError from "components/Error/FullScreenError";
-import getHostCurrentContainer from "utils/Game/getHostCurrentContainer.utils";
+import getRandomQuizItemId from "utils/Quiz/getRandomQuizItemId.util";
+import FullScreenError from "components/Utils/FullScreenError";
+import getHostCurrentContainer from "utils/Game/getHostCurrentContainer.util";
 
 interface HostProps {
   game: Game;
@@ -59,7 +58,7 @@ const Host: React.FC<HostProps> = ({ game }): JSX.Element => {
   const [playersAnswers, setPlayersAnswers] = React.useState<
     Record<string, Answer>
   >(
-    useCookie({
+    getCookie({
       prefix: game.shortId,
       cookieName: ECookieName.playersAnswers,
     }) || {},

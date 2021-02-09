@@ -2,20 +2,19 @@ import React from "react";
 import styled from "styled-components";
 
 import Loader from "components/Utils/Loader";
-import { Answer, Game } from "models/Game";
-import useQuiz from "hooks/useQuiz";
-import FullScreenError from "components/Error/FullScreenError";
+import { Answer, Game } from "models/Game.model";
+import useQuiz from "hooks/useQuiz.hook";
+import FullScreenError from "components/Utils/FullScreenError";
 import CarreAnswers from "components/Quiz/Player/CarreAnswers";
 // import DuoAnswers from "components/Quiz/Player/DuoAnswers";
 // import CashAnswer from "components/Quiz/Player/CashAnswer";
-import getRandomDuoAnswersIndexes from "utils/Quiz/getRandomDuoAnswersIndexes.utils";
-import { setCookie } from "utils/cookies.utils";
+import getRandomDuoAnswersIndexes from "utils/Quiz/getRandomDuoAnswersIndexes.util";
+import { setCookie, getCookie } from "utils/cookies.util";
 import ECookieName from "constants/Cookies.constants";
-import useCookie from "hooks/useCookie";
-import { DuoAnswersIndexes } from "models/Quiz";
+import { DuoAnswersIndexes } from "models/Quiz.model";
 import FullHeightContainer from "components/Utils/FullHeightContainer";
 import TimeBar from "components/Quiz/Others/TimeBar";
-import useRemainingTime from "hooks/useRemainingTime";
+import getQuizRemainingTime from "utils/Quiz/getQuizRemainingTime.util";
 
 interface PlayerProps {
   game: Game;
@@ -31,12 +30,12 @@ const Player: React.FC<PlayerProps> = ({ game, playerId }): JSX.Element => {
     duoAnswersIndexes,
     setDuoAnswersIndexes,
   ] = React.useState<DuoAnswersIndexes>(
-    useCookie({
+    getCookie({
       prefix: game.shortId,
       cookieName: ECookieName.duoAnswersIndexes,
     }),
   );
-  const remainingTime = useRemainingTime({
+  const remainingTime = getQuizRemainingTime({
     timestampReference: quizItemData?.createdAtTimestamp,
     duration: 20,
   });

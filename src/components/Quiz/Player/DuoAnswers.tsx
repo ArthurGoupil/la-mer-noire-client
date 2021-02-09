@@ -2,7 +2,7 @@ import React from "react";
 
 import EStyles from "constants/Styling.constants";
 import AnswerChoice from "./AnswerChoice";
-import { Answer } from "models/Game";
+import { Answer } from "models/Game.model";
 
 interface CarreAnswersProps {
   shortId: string;

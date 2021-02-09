@@ -1,16 +1,16 @@
 import React from "react";
 import styled from "styled-components";
 
-import { Answer } from "models/Game";
+import { Answer } from "models/Game.model";
 import EStyles from "constants/Styling.constants";
 import FullHeightContainer from "components/Utils/FullHeightContainer";
 import Button from "components/Utils/Button";
 import ECookieName from "constants/Cookies.constants";
-import useCookie from "hooks/useCookie";
-import getLettersRecordFromString from "utils/Quiz/getLettersRecordFromString.utils";
-import isMobile from "utils/isMobile.utils";
-import getLetterIndexInSentence from "utils/Quiz/getLetterIndexInSentence.utils";
-import setAnswer from "utils/Game/setAnswer.utils";
+import getLettersRecordFromString from "utils/Quiz/getLettersRecordFromString.util";
+import isMobile from "utils/isMobile.util";
+import getLetterIndexInSentence from "utils/Quiz/getLetterIndexInSentence.util";
+import useAnswer from "hooks/useAnswer.hook";
+import { getCookie } from "utils/cookies.util";
 
 interface CashAnswerProps {
   shortId: string;
@@ -34,15 +34,9 @@ const CashAnswer: React.FC<CashAnswerProps> = ({
     getLettersRecordFromString({ word: answer, returnsEmptyString: true }),
   );
 
-  const handleSetAnswer = setAnswer({
-    shortId,
-    quizId,
-    answer: Object.values(answerLettersValuesRecord).join(""),
-    playerId,
-    setSelectedAnswer,
-  });
+  const setAnswer = useAnswer();
 
-  const currentAnswer = useCookie<Answer>({
+  const currentAnswer = getCookie<Answer>({
     prefix: shortId,
     cookieName: ECookieName.currentAnswer,
   });
@@ -142,7 +136,15 @@ const CashAnswer: React.FC<CashAnswerProps> = ({
                               letterIndexInFullAnswer - 1
                             ]?.current?.focus();
                         } else if (e.key === "Enter") {
-                          handleSetAnswer();
+                          setAnswer({
+                            shortId,
+                            quizId,
+                            answer: Object.values(
+                              answerLettersValuesRecord,
+                            ).join(""),
+                            playerId,
+                            setSelectedAnswer,
+                          });
                         }
                       }}
                       onChange={(e) => {
@@ -168,7 +170,15 @@ const CashAnswer: React.FC<CashAnswerProps> = ({
         </InputsContainer>
         <Button
           label={isPossibleToAnswer ? "Répondre" : "Réponse envoyée !"}
-          onClick={handleSetAnswer}
+          onClick={() =>
+            setAnswer({
+              shortId,
+              quizId,
+              answer: Object.values(answerLettersValuesRecord).join(""),
+              playerId,
+              setSelectedAnswer,
+            })
+          }
           margin="0 10px"
           disabled={!isPossibleToSubmit}
         />

@@ -3,14 +3,14 @@ import styled from "styled-components";
 
 import EStyles from "constants/Styling.constants";
 import EGameStage from "constants/GameStage.constants";
-import useGameStageName from "hooks/useGameStageName";
+import getStageName from "utils/Game/getStageName.util";
 
 interface StageNameProps {
   gameStage: EGameStage;
 }
 
 const StageName: React.FC<StageNameProps> = ({ gameStage }): JSX.Element => {
-  const stageName = useGameStageName({ gameStage });
+  const stageName = getStageName({ gameStage });
 
   return <Name>{stageName}</Name>;
 };

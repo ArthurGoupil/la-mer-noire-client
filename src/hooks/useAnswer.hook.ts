@@ -1,9 +1,9 @@
 import { useMutation } from "@apollo/client";
 
 import ECookieName from "constants/Cookies.constants";
-import { Answer } from "models/Game";
+import { Answer } from "models/Game.model";
 import { GIVE_ANSWER } from "services/games.service";
-import { setCookie } from "utils/cookies.utils";
+import { setCookie } from "utils/cookies.util";
 
 interface SetAnswerProps {
   shortId: string;
@@ -13,16 +13,16 @@ interface SetAnswerProps {
   setSelectedAnswer: React.Dispatch<React.SetStateAction<Answer | null>>;
 }
 
-const setAnswer = ({
-  shortId,
-  quizId,
-  answer,
-  playerId,
-  setSelectedAnswer,
-}: SetAnswerProps): (() => void) => {
+const useAnswer = (): ((props: SetAnswerProps) => void) => {
   const [giveAnswer] = useMutation(GIVE_ANSWER);
 
-  const handleSetAnswer = async (): Promise<void> => {
+  const setAnswer = async ({
+    shortId,
+    quizId,
+    answer,
+    playerId,
+    setSelectedAnswer,
+  }: SetAnswerProps): Promise<void> => {
     setSelectedAnswer({ quizId, answer });
     setCookie({
       prefix: shortId,
@@ -38,7 +38,7 @@ const setAnswer = ({
     });
   };
 
-  return handleSetAnswer;
+  return setAnswer;
 };
 
-export default setAnswer;
+export default useAnswer;

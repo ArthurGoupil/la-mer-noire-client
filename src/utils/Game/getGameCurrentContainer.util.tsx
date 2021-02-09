@@ -1,9 +1,9 @@
-import { Game } from "models/Game";
+import { Game } from "models/Game.model";
 import GamePreparationContainer from "containers/Game/GamePreparation/GamePreparation.container";
 import EGameStage from "constants/GameStage.constants";
 import EUserType from "constants/GameUserType.constants";
 import QuizContainer from "containers/Game/Quiz/Quiz.container";
-import FullScreenError from "components/Error/FullScreenError";
+import FullScreenError from "components/Utils/FullScreenError";
 
 interface GetGameCurrentContainerProps {
   game: Game;

@@ -2,10 +2,10 @@ import React from "react";
 import styled from "styled-components";
 
 import EStyles from "constants/Styling.constants";
-import useCookie from "hooks/useCookie";
 import ECookieName from "constants/Cookies.constants";
-import { Answer } from "models/Game";
-import setAnswer from "utils/Game/setAnswer.utils";
+import { Answer } from "models/Game.model";
+import { getCookie } from "utils/cookies.util";
+import useAnswer from "hooks/useAnswer.hook";
 
 interface AnswerChoiceProps {
   color: string;
@@ -26,18 +26,12 @@ const AnswerChoice: React.FC<AnswerChoiceProps> = ({
   selectedAnswer,
   setSelectedAnswer,
 }): JSX.Element => {
-  const currentAnswer = useCookie<Answer>({
+  const currentAnswer = getCookie<Answer>({
     prefix: shortId,
     cookieName: ECookieName.currentAnswer,
   });
 
-  const handleSetAnswer = setAnswer({
-    shortId,
-    quizId,
-    answer,
-    playerId,
-    setSelectedAnswer,
-  });
+  const setAnswer = useAnswer();
 
   React.useEffect(() => {
     if (currentAnswer?.quizId === quizId) {
@@ -59,7 +53,13 @@ const AnswerChoice: React.FC<AnswerChoiceProps> = ({
       }
       onClick={async () => {
         if (!selectedAnswer && currentAnswer?.quizId !== quizId) {
-          handleSetAnswer();
+          setAnswer({
+            shortId,
+            quizId,
+            answer,
+            playerId,
+            setSelectedAnswer,
+          });
         }
       }}
     >

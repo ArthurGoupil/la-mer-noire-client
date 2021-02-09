@@ -4,18 +4,18 @@ import { useMutation } from "@apollo/client";
 import { UPDATE_GAME_STAGE } from "services/games.service";
 import EGameStage from "constants/GameStage.constants";
 
-interface HandleLaunchGameProps {
+interface useLaunchGameProps {
   shortId: string;
 }
 
-interface HandleLaunchGameReturn {
+interface UseLaunchGameReturn {
   handleLaunchGameCounter: () => void;
   launchGameButtonLabel: string;
 }
 
-export const handleLaunchGame = ({
+const useLaunchGame = ({
   shortId,
-}: HandleLaunchGameProps): HandleLaunchGameReturn => {
+}: useLaunchGameProps): UseLaunchGameReturn => {
   const [launchCounter, setLaunchCounter] = React.useState<number | null>(null);
   const [updateGameStage] = useMutation(UPDATE_GAME_STAGE);
 
@@ -53,3 +53,5 @@ export const handleLaunchGame = ({
       : "Tout le monde est prêt !",
   };
 };
+
+export default useLaunchGame;

@@ -1,14 +1,14 @@
-interface UseRemainingTimeProps {
+interface GetQuizRemainingTimeProps {
   timestampReference: number;
   duration: number;
 }
 
-const useRemainingTime = ({
+const getQuizRemainingTime = ({
   timestampReference,
   duration,
-}: UseRemainingTimeProps): number => {
+}: GetQuizRemainingTimeProps): number => {
   const currentTime = Math.floor(Date.now() / 1000);
   return timestampReference + duration - currentTime;
 };
 
-export default useRemainingTime;
+export default getQuizRemainingTime;

@@ -2,7 +2,7 @@ import React from "react";
 import styled from "styled-components";
 
 import FullWidthContainer from "components/Utils/FullWidthContainer";
-import { QuizItem } from "models/Quiz";
+import { QuizItem } from "models/Quiz.model";
 import EStyles from "constants/Styling.constants";
 
 interface QuestionDisplayProps {

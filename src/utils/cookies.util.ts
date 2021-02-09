@@ -7,6 +7,15 @@ interface SetGameCookieProps {
   cookieValue: string | object;
 }
 
+interface GetCookieProps {
+  prefix: string;
+  cookieName: ECookieName;
+}
+
+export const getCookie = <T>({ prefix, cookieName }: GetCookieProps): T => {
+  return Cookies.getJSON(`${prefix}-${cookieName}`);
+};
+
 export const setCookie = ({
   prefix,
   cookieName,

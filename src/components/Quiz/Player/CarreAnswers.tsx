@@ -1,7 +1,7 @@
 import React from "react";
 
 import EStyles from "constants/Styling.constants";
-import { Answer } from "models/Game";
+import { Answer } from "models/Game.model";
 import AnswerChoice from "./AnswerChoice";
 
 interface CarreAnswersProps {

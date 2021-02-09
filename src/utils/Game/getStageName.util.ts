@@ -1,10 +1,10 @@
 import EGameStage from "constants/GameStage.constants";
 
-interface UseGameStageNameProps {
+interface GetStageNameProps {
   gameStage: EGameStage;
 }
 
-const useGameStageName = ({ gameStage }: UseGameStageNameProps): string => {
+const getStageName = ({ gameStage }: GetStageNameProps): string => {
   switch (gameStage) {
     case EGameStage.caPasseOuCaCash:
       return "ÇA PASSE OU ÇA CASH !";
@@ -13,4 +13,4 @@ const useGameStageName = ({ gameStage }: UseGameStageNameProps): string => {
   }
 };
 
-export default useGameStageName;
+export default getStageName;

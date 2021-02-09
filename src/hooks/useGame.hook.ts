@@ -7,7 +7,7 @@ import {
   GAME_STAGE_UPDATED,
   GAME_PLAYERS_UPDATED,
 } from "services/games.service";
-import { Game } from "models/Game";
+import { Game } from "models/Game.model";
 
 interface UseGameProps {
   shortId: string;

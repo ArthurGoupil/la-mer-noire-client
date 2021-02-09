@@ -1,8 +1,8 @@
-import { Answer, Game } from "models/Game";
+import { Answer, Game } from "models/Game.model";
 import EGameStage from "constants/GameStage.constants";
-import FullScreenError from "components/Error/FullScreenError";
+import FullScreenError from "components/Utils/FullScreenError";
 import CaPasseOuCaCashContainer from "containers/Game/Quiz/Host/CaPasseOuCaCash.container";
-import { QuizItemData } from "models/Quiz";
+import { QuizItemData } from "models/Quiz.model";
 import { GenerateNewQuizItemDataProps } from "containers/Game/Quiz/Host/Host.container";
 
 interface GetHostCurrentContainerProps {

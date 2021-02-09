@@ -1,5 +1,5 @@
 import EGameStage from "constants/GameStage.constants";
-import { Player } from "models/Player";
+import { Player } from "models/Player.model";
 
 export interface Game {
   _id: string;

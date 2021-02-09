@@ -7,12 +7,12 @@ import PlayersList from "components/Utils/ItemsList";
 import LMNLogo from "components/Utils/LMNLogo";
 import FullHeightContainer from "components/Utils/FullHeightContainer";
 import Loader from "components/Utils/Loader";
-import { handleLaunchGame } from "utils/Game/handleLaunchGame.utils";
+import useLaunchGame from "hooks/useLaunchGame.hook";
 import LaunchGameButton from "components/Utils/Button";
 import CreatePlayer from "components/Utils/InputAndButton";
-import { handleCreatePlayer } from "utils/Game/handleCreatePlayer.utils";
+import useJoinGame from "hooks/useJoinGame.hook";
 import EUserType from "constants/GameUserType.constants";
-import { Game } from "models/Game";
+import { Game } from "models/Game.model";
 
 interface GameJoinProps {
   game: Game;
@@ -23,11 +23,11 @@ const GamePreparation: React.FC<GameJoinProps> = ({
   game,
   userType,
 }): JSX.Element => {
-  const { handleLaunchGameCounter, launchGameButtonLabel } = handleLaunchGame({
+  const { handleLaunchGameCounter, launchGameButtonLabel } = useLaunchGame({
     shortId: game.shortId,
   });
 
-  const handleJoinGame = handleCreatePlayer({ shortId: game.shortId });
+  const handleJoinGame = useJoinGame({ shortId: game.shortId });
 
   return game ? (
     <FullHeightContainer className="d-flex flex-column align-center">
