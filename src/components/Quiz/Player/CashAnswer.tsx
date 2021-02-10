@@ -7,10 +7,10 @@ import FullHeightContainer from "components/Utils/FullHeightContainer";
 import Button from "components/Utils/Button";
 import ECookieName from "constants/Cookies.constants";
 import getLettersRecordFromString from "utils/Quiz/getLettersRecordFromString.util";
-import isMobile from "utils/isMobile.util";
 import getLetterIndexInSentence from "utils/Quiz/getLetterIndexInSentence.util";
 import useAnswer from "hooks/useAnswer.hook";
 import { getCookie } from "utils/cookies.util";
+import isDesktop from "utils/isDesktop.util";
 
 interface CashAnswerProps {
   shortId: string;
@@ -183,7 +183,7 @@ const CashAnswer: React.FC<CashAnswerProps> = ({
           disabled={!isPossibleToSubmit}
         />
       </div>
-      {isMobile() && (
+      {!isDesktop() && (
         <div className="d-flex flex-grow align-center">
           <Button
             label="Afficher le clavier"
@@ -209,7 +209,6 @@ const Input = styled.input<{ inputWidth: number }>`
   border: none;
   margin: 2px;
   border-radius: 5px;
-  color: white;
   text-align: center;
   vertical-align: middle;
   outline-color: ${EStyles.turquoise};

@@ -12,13 +12,10 @@ const GameName: React.FC<GameNameProps> = ({ gameName }): JSX.Element => {
 };
 
 const Name = styled.h3`
-  width: 250px;
+  font-size: 35px;
+  text-align: right;
   color: ${EStyles.yellow};
   text-shadow: 3px 3px 0 ${EStyles.redOrange};
-  text-align: left;
-  position: absolute;
-  left: 30px;
-  top: 30px;
 `;
 
 export default GameName;

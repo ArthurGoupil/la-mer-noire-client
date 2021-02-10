@@ -42,8 +42,7 @@ const QuestionDisplay: React.FC<QuestionDisplayProps> = ({
 };
 
 const QuestionContainer = styled.div`
-  color: white;
-  font-size: 25px;
+  font-size: 30px;
   line-height: 35px;
   padding: 10px;
   border-radius: ${EStyles.radius};
@@ -51,7 +50,6 @@ const QuestionContainer = styled.div`
   margin-bottom: 10px;
 `;
 const AnswerContainer = styled.div<{ color: string }>`
-  color: white;
   min-width: 30%;
   text-align: center;
   font-weight: bold;

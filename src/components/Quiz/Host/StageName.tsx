@@ -16,10 +16,10 @@ const StageName: React.FC<StageNameProps> = ({ gameStage }): JSX.Element => {
 };
 
 const Name = styled.h2`
+  font-size: 50px;
   color: ${EStyles.orange};
   text-shadow: 2px 2px 0 ${EStyles.yellow};
   text-align: center;
-  margin-bottom: 20px;
   font-style: italic;
 `;
 

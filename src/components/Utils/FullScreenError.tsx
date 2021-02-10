@@ -28,13 +28,11 @@ const FullScreenError: React.FC<FullScreenErrorProps> = ({
 };
 
 const ErrorWrapper = styled.div`
-  color: white;
   font-size: 20px;
   margin-bottom: 10px;
   text-align: center;
 `;
 const LinkWrapper = styled.div`
-  color: white;
   text-decoration: underline;
   text-align: center;
 `;

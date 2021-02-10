@@ -2,45 +2,34 @@ import { DocumentNode, gql } from "@apollo/client";
 
 // QUERIES
 
-export const GET_QUIZ: DocumentNode = gql`
-  query Quiz($id: ID!) {
-    quiz(id: $id) {
-      _id
+export const GET_QUIZ_ITEM_DATA: DocumentNode = gql`
+  query QuizItemData(
+    $quizId: ID!
+    $level: String!
+    $quizItemId: Int!
+    $createdAtTimestamp: Int!
+  ) {
+    quizItemData(
+      quizId: $quizId
+      level: $level
+      quizItemId: $quizItemId
+      createdAtTimestamp: $createdAtTimestamp
+    ) {
+      quizId
       category {
+        _id
         name
       }
       theme
       subTheme
-      difficulty
-      quizItems {
-        beginner {
-          quizItemId
-          question
-          choices
-          answer
-          anecdote
-        }
-        intermediate {
-          quizItemId
-          question
-          choices
-          answer
-          anecdote
-        }
-        expert {
-          quizItemId
-          question
-          choices
-          answer
-          anecdote
-        }
+      createdAtTimestamp
+      quiz {
+        quizItemId
+        question
+        choices
+        answer
+        anecdote
       }
     }
-  }
-`;
-
-export const GET_RANDOM_QUIZ_ID: DocumentNode = gql`
-  query RandomQuizId {
-    randomQuizId
   }
 `;

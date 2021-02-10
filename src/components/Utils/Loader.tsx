@@ -14,7 +14,7 @@ const Loader: React.FC<LoaderProps> = ({
 const LoaderContainer = styled.div<{ isForButton: boolean }>`
   width: ${(props) => (props.isForButton ? "25px" : "70px")};
   height: ${(props) => (props.isForButton ? "25px" : "70px")};
-  background-color: white;
+  background-;
   position: absolute;
 
   border-radius: 100%;

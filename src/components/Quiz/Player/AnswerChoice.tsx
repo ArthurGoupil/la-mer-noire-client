@@ -76,7 +76,6 @@ const AnswerContainer = styled.button<{
   width: calc(100% - 20px);
   height: 100%;
   margin: 10px;
-  color: white;
   text-shadow: 2px 2px 0px ${EStyles.darkBlue};
   font-weight: bold;
   background-color: ${(props) => props.color};

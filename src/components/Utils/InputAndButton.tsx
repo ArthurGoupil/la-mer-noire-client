@@ -87,7 +87,6 @@ const Input = styled.input<{ inputWidth: number }>`
 `;
 
 const Button = styled.button`
-  color: white;
   background-color: ${EStyles.lightBlue};
   text-align: center;
   padding: 10px;

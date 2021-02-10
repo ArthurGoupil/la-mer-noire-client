@@ -6,19 +6,17 @@ import CategoryTheme from "components/Quiz/Host/CategoryTheme";
 import { QuizItemData } from "models/Quiz.model";
 import QuestionDisplay from "components/Quiz/Host/Question";
 import { Answer, Game, PlayerData } from "models/Game.model";
-import { GenerateNewQuizItemDataProps } from "./Host.container";
 import isValidAnswer from "utils/Quiz/isValidAnswer.util";
 import TimeBar from "components/Quiz/Others/TimeBar";
-import getQuizRemainingTime from "utils/Quiz/getQuizRemainingTime.util";
+import PlayerAnswer from "components/Quiz/Host/PlayerAnswer";
+import FullHeightContainer from "components/Utils/FullHeightContainer";
+import Loader from "components/Utils/Loader";
+import useQuizRemainingTime from "hooks/useQuizRemainingTime.util";
 
 interface CaPasseOuCaCashProps {
   game: Game;
   quizItemData: QuizItemData;
   playersAnswers: Record<string, Answer>;
-  handleGenerateNewQuizItemData: ({
-    quizItemLevel,
-    quizItemId,
-  }: GenerateNewQuizItemDataProps) => void;
 }
 
 const CaPasseOuCaCash: React.FC<CaPasseOuCaCashProps> = ({
@@ -26,22 +24,16 @@ const CaPasseOuCaCash: React.FC<CaPasseOuCaCashProps> = ({
   quizItemData,
   playersAnswers,
 }): JSX.Element => {
-  const remainingTime = getQuizRemainingTime({
-    timestampReference: quizItemData?.createdAtTimestamp,
+  const remainingTime = useQuizRemainingTime({
+    timestampReference: quizItemData.createdAtTimestamp,
     duration: 20,
   });
 
-  return (
-    <FullWidthContainer className="d-flex flex-column space-between flex-grow">
-      <div className="d-flex flex-column align-center space-around flex-grow">
-        <div className="d-flex flex-column align-center">
-          <CategoryTheme
-            categoryName={quizItemData.category.name}
-            theme={quizItemData.theme}
-            subTheme={quizItemData.subTheme}
-          />
-          <QuestionDisplay quizItem={quizItemData.quiz} showAnswers={false} />
-        </div>
+  return remainingTime ? (
+    <FullWidthContainer className="d-flex flex-column align-center space-between flex-grow">
+      <div className="d-flex flex-column align-center justify-center flex-grow">
+        <QuestionDisplay quizItem={quizItemData.quiz} showAnswers={false} />
+        <PlayerAnswer />
         <div className="d-flex">
           {game.players.map((playerData: PlayerData) => {
             let color;
@@ -67,8 +59,17 @@ const CaPasseOuCaCash: React.FC<CaPasseOuCaCashProps> = ({
           })}
         </div>
       </div>
+      <CategoryTheme
+        categoryName={quizItemData.category.name}
+        theme={quizItemData.theme}
+        subTheme={quizItemData.subTheme}
+      />
       <TimeBar totalTime={20} remainingTime={remainingTime} />
     </FullWidthContainer>
+  ) : (
+    <FullHeightContainer className="d-flex justify-center align-center">
+      <Loader />
+    </FullHeightContainer>
   );
 };
 

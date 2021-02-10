@@ -34,7 +34,6 @@ const SmartphoneIcon = styled.img`
 `;
 
 const CodeText = styled.div`
-  color: white;
   font-size: 20px;
   line-height: 20px;
   margin-left: 20px;

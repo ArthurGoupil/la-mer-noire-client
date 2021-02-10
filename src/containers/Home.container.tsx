@@ -34,7 +34,6 @@ const Home: React.FC<{}> = (): JSX.Element => {
 };
 
 const CreateGameWrapper = styled.div`
-  color: white;
   font-size: 14px;
   line-height: 14px;
 `;

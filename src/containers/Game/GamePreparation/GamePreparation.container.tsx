@@ -26,7 +26,6 @@ const GamePreparation: React.FC<GameJoinProps> = ({
   const { handleLaunchGameCounter, launchGameButtonLabel } = useLaunchGame({
     shortId: game.shortId,
   });
-
   const handleJoinGame = useJoinGame({ shortId: game.shortId });
 
   return game ? (

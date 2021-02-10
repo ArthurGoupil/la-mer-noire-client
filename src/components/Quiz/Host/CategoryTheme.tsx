@@ -14,7 +14,7 @@ const CategoryTheme: React.FC<CategoryThemeProps> = ({
   subTheme,
 }): JSX.Element => {
   return (
-    <CategoryThemeContainer className="d-flex align-center">
+    <CategoryThemeContainer className="d-flex justify-center align-center">
       {categoryName}
       <ThemeContainer className="d-flex">
         {theme}
@@ -26,24 +26,18 @@ const CategoryTheme: React.FC<CategoryThemeProps> = ({
 
 const CategoryThemeContainer = styled.div`
   color: ${EStyles.turquoise};
-  text-align: center;
-  font-weight: bold;
-  padding: 15px;
-  border-radius: 100px;
-  border: 3px solid ${EStyles.blue};
-  margin-bottom: 20px;
+  font-weight: 600;
+  margin-bottom: 15px;
 `;
 const ThemeContainer = styled.div`
   color: white;
-  text-align: center;
-  border-radius: 100px;
-  margin-left: 10px;
+  font-weight: 500;
+  margin-left: 20px;
 `;
 const SubThemeContainer = styled.div`
   font-style: italic;
-  text-align: center;
-  font-weight: lighter;
-  margin-left: 10px;
+  font-weight: 300;
+  margin-left: 20px;
 `;
 
 export default CategoryTheme;

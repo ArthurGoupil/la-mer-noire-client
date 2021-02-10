@@ -13,8 +13,13 @@ import EStyles from "constants/Styling.constants";
 import Home from "containers/Home.container";
 import Game from "containers/Game/Game.container";
 import CreateGame from "containers/Game/CreateGame.container";
+import useWindowHeight from "hooks/useWindowHeight.hook";
+import ToggleFullScreen from "components/Utils/ToggleFullScreen";
+import isDesktop from "utils/isDesktop.util";
 
-const App: React.FC<{}> = (): JSX.Element => {
+const App: React.FC = (): JSX.Element => {
+  const height = useWindowHeight();
+
   const httpLink = new HttpLink({
     uri: process.env.REACT_APP_GRAPHQL_URL,
   });
@@ -51,7 +56,8 @@ const App: React.FC<{}> = (): JSX.Element => {
   return (
     <ApolloProvider client={apolloClient}>
       <Router>
-        <Main>
+        <Main height={height}>
+          {isDesktop() && <ToggleFullScreen />}
           <Switch>
             <Route path="/games/:shortId/:userType">
               <Game />
@@ -71,9 +77,9 @@ const App: React.FC<{}> = (): JSX.Element => {
 
 export default App;
 
-const Main = styled.main`
+const Main = styled.main<{ height: number }>`
   width: 100%;
-  min-height: ${window.innerHeight}px;
+  min-height: ${(props) => props.height}px;
   background: linear-gradient(
     to bottom,
     ${EStyles.blue} 0%,

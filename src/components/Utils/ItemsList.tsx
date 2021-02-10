@@ -52,7 +52,6 @@ const List = styled.ul<{ margin: string; maxWidth: string; show: boolean }>`
 
 const Item = styled.li`
   background-color: ${EStyles.darkBlue};
-  color: white;
   text-align: center;
   padding: 10px 15px;
   margin: 7px;
@@ -62,10 +61,6 @@ const Item = styled.li`
 
   &:hover {
     filter: brightness(1.2);
-  }
-
-  & a:visited {
-    color: white;
   }
 `;
 

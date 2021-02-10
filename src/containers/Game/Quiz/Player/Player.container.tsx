@@ -3,7 +3,6 @@ import styled from "styled-components";
 
 import Loader from "components/Utils/Loader";
 import { Answer, Game } from "models/Game.model";
-import useQuiz from "hooks/useQuiz.hook";
 import FullScreenError from "components/Utils/FullScreenError";
 import CarreAnswers from "components/Quiz/Player/CarreAnswers";
 // import DuoAnswers from "components/Quiz/Player/DuoAnswers";
@@ -14,7 +13,9 @@ import ECookieName from "constants/Cookies.constants";
 import { DuoAnswersIndexes } from "models/Quiz.model";
 import FullHeightContainer from "components/Utils/FullHeightContainer";
 import TimeBar from "components/Quiz/Others/TimeBar";
-import getQuizRemainingTime from "utils/Quiz/getQuizRemainingTime.util";
+import { useQuery } from "@apollo/client";
+import { GET_QUIZ_ITEM_DATA } from "services/quizzes.service";
+import useQuizRemainingTime from "hooks/useQuizRemainingTime.util";
 
 interface PlayerProps {
   game: Game;
@@ -22,20 +23,27 @@ interface PlayerProps {
 }
 
 const Player: React.FC<PlayerProps> = ({ game, playerId }): JSX.Element => {
-  const { quizItemData, quizLoading, quizError } = useQuiz({
-    game,
-    isHost: false,
+  const { shortId, currentQuizItem } = game;
+  const { quizId, level, quizItemId, createdAtTimestamp } = currentQuizItem;
+
+  const {
+    data: { quizItemData } = { quizItemData: null },
+    loading: quizItemDataLoading,
+    error: quizItemDataError,
+  } = useQuery(GET_QUIZ_ITEM_DATA, {
+    variables: { quizId, level, quizItemId, createdAtTimestamp },
   });
+
   const [
     duoAnswersIndexes,
     setDuoAnswersIndexes,
   ] = React.useState<DuoAnswersIndexes>(
     getCookie({
-      prefix: game.shortId,
+      prefix: shortId,
       cookieName: ECookieName.duoAnswersIndexes,
     }),
   );
-  const remainingTime = getQuizRemainingTime({
+  const remainingTime = useQuizRemainingTime({
     timestampReference: quizItemData?.createdAtTimestamp,
     duration: 20,
   });
@@ -59,7 +67,7 @@ const Player: React.FC<PlayerProps> = ({ game, playerId }): JSX.Element => {
         };
         setDuoAnswersIndexes(duoAnswersIndexesToStore);
         setCookie({
-          prefix: game.shortId,
+          prefix: shortId,
           cookieName: ECookieName.duoAnswersIndexes,
           cookieValue: duoAnswersIndexesToStore,
         });
@@ -67,7 +75,7 @@ const Player: React.FC<PlayerProps> = ({ game, playerId }): JSX.Element => {
     }
   }, [quizItemData]);
 
-  if (quizError) {
+  if (quizItemDataError) {
     return (
       <FullScreenError
         errorLabel="Erreur ! Quiz non trouvé."
@@ -77,11 +85,11 @@ const Player: React.FC<PlayerProps> = ({ game, playerId }): JSX.Element => {
     );
   }
 
-  return !quizLoading && quizItemData && duoAnswersIndexes ? (
+  return !quizItemDataLoading && quizItemData && duoAnswersIndexes ? (
     <PlayerContainer className="d-flex flex-column">
       <TimeBar totalTime={20} remainingTime={remainingTime} />
       <CarreAnswers
-        shortId={game.shortId}
+        shortId={shortId}
         quizId={quizItemData.quizId}
         choices={quizItemData.quiz.choices}
         playerId={playerId}
@@ -89,7 +97,7 @@ const Player: React.FC<PlayerProps> = ({ game, playerId }): JSX.Element => {
         setSelectedAnswer={setSelectedAnswer}
       />
       {/* <DuoAnswers
-        shortId={game.shortId}
+        shortId={shortId}
         quizId={quizItemData.quizId}
         choices={duoAnswersIndexes.indexes.map(
           (answerIndex) => quizItemData.quiz.choices[answerIndex],
@@ -99,7 +107,7 @@ const Player: React.FC<PlayerProps> = ({ game, playerId }): JSX.Element => {
         setSelectedAnswer={setSelectedAnswer}
       /> */}
       {/* <CashAnswer
-        shortId={game.shortId}
+        shortId={shortId}
         quizId={quizItemData.quizId}
         playerId={playerId}
         answer={quizItemData.quiz.answer}
