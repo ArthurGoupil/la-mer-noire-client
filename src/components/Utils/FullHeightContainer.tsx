@@ -14,6 +14,7 @@ const FullHeightContainer: React.FC<FullHeightContainerProps> = ({
   className = "d-flex justify-center align-center",
 }): JSX.Element => {
   const height = useWindowHeight();
+
   return (
     <Container className={className} height={height} padding={padding}>
       {children}

@@ -1,4 +1,5 @@
 import React from "react";
+import isDesktop from "utils/isDesktop.util";
 
 const useWindowHeight = (): number => {
   const [height, setHeight] = React.useState<number>(window.innerHeight);
@@ -6,11 +7,13 @@ const useWindowHeight = (): number => {
   const handleChangeHeight = () => setHeight(window.innerHeight);
 
   React.useEffect(() => {
-    window.addEventListener("resize", handleChangeHeight);
+    if (isDesktop()) {
+      window.addEventListener("resize", handleChangeHeight);
 
-    return () => {
-      window.removeEventListener("resize", handleChangeHeight);
-    };
+      return () => {
+        window.removeEventListener("resize", handleChangeHeight);
+      };
+    }
   }, []);
 
   return height;

@@ -60,7 +60,7 @@ const GamePreparation: React.FC<GameJoinProps> = ({
         <LaunchGameButton
           onClick={handleLaunchGameCounter}
           label={launchGameButtonLabel}
-          show={userType === "host"}
+          show={userType === EUserType.host}
         />
       </div>
     </FullHeightContainer>
