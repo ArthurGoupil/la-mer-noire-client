@@ -2,11 +2,8 @@ import React from "react";
 import styled from "styled-components";
 
 import Loader from "components/Utils/Loader";
-import { Answer, Game } from "models/Game.model";
+import { Answer, AnswerTypeChoice, Game } from "models/Game.model";
 import FullScreenError from "components/Utils/FullScreenError";
-import CarreAnswers from "components/Quiz/Player/CarreAnswers";
-// import DuoAnswers from "components/Quiz/Player/DuoAnswers";
-// import CashAnswer from "components/Quiz/Player/CashAnswer";
 import getRandomDuoAnswersIndexes from "utils/Quiz/getRandomDuoAnswersIndexes.util";
 import { setCookie, getCookie } from "utils/cookies.util";
 import ECookieName from "constants/Cookies.constants";
@@ -16,6 +13,8 @@ import TimeBar from "components/Quiz/Others/TimeBar";
 import { useQuery } from "@apollo/client";
 import { GET_QUIZ_ITEM_DATA } from "services/quizzes.service";
 import useQuizRemainingTime from "hooks/useQuizRemainingTime.util";
+import AnswerTypeSelection from "components/Quiz/Player/AnswerTypeSelection";
+import getAnswerTypeComponent from "utils/Game/getAnswerTypeComponent.util";
 
 interface PlayerProps {
   game: Game;
@@ -47,6 +46,21 @@ const Player: React.FC<PlayerProps> = ({ game, playerId }): JSX.Element => {
     timestampReference: quizItemData?.createdAtTimestamp,
     duration: 20,
   });
+
+  const [
+    answerTypeChoice,
+    setAnswerTypeChoice,
+  ] = React.useState<AnswerTypeChoice>(
+    getCookie({ prefix: shortId, cookieName: ECookieName.answerTypeChoice }),
+  );
+
+  React.useEffect(() => {
+    setCookie({
+      prefix: shortId,
+      cookieName: ECookieName.answerTypeChoice,
+      cookieValue: answerTypeChoice,
+    });
+  }, [answerTypeChoice]);
 
   const [selectedAnswer, setSelectedAnswer] = React.useState<Answer | null>(
     null,
@@ -88,31 +102,22 @@ const Player: React.FC<PlayerProps> = ({ game, playerId }): JSX.Element => {
   return !quizItemDataLoading && quizItemData && duoAnswersIndexes ? (
     <PlayerContainer className="d-flex flex-column">
       <TimeBar totalTime={20} remainingTime={remainingTime} />
-      <CarreAnswers
-        shortId={shortId}
-        quizId={quizItemData.quizId}
-        choices={quizItemData.quiz.choices}
-        playerId={playerId}
-        selectedAnswer={selectedAnswer}
-        setSelectedAnswer={setSelectedAnswer}
-      />
-      {/* <DuoAnswers
-        shortId={shortId}
-        quizId={quizItemData.quizId}
-        choices={duoAnswersIndexes.indexes.map(
-          (answerIndex) => quizItemData.quiz.choices[answerIndex],
-        )}
-        playerId={playerId}
-        selectedAnswer={selectedAnswer}
-        setSelectedAnswer={setSelectedAnswer}
-      /> */}
-      {/* <CashAnswer
-        shortId={shortId}
-        quizId={quizItemData.quizId}
-        playerId={playerId}
-        answer={quizItemData.quiz.answer}
-        setSelectedAnswer={setSelectedAnswer}
-      /> */}
+      {answerTypeChoice?.quizId !== quizId ? (
+        <AnswerTypeSelection
+          quizId={quizId}
+          setAnswerTypeChoice={setAnswerTypeChoice}
+        />
+      ) : (
+        getAnswerTypeComponent({
+          shortId,
+          playerId,
+          answerType: answerTypeChoice.answerType,
+          quizItemData,
+          duoAnswersIndexes,
+          selectedAnswer,
+          setSelectedAnswer,
+        })
+      )}
     </PlayerContainer>
   ) : (
     <FullHeightContainer className="d-flex justify-center align-center">

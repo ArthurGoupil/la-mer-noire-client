@@ -17,7 +17,7 @@ const Game: React.FC<{}> = (): JSX.Element => {
   const { shortId, userType } = useParams<Params>();
   const { game, gameError } = useGame({
     shortId,
-    subscribe: { stage: true, currentQuizItem: true, players: true },
+    subscribe: { stage: true, players: true },
   });
 
   if (gameError) {

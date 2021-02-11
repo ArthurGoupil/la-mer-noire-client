@@ -25,8 +25,9 @@ const DuoAnswers: React.FC<CarreAnswersProps> = ({
     <>
       <AnswerChoice
         color={EStyles.darkBlue}
-        answer={choices[0]}
+        quizAnswer={choices[0]}
         shortId={shortId}
+        answerType="duo"
         quizId={quizId}
         playerId={playerId}
         selectedAnswer={selectedAnswer}
@@ -34,8 +35,9 @@ const DuoAnswers: React.FC<CarreAnswersProps> = ({
       />
       <AnswerChoice
         color={EStyles.yellow}
-        answer={choices[1]}
+        quizAnswer={choices[1]}
         shortId={shortId}
+        answerType="duo"
         quizId={quizId}
         playerId={playerId}
         selectedAnswer={selectedAnswer}

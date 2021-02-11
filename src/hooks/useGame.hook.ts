@@ -3,7 +3,6 @@ import { ApolloError, useQuery } from "@apollo/client";
 
 import {
   GET_GAME,
-  GAME_CURRENT_QUIZ_ITEM_UPDATED,
   GAME_STAGE_UPDATED,
   GAME_PLAYERS_UPDATED,
 } from "services/games.service";
@@ -17,7 +16,6 @@ interface UseGameProps {
 interface Subscription {
   stage?: boolean;
   players?: boolean;
-  currentQuizItem?: boolean;
 }
 
 interface UseGameReturn {
@@ -27,7 +25,7 @@ interface UseGameReturn {
 
 const useGame = ({
   shortId,
-  subscribe = { stage: false, players: false, currentQuizItem: false },
+  subscribe = { stage: false, players: false },
 }: UseGameProps): UseGameReturn => {
   const { subscribeToMore, data: { game } = {}, error: gameError } = useQuery(
     GET_GAME,
@@ -44,17 +42,6 @@ const useGame = ({
         updateQuery: (prev, { subscriptionData }) => {
           if (!subscriptionData.data) return prev;
           const newFeedItem = subscriptionData.data.gameStageUpdated;
-          return newFeedItem;
-        },
-      });
-    }
-    if (subscribe.currentQuizItem) {
-      subscribeToMore({
-        document: GAME_CURRENT_QUIZ_ITEM_UPDATED,
-        variables: { shortId },
-        updateQuery: (prev, { subscriptionData }) => {
-          if (!subscriptionData.data) return prev;
-          const newFeedItem = subscriptionData.data.gameCurrentQuizItemUpdated;
           return newFeedItem;
         },
       });

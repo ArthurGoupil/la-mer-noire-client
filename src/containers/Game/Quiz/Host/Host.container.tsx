@@ -1,12 +1,9 @@
 import React from "react";
-import { useQuery, useSubscription } from "@apollo/client";
+import { useQuery } from "@apollo/client";
 import styled from "styled-components";
 
-import { PLAYER_ANSWERED } from "services/games.service";
 import Loader from "components/Utils/Loader";
-import { Answer, Game, QuizItemId, QuizItemLevel } from "models/Game.model";
-import { getCookie, setCookie } from "utils/cookies.util";
-import ECookieName from "constants/Cookies.constants";
+import { Game, QuizItemId, QuizItemLevel } from "models/Game.model";
 import FullHeightContainer from "components/Utils/FullHeightContainer";
 import LMNLogo from "components/Utils/LMNLogo";
 import GameName from "components/Quiz/Host/GameName";
@@ -15,6 +12,7 @@ import FullScreenError from "components/Utils/FullScreenError";
 import getHostCurrentContainer from "utils/Game/getHostCurrentContainer.util";
 import FullWidthContainer from "components/Utils/FullWidthContainer";
 import { GET_QUIZ_ITEM_DATA } from "services/quizzes.service";
+import useGetAnswers from "hooks/useGetAnswer.hook";
 
 interface HostProps {
   game: Game;
@@ -37,36 +35,7 @@ const Host: React.FC<HostProps> = ({ game }): JSX.Element => {
     variables: { quizId, level, quizItemId, createdAtTimestamp },
   });
 
-  const { data: answerData } = useSubscription(PLAYER_ANSWERED, {
-    variables: { shortId },
-  });
-
-  const [playersAnswers, setPlayersAnswers] = React.useState<
-    Record<string, Answer>
-  >(
-    getCookie({
-      prefix: shortId,
-      cookieName: ECookieName.playersAnswers,
-    }) || {},
-  );
-
-  React.useEffect(() => {
-    if (answerData && quizItemData) {
-      const playerId = answerData.playerAnswered.playerId;
-      if (playersAnswers[playerId]?.quizId !== quizItemData.quizId) {
-        playersAnswers[playerId] = {
-          quizId: quizItemData.quizId,
-          answer: answerData.playerAnswered.answer,
-        };
-      }
-      setPlayersAnswers({ ...playersAnswers });
-      setCookie({
-        prefix: shortId,
-        cookieName: ECookieName.playersAnswers,
-        cookieValue: playersAnswers,
-      });
-    }
-  }, [answerData]);
+  const playersAnswers = useGetAnswers({ shortId, quizItemData });
 
   if (quizItemDataError) {
     return (

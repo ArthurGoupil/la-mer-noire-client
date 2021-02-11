@@ -25,36 +25,40 @@ const CarreAnswers: React.FC<CarreAnswersProps> = ({
     <>
       <AnswerChoice
         color={EStyles.darkBlue}
-        answer={choices[0]}
+        quizAnswer={choices[0]}
         shortId={shortId}
         quizId={quizId}
+        answerType="carre"
         playerId={playerId}
         selectedAnswer={selectedAnswer}
         setSelectedAnswer={setSelectedAnswer}
       />
       <AnswerChoice
         color={EStyles.yellow}
-        answer={choices[1]}
+        quizAnswer={choices[1]}
         shortId={shortId}
         quizId={quizId}
+        answerType="carre"
         playerId={playerId}
         selectedAnswer={selectedAnswer}
         setSelectedAnswer={setSelectedAnswer}
       />
       <AnswerChoice
         color={EStyles.orange}
-        answer={choices[2]}
+        quizAnswer={choices[2]}
         shortId={shortId}
         quizId={quizId}
+        answerType="carre"
         playerId={playerId}
         selectedAnswer={selectedAnswer}
         setSelectedAnswer={setSelectedAnswer}
       />
       <AnswerChoice
         color={EStyles.turquoise}
-        answer={choices[3]}
+        quizAnswer={choices[3]}
         shortId={shortId}
         quizId={quizId}
+        answerType="carre"
         playerId={playerId}
         selectedAnswer={selectedAnswer}
         setSelectedAnswer={setSelectedAnswer}

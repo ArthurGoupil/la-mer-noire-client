@@ -58,21 +58,19 @@ export const UPDATE_GAME_STAGE: DocumentNode = gql`
   }
 `;
 
-export const UPDATE_GAME_CURRENT_QUIZ_ITEM: DocumentNode = gql`
-  mutation UpdateGameCurrentQuizItem(
-    $shortId: String!
-    $currentQuizItem: CurrentQuizItemInput!
-  ) {
-    updateGameCurrentQuizItem(
-      shortId: $shortId
-      currentQuizItem: $currentQuizItem
-    )
-  }
-`;
-
 export const GIVE_ANSWER: DocumentNode = gql`
-  mutation GiveAnswer($shortId: String!, $playerId: ID!, $answer: String!) {
-    giveAnswer(shortId: $shortId, playerId: $playerId, answer: $answer)
+  mutation GiveAnswer(
+    $shortId: String!
+    $playerId: ID!
+    $answer: String!
+    $answerType: String!
+  ) {
+    giveAnswer(
+      shortId: $shortId
+      playerId: $playerId
+      answer: $answer
+      answerType: $answerType
+    )
   }
 `;
 
@@ -103,19 +101,12 @@ export const GAME_STAGE_UPDATED: DocumentNode = gql`
   }
 `;
 
-export const GAME_CURRENT_QUIZ_ITEM_UPDATED: DocumentNode = gql`
-  subscription OnGameCurrentQuizItemUpdated($shortId: String!) {
-    gameCurrentQuizItemUpdated(shortId: $shortId) {
-     ${gameData}
-    }
-  }
-`;
-
 export const PLAYER_ANSWERED: DocumentNode = gql`
   subscription OnPlayerAnswered($shortId: String!) {
     playerAnswered(shortId: $shortId) {
       playerId
       answer
+      answerType
     }
   }
 `;

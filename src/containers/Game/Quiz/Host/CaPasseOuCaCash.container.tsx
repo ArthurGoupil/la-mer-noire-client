@@ -1,5 +1,4 @@
 import React from "react";
-import styled from "styled-components";
 
 import FullWidthContainer from "components/Utils/FullWidthContainer";
 import CategoryTheme from "components/Quiz/Host/CategoryTheme";
@@ -33,28 +32,18 @@ const CaPasseOuCaCash: React.FC<CaPasseOuCaCashProps> = ({
     <FullWidthContainer className="d-flex flex-column align-center space-between flex-grow">
       <div className="d-flex flex-column align-center justify-center flex-grow">
         <QuestionDisplay quizItem={quizItemData.quiz} showAnswers={false} />
-        <PlayerAnswer />
         <div className="d-flex">
-          {game.players.map((playerData: PlayerData) => {
-            let color;
-            if (playersAnswers[playerData.player._id]) {
-              if (
-                isValidAnswer({
-                  answer: quizItemData.quiz.answer,
-                  givenAnswer: playersAnswers[playerData.player._id].answer,
-                })
-              ) {
-                color = "lime";
-              } else {
-                color = "red";
-              }
-            } else {
-              color = "white";
-            }
+          {game.players.map((playerData: PlayerData, index: number) => {
             return (
-              <PlayerContainer key={playerData.player._id} color={color}>
-                {playerData.player.name}
-              </PlayerContainer>
+              <PlayerAnswer
+                playerName={playerData.player.name}
+                answerType={playersAnswers[playerData.player._id]?.answerType}
+                isGoodAnswer={isValidAnswer({
+                  answer: quizItemData.quiz.answer,
+                  givenAnswer: playersAnswers[playerData.player._id]?.answer,
+                })}
+                noMarginRight={index === game.players.length - 1}
+              />
             );
           })}
         </div>
@@ -72,10 +61,5 @@ const CaPasseOuCaCash: React.FC<CaPasseOuCaCashProps> = ({
     </FullHeightContainer>
   );
 };
-
-const PlayerContainer = styled.div<{ color: string }>`
-  color: ${(props) => props.color};
-  margin-right: 20px;
-`;
 
 export default CaPasseOuCaCash;

@@ -3,15 +3,16 @@ import styled from "styled-components";
 
 import EStyles from "constants/Styling.constants";
 import ECookieName from "constants/Cookies.constants";
-import { Answer } from "models/Game.model";
+import { Answer, AnswerType } from "models/Game.model";
 import { getCookie } from "utils/cookies.util";
-import useAnswer from "hooks/useAnswer.hook";
+import useSetAnswer from "hooks/useSetAnswer.hook";
 
 interface AnswerChoiceProps {
   color: string;
-  answer: string;
+  quizAnswer: string;
   shortId: string;
   quizId: string;
+  answerType: AnswerType;
   playerId: string;
   selectedAnswer: Answer | null;
   setSelectedAnswer: React.Dispatch<React.SetStateAction<Answer | null>>;
@@ -19,9 +20,10 @@ interface AnswerChoiceProps {
 
 const AnswerChoice: React.FC<AnswerChoiceProps> = ({
   color,
-  answer,
+  quizAnswer,
   shortId,
   quizId,
+  answerType,
   playerId,
   selectedAnswer,
   setSelectedAnswer,
@@ -31,7 +33,7 @@ const AnswerChoice: React.FC<AnswerChoiceProps> = ({
     cookieName: ECookieName.currentAnswer,
   });
 
-  const setAnswer = useAnswer();
+  const setAnswer = useSetAnswer();
 
   React.useEffect(() => {
     if (currentAnswer?.quizId === quizId) {
@@ -44,11 +46,12 @@ const AnswerChoice: React.FC<AnswerChoiceProps> = ({
       className="d-flex justify-center align-center"
       color={color}
       answerIsSelected={
-        selectedAnswer?.answer === answer && selectedAnswer?.quizId === quizId
+        selectedAnswer?.answer === quizAnswer &&
+        selectedAnswer?.quizId === quizId
       }
       anotherAnswerIsSelected={
         selectedAnswer !== null &&
-        selectedAnswer?.answer !== answer &&
+        selectedAnswer?.answer !== quizAnswer &&
         selectedAnswer?.quizId === quizId
       }
       onClick={async () => {
@@ -56,14 +59,15 @@ const AnswerChoice: React.FC<AnswerChoiceProps> = ({
           setAnswer({
             shortId,
             quizId,
-            answer,
+            answer: quizAnswer,
+            answerType,
             playerId,
             setSelectedAnswer,
           });
         }
       }}
     >
-      {answer}
+      {quizAnswer}
     </AnswerContainer>
   );
 };

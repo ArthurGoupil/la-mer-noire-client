@@ -30,4 +30,12 @@ export type QuizItemLevel = "beginner" | "intermediate" | "expert";
 export interface Answer {
   quizId: string;
   answer: string;
+  answerType: AnswerType;
+}
+
+export type AnswerType = "duo" | "carre" | "cash";
+
+export interface AnswerTypeChoice {
+  quizId: string;
+  answerType: AnswerType;
 }

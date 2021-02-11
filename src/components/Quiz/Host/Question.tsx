@@ -15,7 +15,10 @@ const QuestionDisplay: React.FC<QuestionDisplayProps> = ({
   showAnswers = true,
 }): JSX.Element => {
   return (
-    <FullWidthContainer className="d-flex flex-column align-center">
+    <FullWidthContainer
+      className="d-flex flex-column align-center"
+      margin="0 0 10px 0"
+    >
       <QuestionContainer>{quizItem.question}</QuestionContainer>
       {showAnswers && (
         <>

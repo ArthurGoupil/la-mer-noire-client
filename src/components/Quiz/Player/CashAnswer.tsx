@@ -8,7 +8,7 @@ import Button from "components/Utils/Button";
 import ECookieName from "constants/Cookies.constants";
 import getLettersRecordFromString from "utils/Quiz/getLettersRecordFromString.util";
 import getLetterIndexInSentence from "utils/Quiz/getLetterIndexInSentence.util";
-import useAnswer from "hooks/useAnswer.hook";
+import useSetAnswer from "hooks/useSetAnswer.hook";
 import { getCookie } from "utils/cookies.util";
 import isDesktop from "utils/isDesktop.util";
 
@@ -34,7 +34,7 @@ const CashAnswer: React.FC<CashAnswerProps> = ({
     getLettersRecordFromString({ word: answer, returnsEmptyString: true }),
   );
 
-  const setAnswer = useAnswer();
+  const setAnswer = useSetAnswer();
 
   const currentAnswer = getCookie<Answer>({
     prefix: shortId,
@@ -127,24 +127,27 @@ const CashAnswer: React.FC<CashAnswerProps> = ({
                         ].current?.setSelectionRange(1, 1);
                       }}
                       onKeyDown={(e) => {
-                        if (e.key === "Backspace") {
-                          setAnswerLettersValuesRecord({
-                            ...answerLettersValuesRecord,
-                            [letterIndexInFullAnswer]: "",
-                          }),
-                            answerLettersRefsRecord[
-                              letterIndexInFullAnswer - 1
-                            ]?.current?.focus();
-                        } else if (e.key === "Enter") {
-                          setAnswer({
-                            shortId,
-                            quizId,
-                            answer: Object.values(
-                              answerLettersValuesRecord,
-                            ).join(""),
-                            playerId,
-                            setSelectedAnswer,
-                          });
+                        if (isPossibleToAnswer) {
+                          if (e.key === "Backspace") {
+                            setAnswerLettersValuesRecord({
+                              ...answerLettersValuesRecord,
+                              [letterIndexInFullAnswer]: "",
+                            }),
+                              answerLettersRefsRecord[
+                                letterIndexInFullAnswer - 1
+                              ]?.current?.focus();
+                          } else if (e.key === "Enter") {
+                            setAnswer({
+                              shortId,
+                              quizId,
+                              answer: Object.values(
+                                answerLettersValuesRecord,
+                              ).join(""),
+                              answerType: "cash",
+                              playerId,
+                              setSelectedAnswer,
+                            });
+                          }
                         }
                       }}
                       onChange={(e) => {
@@ -175,6 +178,7 @@ const CashAnswer: React.FC<CashAnswerProps> = ({
               shortId,
               quizId,
               answer: Object.values(answerLettersValuesRecord).join(""),
+              answerType: "cash",
               playerId,
               setSelectedAnswer,
             })
@@ -205,9 +209,10 @@ const CashAnswer: React.FC<CashAnswerProps> = ({
 const Input = styled.input<{ inputWidth: number }>`
   width: ${(props) => props.inputWidth}px;
   height: ${(props) => props.inputWidth}px;
+  color: white;
   background-color: rgba(0, 0, 0, 0.2);
   border: none;
-  margin: 2px;
+  margin: 12px 2px 2px 2px;
   border-radius: 5px;
   text-align: center;
   vertical-align: middle;
