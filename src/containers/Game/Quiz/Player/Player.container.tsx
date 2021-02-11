@@ -1,5 +1,4 @@
 import React from "react";
-import styled from "styled-components";
 
 import Loader from "components/Utils/Loader";
 import { Answer, AnswerTypeChoice, Game } from "models/Game.model";
