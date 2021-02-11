@@ -1,3 +1,5 @@
+import React from "react";
+
 import { Game } from "models/Game.model";
 import GamePreparationContainer from "containers/Game/GamePreparation/GamePreparation.container";
 import EGameStage from "constants/GameStage.constants";
@@ -5,14 +7,15 @@ import EUserType from "constants/GameUserType.constants";
 import QuizContainer from "containers/Game/Quiz/Quiz.container";
 import FullScreenError from "components/Utils/FullScreenError";
 
-interface GetGameCurrentContainerProps {
+interface GameCurrentContainerProps {
   game: Game;
   userType: EUserType;
 }
-const getGameCurrentContainer = ({
+
+const GameCurrentContainer: React.FC<GameCurrentContainerProps> = ({
   game,
   userType,
-}: GetGameCurrentContainerProps): JSX.Element => {
+}): JSX.Element => {
   switch (game?.stage) {
     case EGameStage.playersRegistration:
       return <GamePreparationContainer game={game} userType={userType} />;
@@ -30,4 +33,4 @@ const getGameCurrentContainer = ({
   }
 };
 
-export default getGameCurrentContainer;
+export default GameCurrentContainer;

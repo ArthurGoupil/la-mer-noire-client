@@ -1,8 +1,9 @@
 import React from "react";
+import styled from "styled-components";
 
 import { AnswerTypeChoice } from "models/Game.model";
-import styled from "styled-components";
 import EStyles from "constants/Styling.constants";
+import FullHeightContainer from "components/Utils/FullHeightContainer";
 
 interface AnswerTypeSelectionProps {
   quizId: string;
@@ -14,7 +15,11 @@ const AnswerTypeSelection: React.FC<AnswerTypeSelectionProps> = ({
   setAnswerTypeChoice,
 }): JSX.Element => {
   return (
-    <div className="d-flex flex-column flex-grow">
+    <FullHeightContainer
+      minHeight="100%"
+      padding="0"
+      className="d-flex flex-column align-center flex-grow"
+    >
       <AnswerTypeContainer
         className="d-flex justify-center align-center"
         backgroundColor={EStyles.lightBlue}
@@ -36,12 +41,13 @@ const AnswerTypeSelection: React.FC<AnswerTypeSelectionProps> = ({
       >
         CASH
       </AnswerTypeContainer>
-    </div>
+    </FullHeightContainer>
   );
 };
 
 const AnswerTypeContainer = styled.div<{ backgroundColor: string }>`
-  height: 100%;
+  width: 100%;
+  flex: 1;
   font-family: "Boogaloo", cursive;
   font-size: 30px;
   text-shadow: 3px 3px 0px ${EStyles.darkBlue};

@@ -1,19 +1,21 @@
+import React from "react";
+
 import { Answer, Game } from "models/Game.model";
 import EGameStage from "constants/GameStage.constants";
 import FullScreenError from "components/Utils/FullScreenError";
 import CaPasseOuCaCashContainer from "containers/Game/Quiz/Host/CaPasseOuCaCash.container";
 import { QuizItemData } from "models/Quiz.model";
 
-interface GetHostCurrentContainerProps {
+interface HostCurrentContainerProps {
   game: Game;
   quizItemData: QuizItemData;
   playersAnswers: Record<string, Answer>;
 }
-const getHostCurrentContainer = ({
+const HostCurrentContainer: React.FC<HostCurrentContainerProps> = ({
   game,
   quizItemData,
   playersAnswers,
-}: GetHostCurrentContainerProps): JSX.Element => {
+}): JSX.Element => {
   switch (game.stage) {
     case EGameStage.caPasseOuCaCash:
       return (
@@ -34,4 +36,4 @@ const getHostCurrentContainer = ({
   }
 };
 
-export default getHostCurrentContainer;
+export default HostCurrentContainer;

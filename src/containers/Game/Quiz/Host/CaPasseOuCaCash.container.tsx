@@ -53,7 +53,7 @@ const CaPasseOuCaCash: React.FC<CaPasseOuCaCashProps> = ({
         theme={quizItemData.theme}
         subTheme={quizItemData.subTheme}
       />
-      <TimeBar totalTime={20} remainingTime={remainingTime} />
+      <TimeBar totalTime={20} remainingTime={remainingTime} isHost />
     </FullWidthContainer>
   ) : (
     <FullHeightContainer className="d-flex justify-center align-center">

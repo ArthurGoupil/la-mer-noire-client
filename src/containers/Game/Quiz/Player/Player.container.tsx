@@ -14,7 +14,7 @@ import { useQuery } from "@apollo/client";
 import { GET_QUIZ_ITEM_DATA } from "services/quizzes.service";
 import useQuizRemainingTime from "hooks/useQuizRemainingTime.util";
 import AnswerTypeSelection from "components/Quiz/Player/AnswerTypeSelection";
-import getAnswerTypeComponent from "utils/Game/getAnswerTypeComponent.util";
+import AnswerComponents from "../../../../components/Quiz/Player/AnswerComponents";
 
 interface PlayerProps {
   game: Game;
@@ -100,7 +100,10 @@ const Player: React.FC<PlayerProps> = ({ game, playerId }): JSX.Element => {
   }
 
   return !quizItemDataLoading && quizItemData && duoAnswersIndexes ? (
-    <PlayerContainer className="d-flex flex-column">
+    <FullHeightContainer
+      className="d-flex flex-column align-center"
+      padding="10px 20px"
+    >
       <TimeBar totalTime={20} remainingTime={remainingTime} />
       {answerTypeChoice?.quizId !== quizId ? (
         <AnswerTypeSelection
@@ -108,29 +111,22 @@ const Player: React.FC<PlayerProps> = ({ game, playerId }): JSX.Element => {
           setAnswerTypeChoice={setAnswerTypeChoice}
         />
       ) : (
-        getAnswerTypeComponent({
-          shortId,
-          playerId,
-          answerType: answerTypeChoice.answerType,
-          quizItemData,
-          duoAnswersIndexes,
-          selectedAnswer,
-          setSelectedAnswer,
-        })
+        <AnswerComponents
+          shortId={shortId}
+          playerId={playerId}
+          answerType={answerTypeChoice.answerType}
+          quizItemData={quizItemData}
+          duoAnswersIndexes={duoAnswersIndexes}
+          selectedAnswer={selectedAnswer}
+          setSelectedAnswer={setSelectedAnswer}
+        />
       )}
-    </PlayerContainer>
+    </FullHeightContainer>
   ) : (
     <FullHeightContainer className="d-flex justify-center align-center">
       <Loader />
     </FullHeightContainer>
   );
 };
-
-const PlayerContainer = styled.div`
-  width: 100%;
-  height: 100%;
-  position: absolute;
-  padding: 10px;
-`;
 
 export default Player;

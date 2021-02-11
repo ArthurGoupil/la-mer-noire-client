@@ -1,3 +1,4 @@
+import React from "react";
 import CarreAnswers from "components/Quiz/Player/CarreAnswers";
 import CashAnswer from "components/Quiz/Player/CashAnswer";
 import DuoAnswers from "components/Quiz/Player/DuoAnswers";
@@ -15,15 +16,15 @@ interface GetAnswerTypeComponentProps {
   setSelectedAnswer: React.Dispatch<React.SetStateAction<Answer | null>>;
 }
 
-const getAnswerTypeComponent = ({
-  answerType,
+const AnswerDisplay: React.FC<GetAnswerTypeComponentProps> = ({
   shortId,
+  playerId,
+  answerType,
   quizItemData,
   duoAnswersIndexes,
-  playerId,
   selectedAnswer,
   setSelectedAnswer,
-}: GetAnswerTypeComponentProps): JSX.Element => {
+}) => {
   switch (answerType) {
     case "duo":
       return (
@@ -60,7 +61,6 @@ const getAnswerTypeComponent = ({
         />
       );
   }
-
   return (
     <FullScreenError
       errorLabel={`Erreur de type "unknown answer type choice."`}
@@ -70,4 +70,4 @@ const getAnswerTypeComponent = ({
   );
 };
 
-export default getAnswerTypeComponent;
+export default AnswerDisplay;

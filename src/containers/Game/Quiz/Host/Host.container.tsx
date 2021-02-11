@@ -9,10 +9,10 @@ import LMNLogo from "components/Utils/LMNLogo";
 import GameName from "components/Quiz/Host/GameName";
 import StageName from "components/Quiz/Host/StageName";
 import FullScreenError from "components/Utils/FullScreenError";
-import getHostCurrentContainer from "utils/Game/getHostCurrentContainer.util";
 import FullWidthContainer from "components/Utils/FullWidthContainer";
 import { GET_QUIZ_ITEM_DATA } from "services/quizzes.service";
 import useGetAnswers from "hooks/useGetAnswer.hook";
+import HostCurrentContainer from "components/Quiz/Host/HostCurrentContainer";
 
 interface HostProps {
   game: Game;
@@ -55,11 +55,11 @@ const Host: React.FC<HostProps> = ({ game }): JSX.Element => {
         <EmptyDivForFullScreenIcon />
       </FullWidthContainer>
       <StageName gameStage={stage} />
-      {getHostCurrentContainer({
-        game,
-        quizItemData,
-        playersAnswers,
-      })}
+      <HostCurrentContainer
+        game={game}
+        quizItemData={quizItemData}
+        playersAnswers={playersAnswers}
+      />
     </FullHeightContainer>
   ) : (
     <FullHeightContainer className="d-flex justify-center align-center">

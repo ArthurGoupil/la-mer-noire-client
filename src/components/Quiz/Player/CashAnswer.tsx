@@ -79,8 +79,8 @@ const CashAnswer: React.FC<CashAnswerProps> = ({
   // innerWidth minus padding, minus margin of each input
   const inputWidth =
     longestWordLength > 4
-      ? (window.innerWidth - 20 - longestWordLength * 4) / longestWordLength
-      : (window.innerWidth - 20 - 4 * 4) / 4;
+      ? (window.innerWidth - 40 - longestWordLength * 4) / longestWordLength
+      : (window.innerWidth - 40 - 4 * 4) / 4;
 
   const isPossibleToAnswer = quizId !== currentAnswer?.quizId;
   const isPossibleToSubmit =
@@ -95,8 +95,9 @@ const CashAnswer: React.FC<CashAnswerProps> = ({
 
   return (
     <FullHeightContainer
-      padding={0}
-      className="d-flex flex-column align-center"
+      minHeight="100%"
+      padding="0"
+      className="d-flex flex-column align-center flex-grow"
     >
       <div className="d-flex flex-column">
         <InputsContainer>

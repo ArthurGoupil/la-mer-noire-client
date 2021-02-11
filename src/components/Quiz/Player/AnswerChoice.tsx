@@ -42,7 +42,7 @@ const AnswerChoice: React.FC<AnswerChoiceProps> = ({
   }, []);
 
   return (
-    <AnswerContainer
+    <AnswerButton
       className="d-flex justify-center align-center"
       color={color}
       answerIsSelected={
@@ -68,18 +68,18 @@ const AnswerChoice: React.FC<AnswerChoiceProps> = ({
       }}
     >
       {quizAnswer}
-    </AnswerContainer>
+    </AnswerButton>
   );
 };
 
-const AnswerContainer = styled.button<{
+const AnswerButton = styled.button<{
   color: string;
   answerIsSelected: boolean;
   anotherAnswerIsSelected: boolean;
 }>`
-  width: calc(100% - 20px);
-  height: 100%;
-  margin: 10px;
+  width: 100%;
+  flex: 1;
+  margin: 10px 0;
   text-shadow: 2px 2px 0px ${EStyles.darkBlue};
   font-weight: bold;
   background-color: ${(props) => props.color};

@@ -6,24 +6,29 @@ import EStyles from "constants/Styling.constants";
 interface TimeBarProps {
   totalTime: number;
   remainingTime: number;
+  isHost?: boolean;
 }
 
 const TimeBar: React.FC<TimeBarProps> = ({
   totalTime,
   remainingTime,
+  isHost = false,
 }): JSX.Element => {
   const initialWidth = 100 - (100 * remainingTime) / totalTime + "%";
 
   return (
-    <BarContainer className="d-flex justify-start">
+    <BarContainer
+      className="d-flex justify-start"
+      margin={isHost ? "0" : "10px"}
+    >
       <Bar initialWidth={initialWidth} remainingTime={remainingTime} />
     </BarContainer>
   );
 };
 
-const BarContainer = styled.div`
-  width: calc(100% - 20px);
-  margin: 10px;
+const BarContainer = styled.div<{ margin: string }>`
+  width: 100%;
+  margin: ${(props) => props.margin};
   padding: 10px;
   background-color: ${EStyles.darken_darkBlue};
   border-radius: ${EStyles.miniRadius};
