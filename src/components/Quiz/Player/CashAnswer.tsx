@@ -216,7 +216,7 @@ const Input = styled.input<{ inputWidth: number }>`
   border-radius: 5px;
   text-align: center;
   outline-color: ${EStyles.turquoise};
-  font-size: ${(props) => props.inputWidth * 0.7}px;
+  font-size: ${(props) => props.inputWidth * 0.6}px;
   line-height: ${(props) => props.inputWidth}px;
 `;
 
