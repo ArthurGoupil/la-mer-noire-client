@@ -118,7 +118,6 @@ const CashAnswer: React.FC<CashAnswerProps> = ({
                       readOnly={!isPossibleToAnswer}
                       ref={answerLettersRefsRecord[letterIndexInFullAnswer]}
                       key={letterIndex}
-                      className="d-flex justify-center align-center"
                       value={answerLettersValuesRecord[
                         letterIndexInFullAnswer
                       ]?.toUpperCase()}
@@ -216,10 +215,9 @@ const Input = styled.input<{ inputWidth: number }>`
   margin: 12px 2px 2px 2px;
   border-radius: 5px;
   text-align: center;
-  vertical-align: middle;
   outline-color: ${EStyles.turquoise};
-  font-size: ${(props) => props.inputWidth * 0.7}px;
-  line-height: ${(props) => props.inputWidth * 0.7}px;
+  font-size: ${(props) => props.inputWidth * 0.5}px;
+  line-height: ${(props) => props.inputWidth}px;
 `;
 
 const InputsContainer = styled.div`

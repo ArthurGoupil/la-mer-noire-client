@@ -36,6 +36,7 @@ const CaPasseOuCaCash: React.FC<CaPasseOuCaCashProps> = ({
           {game.players.map((playerData: PlayerData, index: number) => {
             return (
               <PlayerAnswer
+                key={index}
                 playerName={playerData.player.name}
                 answerType={playersAnswers[playerData.player._id]?.answerType}
                 isGoodAnswer={isValidAnswer({
