@@ -56,7 +56,7 @@ const AnswerDisplay: React.FC<GetAnswerTypeComponentProps> = ({
           shortId={shortId}
           quizId={quizItemData.quizId}
           playerId={playerId}
-          answer="La colombe"
+          answer={quizItemData.quiz.answer}
           setSelectedAnswer={setSelectedAnswer}
         />
       );
