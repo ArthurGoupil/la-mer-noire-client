@@ -25,7 +25,7 @@ const App: React.FC = (): JSX.Element => {
   });
 
   const wsServer =
-    process.env.NODE_ENV !== "development"
+    process.env.NODE_ENV === "development"
       ? "ws://localhost:4000/graphql"
       : "wss://la-mer-noire-server.herokuapp.com/graphql";
 
