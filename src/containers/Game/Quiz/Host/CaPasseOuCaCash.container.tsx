@@ -28,6 +28,24 @@ const CaPasseOuCaCash: React.FC<CaPasseOuCaCashProps> = ({
     duration: 20,
   });
 
+  const [questionIsOver, setQuestionIsOver] = React.useState<boolean>(false);
+
+  React.useEffect(() => {
+    if (remainingTime) {
+      const timeout = setTimeout(() => {
+        setQuestionIsOver(true);
+      }, remainingTime * 1000);
+
+      return () => clearTimeout(timeout);
+    }
+  }, [remainingTime]);
+
+  React.useEffect(() => {
+    if (Object.keys(playersAnswers).length === game.players.length) {
+      setQuestionIsOver(true);
+    }
+  }, [playersAnswers]);
+
   return remainingTime ? (
     <FullWidthContainer className="d-flex flex-column align-center space-between flex-grow">
       <div className="d-flex flex-column align-center justify-center flex-grow">
@@ -44,6 +62,7 @@ const CaPasseOuCaCash: React.FC<CaPasseOuCaCashProps> = ({
                   givenAnswer: playersAnswers[playerData.player._id]?.answer,
                 })}
                 noMarginRight={index === game.players.length - 1}
+                questionIsOver={questionIsOver}
               />
             );
           })}
@@ -54,7 +73,12 @@ const CaPasseOuCaCash: React.FC<CaPasseOuCaCashProps> = ({
         theme={quizItemData.theme}
         subTheme={quizItemData.subTheme}
       />
-      <TimeBar totalTime={20} remainingTime={remainingTime} isHost />
+      <TimeBar
+        totalTime={20}
+        remainingTime={remainingTime}
+        questionIsOver={questionIsOver}
+        isHost
+      />
     </FullWidthContainer>
   ) : (
     <FullHeightContainer className="d-flex justify-center align-center">
