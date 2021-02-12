@@ -7,11 +7,13 @@ import FullHeightContainer from "components/Utils/FullHeightContainer";
 
 interface AnswerTypeSelectionProps {
   quizId: string;
+  questionIsOver: boolean;
   setAnswerTypeChoice: React.Dispatch<React.SetStateAction<AnswerTypeChoice>>;
 }
 
 const AnswerTypeSelection: React.FC<AnswerTypeSelectionProps> = ({
   quizId,
+  questionIsOver,
   setAnswerTypeChoice,
 }): JSX.Element => {
   return (
@@ -21,22 +23,28 @@ const AnswerTypeSelection: React.FC<AnswerTypeSelectionProps> = ({
       className="d-flex flex-column align-center flex-grow"
     >
       <AnswerTypeContainer
+        disabled={questionIsOver}
         className="d-flex justify-center align-center"
         backgroundColor={EStyles.lightBlue}
+        opacity={questionIsOver ? 0.6 : 1}
         onClick={() => setAnswerTypeChoice({ quizId, answerType: "duo" })}
       >
         DUO
       </AnswerTypeContainer>
       <AnswerTypeContainer
+        disabled={questionIsOver}
         className="d-flex justify-center align-center"
         backgroundColor={EStyles.yellow}
+        opacity={questionIsOver ? 0.6 : 1}
         onClick={() => setAnswerTypeChoice({ quizId, answerType: "carre" })}
       >
         CARRÉ
       </AnswerTypeContainer>
       <AnswerTypeContainer
+        disabled={questionIsOver}
         className="d-flex justify-center align-center"
         backgroundColor={EStyles.orange}
+        opacity={questionIsOver ? 0.6 : 1}
         onClick={() => setAnswerTypeChoice({ quizId, answerType: "cash" })}
       >
         CASH
@@ -45,7 +53,10 @@ const AnswerTypeSelection: React.FC<AnswerTypeSelectionProps> = ({
   );
 };
 
-const AnswerTypeContainer = styled.div<{ backgroundColor: string }>`
+const AnswerTypeContainer = styled.button<{
+  backgroundColor: string;
+  opacity: number;
+}>`
   width: 100%;
   flex: 1;
   font-family: "Boogaloo", cursive;
@@ -54,6 +65,8 @@ const AnswerTypeContainer = styled.div<{ backgroundColor: string }>`
   background-color: ${(props) => props.backgroundColor};
   margin: 10px;
   border-radius: 10px;
+  opacity: ${(props) => props.opacity};
+  border: none;
 `;
 
 export default AnswerTypeSelection;

@@ -11,7 +11,6 @@ import StageName from "components/Quiz/Host/StageName";
 import FullScreenError from "components/Utils/FullScreenError";
 import FullWidthContainer from "components/Utils/FullWidthContainer";
 import { GET_QUIZ_ITEM_DATA } from "services/quizzes.service";
-import useGetAnswers from "hooks/useGetAnswer.hook";
 import HostCurrentContainer from "components/Quiz/Host/HostCurrentContainer";
 
 interface HostProps {
@@ -24,7 +23,7 @@ export interface GenerateNewQuizItemDataProps {
 }
 
 const Host: React.FC<HostProps> = ({ game }): JSX.Element => {
-  const { shortId, stage, name, currentQuizItem } = game;
+  const { stage, name, currentQuizItem } = game;
   const { quizId, level, quizItemId, createdAtTimestamp } = currentQuizItem;
 
   const {
@@ -34,8 +33,6 @@ const Host: React.FC<HostProps> = ({ game }): JSX.Element => {
   } = useQuery(GET_QUIZ_ITEM_DATA, {
     variables: { quizId, level, quizItemId, createdAtTimestamp },
   });
-
-  const playersAnswers = useGetAnswers({ shortId, quizItemData });
 
   if (quizItemDataError) {
     return (
@@ -55,11 +52,7 @@ const Host: React.FC<HostProps> = ({ game }): JSX.Element => {
         <EmptyDivForFullScreenIcon />
       </FullWidthContainer>
       <StageName gameStage={stage} />
-      <HostCurrentContainer
-        game={game}
-        quizItemData={quizItemData}
-        playersAnswers={playersAnswers}
-      />
+      <HostCurrentContainer game={game} quizItemData={quizItemData} />
     </FullHeightContainer>
   ) : (
     <FullHeightContainer className="d-flex justify-center align-center">

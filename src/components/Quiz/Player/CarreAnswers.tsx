@@ -9,6 +9,7 @@ interface CarreAnswersProps {
   quizId: string;
   choices: string[];
   playerId: string;
+  questionIsOver: boolean;
   selectedAnswer: Answer | null;
   setSelectedAnswer: React.Dispatch<React.SetStateAction<Answer | null>>;
 }
@@ -18,6 +19,7 @@ const CarreAnswers: React.FC<CarreAnswersProps> = ({
   quizId,
   choices,
   playerId,
+  questionIsOver,
   selectedAnswer,
   setSelectedAnswer,
 }): JSX.Element => {
@@ -30,6 +32,7 @@ const CarreAnswers: React.FC<CarreAnswersProps> = ({
         quizId={quizId}
         answerType="carre"
         playerId={playerId}
+        questionIsOver={questionIsOver}
         selectedAnswer={selectedAnswer}
         setSelectedAnswer={setSelectedAnswer}
       />
@@ -40,6 +43,7 @@ const CarreAnswers: React.FC<CarreAnswersProps> = ({
         quizId={quizId}
         answerType="carre"
         playerId={playerId}
+        questionIsOver={questionIsOver}
         selectedAnswer={selectedAnswer}
         setSelectedAnswer={setSelectedAnswer}
       />
@@ -50,6 +54,7 @@ const CarreAnswers: React.FC<CarreAnswersProps> = ({
         quizId={quizId}
         answerType="carre"
         playerId={playerId}
+        questionIsOver={questionIsOver}
         selectedAnswer={selectedAnswer}
         setSelectedAnswer={setSelectedAnswer}
       />
@@ -60,6 +65,7 @@ const CarreAnswers: React.FC<CarreAnswersProps> = ({
         quizId={quizId}
         answerType="carre"
         playerId={playerId}
+        questionIsOver={questionIsOver}
         selectedAnswer={selectedAnswer}
         setSelectedAnswer={setSelectedAnswer}
       />

@@ -12,6 +12,7 @@ interface GetAnswerTypeComponentProps {
   answerType: string;
   quizItemData: QuizItemData;
   duoAnswersIndexes: DuoAnswersIndexes;
+  questionIsOver: boolean;
   selectedAnswer: Answer | null;
   setSelectedAnswer: React.Dispatch<React.SetStateAction<Answer | null>>;
 }
@@ -22,6 +23,7 @@ const AnswerDisplay: React.FC<GetAnswerTypeComponentProps> = ({
   answerType,
   quizItemData,
   duoAnswersIndexes,
+  questionIsOver,
   selectedAnswer,
   setSelectedAnswer,
 }) => {
@@ -35,6 +37,7 @@ const AnswerDisplay: React.FC<GetAnswerTypeComponentProps> = ({
             (answerIndex: number) => quizItemData.quiz.choices[answerIndex],
           )}
           playerId={playerId}
+          questionIsOver={questionIsOver}
           selectedAnswer={selectedAnswer}
           setSelectedAnswer={setSelectedAnswer}
         />
@@ -46,6 +49,7 @@ const AnswerDisplay: React.FC<GetAnswerTypeComponentProps> = ({
           quizId={quizItemData.quizId}
           choices={quizItemData.quiz.choices}
           playerId={playerId}
+          questionIsOver={questionIsOver}
           selectedAnswer={selectedAnswer}
           setSelectedAnswer={setSelectedAnswer}
         />
@@ -57,6 +61,7 @@ const AnswerDisplay: React.FC<GetAnswerTypeComponentProps> = ({
           quizId={quizItemData.quizId}
           playerId={playerId}
           answer={quizItemData.quiz.answer}
+          questionIsOver={questionIsOver}
           setSelectedAnswer={setSelectedAnswer}
         />
       );

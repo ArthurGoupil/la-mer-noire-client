@@ -33,7 +33,11 @@ const Player: React.FC<PlayerProps> = ({ game, playerId }): JSX.Element => {
     variables: { quizId, level, quizItemId, createdAtTimestamp },
   });
 
-  const playersAnswers = useGetAnswers({ shortId, quizItemData });
+  const playersAnswers = useGetAnswers({
+    shortId,
+    quizItemData,
+    players: game.players,
+  });
 
   const [
     duoAnswersIndexes,
@@ -116,6 +120,7 @@ const Player: React.FC<PlayerProps> = ({ game, playerId }): JSX.Element => {
       {answerTypeChoice?.quizId !== quizId ? (
         <AnswerTypeSelection
           quizId={quizId}
+          questionIsOver={questionIsOver}
           setAnswerTypeChoice={setAnswerTypeChoice}
         />
       ) : (
@@ -125,6 +130,7 @@ const Player: React.FC<PlayerProps> = ({ game, playerId }): JSX.Element => {
           answerType={answerTypeChoice.answerType}
           quizItemData={quizItemData}
           duoAnswersIndexes={duoAnswersIndexes}
+          questionIsOver={questionIsOver}
           selectedAnswer={selectedAnswer}
           setSelectedAnswer={setSelectedAnswer}
         />

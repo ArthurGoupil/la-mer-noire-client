@@ -33,7 +33,9 @@ const PlayerAnswer: React.FC<PlayerAnswerProps> = ({
       <FullWidthContainer>
         <AnswerTypeContainer
           className="d-flex justify-center align-center"
-          color={answerTypeString ? EStyles.darkBlue : "white"}
+          color={
+            answerTypeString || questionIsOver ? EStyles.darkBlue : "white"
+          }
           backgroundColor={
             answerTypeString
               ? isGoodAnswer

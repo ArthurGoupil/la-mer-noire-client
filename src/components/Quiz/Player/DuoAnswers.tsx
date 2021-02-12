@@ -9,6 +9,7 @@ interface CarreAnswersProps {
   quizId: string;
   choices: string[];
   playerId: string;
+  questionIsOver: boolean;
   selectedAnswer: Answer | null;
   setSelectedAnswer: React.Dispatch<React.SetStateAction<Answer | null>>;
 }
@@ -18,6 +19,7 @@ const DuoAnswers: React.FC<CarreAnswersProps> = ({
   quizId,
   choices,
   playerId,
+  questionIsOver,
   selectedAnswer,
   setSelectedAnswer,
 }): JSX.Element => {
@@ -30,6 +32,7 @@ const DuoAnswers: React.FC<CarreAnswersProps> = ({
         answerType="duo"
         quizId={quizId}
         playerId={playerId}
+        questionIsOver={questionIsOver}
         selectedAnswer={selectedAnswer}
         setSelectedAnswer={setSelectedAnswer}
       />
@@ -40,6 +43,7 @@ const DuoAnswers: React.FC<CarreAnswersProps> = ({
         answerType="duo"
         quizId={quizId}
         playerId={playerId}
+        questionIsOver={questionIsOver}
         selectedAnswer={selectedAnswer}
         setSelectedAnswer={setSelectedAnswer}
       />

@@ -17,6 +17,7 @@ interface CashAnswerProps {
   quizId: string;
   playerId: string;
   answer: string;
+  questionIsOver: boolean;
   setSelectedAnswer: (value: React.SetStateAction<Answer | null>) => void;
 }
 
@@ -25,6 +26,7 @@ const CashAnswer: React.FC<CashAnswerProps> = ({
   quizId,
   playerId,
   answer,
+  questionIsOver,
   setSelectedAnswer,
 }): JSX.Element => {
   const [
@@ -82,7 +84,8 @@ const CashAnswer: React.FC<CashAnswerProps> = ({
       ? (window.innerWidth - 40 - longestWordLength * 4) / longestWordLength
       : (window.innerWidth - 40 - 4 * 4) / 4;
 
-  const isPossibleToAnswer = quizId !== currentAnswer?.quizId;
+  const isPossibleToAnswer =
+    quizId !== currentAnswer?.quizId && !questionIsOver;
   const isPossibleToSubmit =
     isPossibleToAnswer &&
     Object.keys(answerLettersValuesRecord).reduce((acc, cur) => {
@@ -172,7 +175,13 @@ const CashAnswer: React.FC<CashAnswerProps> = ({
           })}
         </InputsContainer>
         <Button
-          label={isPossibleToAnswer ? "Répondre" : "Réponse envoyée !"}
+          label={
+            isPossibleToAnswer
+              ? "Répondre"
+              : questionIsOver
+              ? "Too late !"
+              : "Réponse envoyée !"
+          }
           onClick={() =>
             setAnswer({
               shortId,

@@ -14,6 +14,7 @@ interface AnswerChoiceProps {
   quizId: string;
   answerType: AnswerType;
   playerId: string;
+  questionIsOver: boolean;
   selectedAnswer: Answer | null;
   setSelectedAnswer: React.Dispatch<React.SetStateAction<Answer | null>>;
 }
@@ -25,6 +26,7 @@ const AnswerChoice: React.FC<AnswerChoiceProps> = ({
   quizId,
   answerType,
   playerId,
+  questionIsOver,
   selectedAnswer,
   setSelectedAnswer,
 }): JSX.Element => {
@@ -41,19 +43,22 @@ const AnswerChoice: React.FC<AnswerChoiceProps> = ({
     }
   }, []);
 
+  const answerIsSelected =
+    selectedAnswer?.answer === quizAnswer && selectedAnswer?.quizId === quizId;
+
+  const anotherAnswerIsSelected =
+    (selectedAnswer !== null &&
+      selectedAnswer?.answer !== quizAnswer &&
+      selectedAnswer?.quizId === quizId) ||
+    questionIsOver;
+
   return (
     <AnswerButton
+      disabled={anotherAnswerIsSelected}
       className="d-flex justify-center align-center"
       color={color}
-      answerIsSelected={
-        selectedAnswer?.answer === quizAnswer &&
-        selectedAnswer?.quizId === quizId
-      }
-      anotherAnswerIsSelected={
-        selectedAnswer !== null &&
-        selectedAnswer?.answer !== quizAnswer &&
-        selectedAnswer?.quizId === quizId
-      }
+      answerIsSelected={answerIsSelected}
+      anotherAnswerIsSelected={anotherAnswerIsSelected}
       onClick={async () => {
         if (!selectedAnswer && currentAnswer?.quizId !== quizId) {
           setAnswer({

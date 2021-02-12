@@ -1,21 +1,26 @@
 import React from "react";
 
-import { Answer, Game } from "models/Game.model";
+import { Game } from "models/Game.model";
 import EGameStage from "constants/GameStage.constants";
 import FullScreenError from "components/Utils/FullScreenError";
 import CaPasseOuCaCashContainer from "containers/Game/Quiz/Host/CaPasseOuCaCash.container";
 import { QuizItemData } from "models/Quiz.model";
+import useGetAnswers from "hooks/useGetAnswer.hook";
 
 interface HostCurrentContainerProps {
   game: Game;
   quizItemData: QuizItemData;
-  playersAnswers: Record<string, Answer>;
 }
 const HostCurrentContainer: React.FC<HostCurrentContainerProps> = ({
   game,
   quizItemData,
-  playersAnswers,
 }): JSX.Element => {
+  const playersAnswers = useGetAnswers({
+    shortId: game.shortId,
+    quizItemData,
+    players: game.players,
+  });
+
   switch (game.stage) {
     case EGameStage.caPasseOuCaCash:
       return (
