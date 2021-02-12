@@ -11,9 +11,10 @@ import FullHeightContainer from "components/Utils/FullHeightContainer";
 import TimeBar from "components/Quiz/Others/TimeBar";
 import { useQuery } from "@apollo/client";
 import { GET_QUIZ_ITEM_DATA } from "services/quizzes.service";
-import useQuizRemainingTime from "hooks/useQuizRemainingTime.util";
+import useQuizRemainingTime from "hooks/useQuizTiming.util";
 import AnswerTypeSelection from "components/Quiz/Player/AnswerTypeSelection";
 import AnswerComponents from "../../../../components/Quiz/Player/AnswerComponents";
+import useGetAnswers from "hooks/useGetAnswer.hook";
 
 interface PlayerProps {
   game: Game;
@@ -32,6 +33,8 @@ const Player: React.FC<PlayerProps> = ({ game, playerId }): JSX.Element => {
     variables: { quizId, level, quizItemId, createdAtTimestamp },
   });
 
+  const playersAnswers = useGetAnswers({ shortId, quizItemData });
+
   const [
     duoAnswersIndexes,
     setDuoAnswersIndexes,
@@ -41,7 +44,9 @@ const Player: React.FC<PlayerProps> = ({ game, playerId }): JSX.Element => {
       cookieName: ECookieName.duoAnswersIndexes,
     }),
   );
-  const remainingTime = useQuizRemainingTime({
+  const { remainingTime, questionIsOver } = useQuizRemainingTime({
+    players: game.players,
+    playersAnswers,
     timestampReference: quizItemData?.createdAtTimestamp,
     duration: 20,
   });
@@ -103,7 +108,11 @@ const Player: React.FC<PlayerProps> = ({ game, playerId }): JSX.Element => {
       className="d-flex flex-column align-center"
       padding="10px 20px"
     >
-      <TimeBar totalTime={20} remainingTime={remainingTime} />
+      <TimeBar
+        totalTime={20}
+        remainingTime={remainingTime}
+        questionIsOver={questionIsOver}
+      />
       {answerTypeChoice?.quizId !== quizId ? (
         <AnswerTypeSelection
           quizId={quizId}

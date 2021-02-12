@@ -6,7 +6,7 @@ import EStyles from "constants/Styling.constants";
 interface TimeBarProps {
   totalTime: number;
   remainingTime: number;
-  questionIsOver?: boolean;
+  questionIsOver: boolean;
   isHost?: boolean;
 }
 

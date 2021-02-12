@@ -10,7 +10,7 @@ import TimeBar from "components/Quiz/Others/TimeBar";
 import PlayerAnswer from "components/Quiz/Host/PlayerAnswer";
 import FullHeightContainer from "components/Utils/FullHeightContainer";
 import Loader from "components/Utils/Loader";
-import useQuizRemainingTime from "hooks/useQuizRemainingTime.util";
+import useQuizTiming from "hooks/useQuizTiming.util";
 
 interface CaPasseOuCaCashProps {
   game: Game;
@@ -23,28 +23,12 @@ const CaPasseOuCaCash: React.FC<CaPasseOuCaCashProps> = ({
   quizItemData,
   playersAnswers,
 }): JSX.Element => {
-  const remainingTime = useQuizRemainingTime({
+  const { remainingTime, questionIsOver } = useQuizTiming({
+    players: game.players,
+    playersAnswers,
     timestampReference: quizItemData.createdAtTimestamp,
     duration: 20,
   });
-
-  const [questionIsOver, setQuestionIsOver] = React.useState<boolean>(false);
-
-  React.useEffect(() => {
-    if (remainingTime) {
-      const timeout = setTimeout(() => {
-        setQuestionIsOver(true);
-      }, remainingTime * 1000);
-
-      return () => clearTimeout(timeout);
-    }
-  }, [remainingTime]);
-
-  React.useEffect(() => {
-    if (Object.keys(playersAnswers).length === game.players.length) {
-      setQuestionIsOver(true);
-    }
-  }, [playersAnswers]);
 
   return remainingTime ? (
     <FullWidthContainer className="d-flex flex-column align-center space-between flex-grow">
