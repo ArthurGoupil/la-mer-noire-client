@@ -7,17 +7,21 @@ import { Answer, PlayerData } from "models/Game.model";
 import ECookieName from "constants/Cookies.constants";
 import { QuizItemData } from "models/Quiz.model";
 
-interface UseGetAnswersProps {
+interface UsePlayersAnswersProps {
   shortId: string;
   quizItemData: QuizItemData;
   players: PlayerData[];
 }
 
-const useGetAnswers = ({
+interface UsePlayersAnswersReturn {
+  playersAnswers: Record<string, Answer>;
+}
+
+const usePlayersAnswers = ({
   shortId,
   quizItemData,
   players,
-}: UseGetAnswersProps): Record<string, Answer> => {
+}: UsePlayersAnswersProps): UsePlayersAnswersReturn => {
   const { data: { playerAnswered } = {} } = useSubscription(PLAYER_ANSWERED, {
     variables: { shortId },
   });
@@ -35,7 +39,7 @@ const useGetAnswers = ({
     if (
       playerAnswered &&
       quizItemData &&
-      Object.keys(playersAnswers).length === players.length
+      Object.keys(playersAnswers).length !== players.length
     ) {
       const playerId = playerAnswered.playerId;
       if (playersAnswers[playerId]?.quizId !== quizItemData.quizId) {
@@ -54,7 +58,7 @@ const useGetAnswers = ({
     }
   }, [playerAnswered]);
 
-  return playersAnswers;
+  return { playersAnswers };
 };
 
-export default useGetAnswers;
+export default usePlayersAnswers;

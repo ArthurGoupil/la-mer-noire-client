@@ -2,10 +2,8 @@ import React from "react";
 import styled from "styled-components";
 
 import EStyles from "constants/Styling.constants";
-import ECookieName from "constants/Cookies.constants";
-import { Answer, AnswerType } from "models/Game.model";
-import { getCookie } from "utils/cookies.util";
-import useSetAnswer from "hooks/useSetAnswer.hook";
+import { AnswerType } from "models/Game.model";
+import useCurrentAnswer from "hooks/quiz/useCurrentAnswer.hook";
 
 interface AnswerChoiceProps {
   color: string;
@@ -15,8 +13,6 @@ interface AnswerChoiceProps {
   answerType: AnswerType;
   playerId: string;
   questionIsOver: boolean;
-  selectedAnswer: Answer | null;
-  setSelectedAnswer: React.Dispatch<React.SetStateAction<Answer | null>>;
 }
 
 const AnswerChoice: React.FC<AnswerChoiceProps> = ({
@@ -27,30 +23,20 @@ const AnswerChoice: React.FC<AnswerChoiceProps> = ({
   answerType,
   playerId,
   questionIsOver,
-  selectedAnswer,
-  setSelectedAnswer,
 }): JSX.Element => {
-  const currentAnswer = getCookie<Answer>({
-    prefix: shortId,
-    cookieName: ECookieName.currentAnswer,
+  const { currentAnswer, setCurrentAnswer } = useCurrentAnswer({
+    shortId,
+    quizId,
   });
 
-  const setAnswer = useSetAnswer();
-
-  React.useEffect(() => {
-    if (currentAnswer?.quizId === quizId) {
-      setSelectedAnswer(currentAnswer);
-    }
-  }, []);
-
   const answerIsSelected =
-    selectedAnswer?.answer === quizAnswer && selectedAnswer?.quizId === quizId;
+    currentAnswer?.answer === quizAnswer && currentAnswer?.quizId === quizId;
 
   const anotherAnswerIsSelected =
-    (selectedAnswer !== null &&
-      selectedAnswer?.answer !== quizAnswer &&
-      selectedAnswer?.quizId === quizId) ||
-    questionIsOver;
+    (currentAnswer !== null &&
+      currentAnswer?.answer !== quizAnswer &&
+      currentAnswer?.quizId === quizId) ||
+    (!answerIsSelected && questionIsOver);
 
   return (
     <AnswerButton
@@ -60,15 +46,8 @@ const AnswerChoice: React.FC<AnswerChoiceProps> = ({
       answerIsSelected={answerIsSelected}
       anotherAnswerIsSelected={anotherAnswerIsSelected}
       onClick={async () => {
-        if (!selectedAnswer && currentAnswer?.quizId !== quizId) {
-          setAnswer({
-            shortId,
-            quizId,
-            answer: quizAnswer,
-            answerType,
-            playerId,
-            setSelectedAnswer,
-          });
+        if (currentAnswer?.quizId !== quizId) {
+          setCurrentAnswer({ answer: quizAnswer, answerType, playerId });
         }
       }}
     >

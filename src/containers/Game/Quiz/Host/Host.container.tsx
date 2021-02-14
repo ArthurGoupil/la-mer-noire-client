@@ -12,6 +12,7 @@ import FullScreenError from "components/Utils/FullScreenError";
 import FullWidthContainer from "components/Utils/FullWidthContainer";
 import { GET_QUIZ_ITEM_DATA } from "services/quizzes.service";
 import HostCurrentContainer from "components/Quiz/Host/HostCurrentContainer";
+import usePlayersAnswers from "hooks/quiz/usePlayersAnswers.hook";
 
 interface HostProps {
   game: Game;
@@ -34,6 +35,12 @@ const Host: React.FC<HostProps> = ({ game }): JSX.Element => {
     variables: { quizId, level, quizItemId, createdAtTimestamp },
   });
 
+  const { playersAnswers } = usePlayersAnswers({
+    shortId: game.shortId,
+    quizItemData,
+    players: game.players,
+  });
+
   if (quizItemDataError) {
     return (
       <FullScreenError
@@ -52,7 +59,11 @@ const Host: React.FC<HostProps> = ({ game }): JSX.Element => {
         <EmptyDivForFullScreenIcon />
       </FullWidthContainer>
       <StageName gameStage={stage} />
-      <HostCurrentContainer game={game} quizItemData={quizItemData} />
+      <HostCurrentContainer
+        game={game}
+        quizItemData={quizItemData}
+        playersAnswers={playersAnswers}
+      />
     </FullHeightContainer>
   ) : (
     <FullHeightContainer className="d-flex justify-center align-center">

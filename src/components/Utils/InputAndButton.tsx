@@ -5,7 +5,7 @@ import EStyles from "constants/Styling.constants";
 import Loader from "./Loader";
 
 interface InputAndButtonProps {
-  handleSubmit: (name: string) => void;
+  handleSubmit: (value: string) => void;
   buttonLabel: string;
   inputWidth?: number;
   margin?: string;
@@ -29,7 +29,7 @@ const InputAndButton: React.FC<InputAndButtonProps> = ({
 
   return (
     <Form
-      onSubmit={(e) => {
+      onSubmit={async (e) => {
         e.preventDefault();
         if (value.length > 0) {
           handleSubmit(value);

@@ -3,7 +3,7 @@ import styled from "styled-components";
 
 import { AnswerType } from "models/Game.model";
 import EStyles from "constants/Styling.constants";
-import getStringFromAnswerType from "utils/Quiz/getStringFromAnswerType";
+import getStringFromAnswerType from "utils/quiz/getStringFromAnswerType";
 import FullWidthContainer from "components/Utils/FullWidthContainer";
 
 interface PlayerAnswerProps {

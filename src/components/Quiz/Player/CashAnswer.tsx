@@ -1,16 +1,13 @@
 import React from "react";
 import styled from "styled-components";
 
-import { Answer } from "models/Game.model";
 import EStyles from "constants/Styling.constants";
 import FullHeightContainer from "components/Utils/FullHeightContainer";
 import Button from "components/Utils/Button";
-import ECookieName from "constants/Cookies.constants";
-import getLettersRecordFromString from "utils/Quiz/getLettersRecordFromString.util";
-import getLetterIndexInSentence from "utils/Quiz/getLetterIndexInSentence.util";
-import useSetAnswer from "hooks/useSetAnswer.hook";
-import { getCookie } from "utils/cookies.util";
+import getLettersRecordFromString from "utils/quiz/getLettersRecordFromString.util";
+import getLetterIndexInSentence from "utils/quiz/getLetterIndexInSentence.util";
 import isDesktop from "utils/isDesktop.util";
+import useCurrentAnswer from "hooks/quiz/useCurrentAnswer.hook";
 
 interface CashAnswerProps {
   shortId: string;
@@ -18,7 +15,6 @@ interface CashAnswerProps {
   playerId: string;
   answer: string;
   questionIsOver: boolean;
-  setSelectedAnswer: (value: React.SetStateAction<Answer | null>) => void;
 }
 
 const CashAnswer: React.FC<CashAnswerProps> = ({
@@ -27,7 +23,6 @@ const CashAnswer: React.FC<CashAnswerProps> = ({
   playerId,
   answer,
   questionIsOver,
-  setSelectedAnswer,
 }): JSX.Element => {
   const [
     answerLettersValuesRecord,
@@ -36,11 +31,9 @@ const CashAnswer: React.FC<CashAnswerProps> = ({
     getLettersRecordFromString({ word: answer, returnsEmptyString: true }),
   );
 
-  const setAnswer = useSetAnswer();
-
-  const currentAnswer = getCookie<Answer>({
-    prefix: shortId,
-    cookieName: ECookieName.currentAnswer,
+  const { currentAnswer, setCurrentAnswer } = useCurrentAnswer({
+    shortId,
+    quizId,
   });
 
   React.useEffect(() => {
@@ -140,15 +133,12 @@ const CashAnswer: React.FC<CashAnswerProps> = ({
                                 letterIndexInFullAnswer - 1
                               ]?.current?.focus();
                           } else if (e.key === "Enter") {
-                            setAnswer({
-                              shortId,
-                              quizId,
+                            setCurrentAnswer({
                               answer: Object.values(
                                 answerLettersValuesRecord,
                               ).join(""),
                               answerType: "cash",
                               playerId,
-                              setSelectedAnswer,
                             });
                           }
                         }
@@ -178,18 +168,15 @@ const CashAnswer: React.FC<CashAnswerProps> = ({
           label={
             isPossibleToAnswer
               ? "Répondre"
-              : questionIsOver
+              : questionIsOver && currentAnswer?.quizId !== quizId
               ? "Too late !"
               : "Réponse envoyée !"
           }
           onClick={() =>
-            setAnswer({
-              shortId,
-              quizId,
+            setCurrentAnswer({
               answer: Object.values(answerLettersValuesRecord).join(""),
               answerType: "cash",
               playerId,
-              setSelectedAnswer,
             })
           }
           margin="0 10px"

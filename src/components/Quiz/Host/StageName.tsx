@@ -3,7 +3,7 @@ import styled from "styled-components";
 
 import EStyles from "constants/Styling.constants";
 import EGameStage from "constants/GameStage.constants";
-import getStageName from "utils/Game/getStageName.util";
+import getStageName from "utils/game/getStageName.util";
 
 interface StageNameProps {
   gameStage: EGameStage;

@@ -40,7 +40,7 @@ const useLaunchGame = ({
         setLaunchCounter(launchCounter - 1);
       }, 1000);
     } else if (launchCounter === 0) {
-      launchGame();
+      (async () => await launchGame())();
     }
 
     return () => clearTimeout(timeout);

@@ -1,7 +1,6 @@
 import React from "react";
 
 import EStyles from "constants/Styling.constants";
-import { Answer } from "models/Game.model";
 import AnswerChoice from "./AnswerChoice";
 
 interface CarreAnswersProps {
@@ -10,8 +9,6 @@ interface CarreAnswersProps {
   choices: string[];
   playerId: string;
   questionIsOver: boolean;
-  selectedAnswer: Answer | null;
-  setSelectedAnswer: React.Dispatch<React.SetStateAction<Answer | null>>;
 }
 
 const CarreAnswers: React.FC<CarreAnswersProps> = ({
@@ -20,8 +17,6 @@ const CarreAnswers: React.FC<CarreAnswersProps> = ({
   choices,
   playerId,
   questionIsOver,
-  selectedAnswer,
-  setSelectedAnswer,
 }): JSX.Element => {
   return (
     <>
@@ -33,8 +28,6 @@ const CarreAnswers: React.FC<CarreAnswersProps> = ({
         answerType="carre"
         playerId={playerId}
         questionIsOver={questionIsOver}
-        selectedAnswer={selectedAnswer}
-        setSelectedAnswer={setSelectedAnswer}
       />
       <AnswerChoice
         color={EStyles.yellow}
@@ -44,8 +37,6 @@ const CarreAnswers: React.FC<CarreAnswersProps> = ({
         answerType="carre"
         playerId={playerId}
         questionIsOver={questionIsOver}
-        selectedAnswer={selectedAnswer}
-        setSelectedAnswer={setSelectedAnswer}
       />
       <AnswerChoice
         color={EStyles.orange}
@@ -55,8 +46,6 @@ const CarreAnswers: React.FC<CarreAnswersProps> = ({
         answerType="carre"
         playerId={playerId}
         questionIsOver={questionIsOver}
-        selectedAnswer={selectedAnswer}
-        setSelectedAnswer={setSelectedAnswer}
       />
       <AnswerChoice
         color={EStyles.turquoise}
@@ -66,8 +55,6 @@ const CarreAnswers: React.FC<CarreAnswersProps> = ({
         answerType="carre"
         playerId={playerId}
         questionIsOver={questionIsOver}
-        selectedAnswer={selectedAnswer}
-        setSelectedAnswer={setSelectedAnswer}
       />
     </>
   );

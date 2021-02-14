@@ -2,7 +2,6 @@ import React from "react";
 
 import EStyles from "constants/Styling.constants";
 import AnswerChoice from "./AnswerChoice";
-import { Answer } from "models/Game.model";
 
 interface CarreAnswersProps {
   shortId: string;
@@ -10,8 +9,6 @@ interface CarreAnswersProps {
   choices: string[];
   playerId: string;
   questionIsOver: boolean;
-  selectedAnswer: Answer | null;
-  setSelectedAnswer: React.Dispatch<React.SetStateAction<Answer | null>>;
 }
 
 const DuoAnswers: React.FC<CarreAnswersProps> = ({
@@ -20,8 +17,6 @@ const DuoAnswers: React.FC<CarreAnswersProps> = ({
   choices,
   playerId,
   questionIsOver,
-  selectedAnswer,
-  setSelectedAnswer,
 }): JSX.Element => {
   return (
     <>
@@ -33,8 +28,6 @@ const DuoAnswers: React.FC<CarreAnswersProps> = ({
         quizId={quizId}
         playerId={playerId}
         questionIsOver={questionIsOver}
-        selectedAnswer={selectedAnswer}
-        setSelectedAnswer={setSelectedAnswer}
       />
       <AnswerChoice
         color={EStyles.yellow}
@@ -44,8 +37,6 @@ const DuoAnswers: React.FC<CarreAnswersProps> = ({
         quizId={quizId}
         playerId={playerId}
         questionIsOver={questionIsOver}
-        selectedAnswer={selectedAnswer}
-        setSelectedAnswer={setSelectedAnswer}
       />
     </>
   );

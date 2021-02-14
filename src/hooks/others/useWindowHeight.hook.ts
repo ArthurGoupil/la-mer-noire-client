@@ -1,7 +1,11 @@
 import React from "react";
 import isDesktop from "utils/isDesktop.util";
 
-const useWindowHeight = (): number => {
+interface UseWindowHeightReturn {
+  height: number;
+}
+
+const useWindowHeight = (): UseWindowHeightReturn => {
   const [height, setHeight] = React.useState<number>(window.innerHeight);
 
   const handleChangeHeight = () => setHeight(window.innerHeight);
@@ -16,7 +20,7 @@ const useWindowHeight = (): number => {
     }
   }, []);
 
-  return height;
+  return { height };
 };
 
 export default useWindowHeight;

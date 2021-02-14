@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 
 import Loader from "components/Utils/Loader";
 import FullScreenError from "components/Utils/FullScreenError";
-import useGame from "hooks/useGame.hook";
+import useGame from "hooks/game/useGame.hook";
 import EUserType from "constants/GameUserType.constants";
 import FullHeightContainer from "components/Utils/FullHeightContainer";
 import GameCurrentContainer from "components/Game/GameCurrentContainer";

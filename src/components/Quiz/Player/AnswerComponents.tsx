@@ -1,8 +1,8 @@
 import React from "react";
+
 import CarreAnswers from "components/Quiz/Player/CarreAnswers";
 import CashAnswer from "components/Quiz/Player/CashAnswer";
 import DuoAnswers from "components/Quiz/Player/DuoAnswers";
-import { Answer } from "models/Game.model";
 import { DuoAnswersIndexes, QuizItemData } from "models/Quiz.model";
 import FullScreenError from "components/Utils/FullScreenError";
 
@@ -13,8 +13,6 @@ interface GetAnswerTypeComponentProps {
   quizItemData: QuizItemData;
   duoAnswersIndexes: DuoAnswersIndexes;
   questionIsOver: boolean;
-  selectedAnswer: Answer | null;
-  setSelectedAnswer: React.Dispatch<React.SetStateAction<Answer | null>>;
 }
 
 const AnswerDisplay: React.FC<GetAnswerTypeComponentProps> = ({
@@ -24,8 +22,6 @@ const AnswerDisplay: React.FC<GetAnswerTypeComponentProps> = ({
   quizItemData,
   duoAnswersIndexes,
   questionIsOver,
-  selectedAnswer,
-  setSelectedAnswer,
 }) => {
   switch (answerType) {
     case "duo":
@@ -38,8 +34,6 @@ const AnswerDisplay: React.FC<GetAnswerTypeComponentProps> = ({
           )}
           playerId={playerId}
           questionIsOver={questionIsOver}
-          selectedAnswer={selectedAnswer}
-          setSelectedAnswer={setSelectedAnswer}
         />
       );
     case "carre":
@@ -50,8 +44,6 @@ const AnswerDisplay: React.FC<GetAnswerTypeComponentProps> = ({
           choices={quizItemData.quiz.choices}
           playerId={playerId}
           questionIsOver={questionIsOver}
-          selectedAnswer={selectedAnswer}
-          setSelectedAnswer={setSelectedAnswer}
         />
       );
     case "cash":
@@ -62,7 +54,6 @@ const AnswerDisplay: React.FC<GetAnswerTypeComponentProps> = ({
           playerId={playerId}
           answer={quizItemData.quiz.answer}
           questionIsOver={questionIsOver}
-          setSelectedAnswer={setSelectedAnswer}
         />
       );
   }

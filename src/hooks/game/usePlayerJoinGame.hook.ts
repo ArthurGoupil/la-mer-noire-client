@@ -6,15 +6,26 @@ import { ADD_PLAYER_TO_GAME } from "services/games.service";
 import { CREATE_PLAYER } from "services/players.service";
 import { setCookie } from "utils/cookies.util";
 
-interface UseJoinGameProps {
+interface UsePlayerJoinGameProps {
   shortId: string;
 }
-const useJoinGame = ({ shortId }: UseJoinGameProps) => {
+
+interface UsePlayerJoinGameReturn {
+  handlePlayerJoinGame: ({ name }: HandlePlayerJoinGameProps) => Promise<void>;
+}
+
+export interface HandlePlayerJoinGameProps {
+  name: string;
+}
+
+const usePlayerJoinGame = ({
+  shortId,
+}: UsePlayerJoinGameProps): UsePlayerJoinGameReturn => {
   const history = useHistory();
   const [createPlayer] = useMutation(CREATE_PLAYER);
   const [addPlayerToGame] = useMutation(ADD_PLAYER_TO_GAME);
 
-  const handleJoinGame = async (name: string) => {
+  const handlePlayerJoinGame = async ({ name }: HandlePlayerJoinGameProps) => {
     const createdPlayer = (await createPlayer({ variables: { name } })).data
       .createPlayer;
     setCookie({
@@ -28,7 +39,7 @@ const useJoinGame = ({ shortId }: UseJoinGameProps) => {
     history.push(`/games/${shortId.toUpperCase()}/play`);
   };
 
-  return handleJoinGame;
+  return { handlePlayerJoinGame };
 };
 
-export default useJoinGame;
+export default usePlayerJoinGame;

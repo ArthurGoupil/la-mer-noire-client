@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 
-import useWindowHeight from "hooks/useWindowHeight.hook";
+import useWindowHeight from "hooks/others/useWindowHeight.hook";
 interface FullHeightContainerProps {
   children: React.ReactNode;
   padding?: string;
@@ -15,7 +15,7 @@ const FullHeightContainer: React.FC<FullHeightContainerProps> = ({
   minHeight = null,
   className = "d-flex justify-center align-center",
 }): JSX.Element => {
-  const height = useWindowHeight();
+  const { height } = useWindowHeight();
 
   return (
     <Container

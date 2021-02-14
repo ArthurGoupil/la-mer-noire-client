@@ -1,20 +1,19 @@
 import React from "react";
 
 import Loader from "components/Utils/Loader";
-import { Answer, AnswerTypeChoice, Game } from "models/Game.model";
+import { AnswerTypeChoice, Game } from "models/Game.model";
 import FullScreenError from "components/Utils/FullScreenError";
-import getRandomDuoAnswersIndexes from "utils/Quiz/getRandomDuoAnswersIndexes.util";
 import { setCookie, getCookie } from "utils/cookies.util";
 import ECookieName from "constants/Cookies.constants";
-import { DuoAnswersIndexes } from "models/Quiz.model";
 import FullHeightContainer from "components/Utils/FullHeightContainer";
 import TimeBar from "components/Quiz/Others/TimeBar";
 import { useQuery } from "@apollo/client";
 import { GET_QUIZ_ITEM_DATA } from "services/quizzes.service";
-import useQuizRemainingTime from "hooks/useQuizTiming.util";
+import useQuizRemainingTime from "hooks/quiz/useQuizTiming.hook";
 import AnswerTypeSelection from "components/Quiz/Player/AnswerTypeSelection";
 import AnswerComponents from "../../../../components/Quiz/Player/AnswerComponents";
-import useGetAnswers from "hooks/useGetAnswer.hook";
+import usePlayersAnswers from "hooks/quiz/usePlayersAnswers.hook";
+import useDuoAnswersIndexes from "hooks/quiz/useDuoAnswersIndexes.hook";
 
 interface PlayerProps {
   game: Game;
@@ -33,21 +32,17 @@ const Player: React.FC<PlayerProps> = ({ game, playerId }): JSX.Element => {
     variables: { quizId, level, quizItemId, createdAtTimestamp },
   });
 
-  const playersAnswers = useGetAnswers({
+  const { playersAnswers } = usePlayersAnswers({
     shortId,
     quizItemData,
     players: game.players,
   });
 
-  const [
-    duoAnswersIndexes,
-    setDuoAnswersIndexes,
-  ] = React.useState<DuoAnswersIndexes>(
-    getCookie({
-      prefix: shortId,
-      cookieName: ECookieName.duoAnswersIndexes,
-    }),
-  );
+  const { duoAnswersIndexes } = useDuoAnswersIndexes({
+    shortId: game.shortId,
+    quizItemData,
+  });
+
   const { remainingTime, questionIsOver } = useQuizRemainingTime({
     players: game.players,
     playersAnswers,
@@ -69,33 +64,6 @@ const Player: React.FC<PlayerProps> = ({ game, playerId }): JSX.Element => {
       cookieValue: answerTypeChoice,
     });
   }, [answerTypeChoice]);
-
-  const [selectedAnswer, setSelectedAnswer] = React.useState<Answer | null>(
-    null,
-  );
-
-  React.useEffect(() => {
-    if (quizItemData) {
-      if (selectedAnswer && selectedAnswer?.quizId !== quizItemData.quizId) {
-        setSelectedAnswer(null);
-      }
-      if (duoAnswersIndexes?.quizId !== quizItemData.quizId) {
-        const duoAnswersIndexesToStore = {
-          quizId: quizItemData.quizId,
-          indexes: getRandomDuoAnswersIndexes({
-            choices: quizItemData.quiz.choices,
-            answer: quizItemData.quiz.answer,
-          }),
-        };
-        setDuoAnswersIndexes(duoAnswersIndexesToStore);
-        setCookie({
-          prefix: shortId,
-          cookieName: ECookieName.duoAnswersIndexes,
-          cookieValue: duoAnswersIndexesToStore,
-        });
-      }
-    }
-  }, [quizItemData]);
 
   if (quizItemDataError) {
     return (
@@ -131,8 +99,6 @@ const Player: React.FC<PlayerProps> = ({ game, playerId }): JSX.Element => {
           quizItemData={quizItemData}
           duoAnswersIndexes={duoAnswersIndexes}
           questionIsOver={questionIsOver}
-          selectedAnswer={selectedAnswer}
-          setSelectedAnswer={setSelectedAnswer}
         />
       )}
     </FullHeightContainer>
