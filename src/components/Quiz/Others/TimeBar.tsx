@@ -13,7 +13,7 @@ interface TimeBarProps {
 const TimeBar: React.FC<TimeBarProps> = ({
   totalTime,
   remainingTime,
-  questionIsOver = false,
+  questionIsOver,
   isHost = false,
 }): JSX.Element => {
   const initialWidth = 100 - (100 * remainingTime) / totalTime + "%";

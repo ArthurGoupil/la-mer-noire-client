@@ -22,28 +22,33 @@ const useQuizTiming = ({
   timestampReference,
   duration,
 }: UseQuizRemainingTimeProps): UseQuizRemainingTimeReturn => {
-  const { data } = useQuery(GET_TIMESTAMP);
+  const { data } = useQuery(GET_TIMESTAMP, { fetchPolicy: "no-cache" });
   const remainingTime = timestampReference + duration - data?.timestamp;
 
   const [questionIsOver, setQuestionIsOver] = React.useState<boolean>(false);
 
   React.useEffect(() => {
+    let timeout: NodeJS.Timeout;
     if (remainingTime) {
-      const timeout = setTimeout(() => {
+      timeout = setTimeout(() => {
         setQuestionIsOver(true);
       }, remainingTime * 1000);
-
-      return () => clearTimeout(timeout);
     }
+    return () => clearTimeout(timeout);
   }, [remainingTime]);
 
   React.useEffect(() => {
     if (Object.keys(playersAnswers).length === players.length) {
       setQuestionIsOver(true);
     }
+
+    return;
   }, [playersAnswers]);
 
-  return { remainingTime, questionIsOver };
+  return {
+    remainingTime,
+    questionIsOver,
+  };
 };
 
 export default useQuizTiming;

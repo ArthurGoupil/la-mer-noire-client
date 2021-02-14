@@ -75,7 +75,10 @@ const Player: React.FC<PlayerProps> = ({ game, playerId }): JSX.Element => {
     );
   }
 
-  return !quizItemDataLoading && quizItemData && duoAnswersIndexes ? (
+  return !quizItemDataLoading &&
+    quizItemData &&
+    duoAnswersIndexes &&
+    remainingTime ? (
     <FullHeightContainer
       className="d-flex flex-column align-center"
       padding="10px 20px"
