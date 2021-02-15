@@ -4,7 +4,7 @@ interface GetLetterIndexInSentenceProps {
   letterIndex: number;
 }
 
-const getLetterIndexInSentence = ({
+export const getLetterIndexInSentence = ({
   sentence,
   wordIndex,
   letterIndex,
@@ -19,5 +19,3 @@ const getLetterIndexInSentence = ({
   }
   return letterIndexInSentence;
 };
-
-export default getLetterIndexInSentence;

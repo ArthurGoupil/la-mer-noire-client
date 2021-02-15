@@ -1,13 +1,14 @@
 import React from "react";
 import styled from "styled-components";
 
-import EStyles from "constants/Styling.constants";
-import FullHeightContainer from "components/Utils/FullHeightContainer";
-import Button from "components/Utils/Button";
-import getLettersRecordFromString from "utils/quiz/getLettersRecordFromString.util";
-import getLetterIndexInSentence from "utils/quiz/getLetterIndexInSentence.util";
-import isDesktop from "utils/isDesktop.util";
-import useCurrentAnswer from "hooks/quiz/useCurrentAnswer.hook";
+import { EStyles } from "constants/Styling.constants";
+import { FullHeightContainer } from "components/Utils/FullHeightContainer";
+import { Button } from "components/Utils/Button";
+import { getLettersRecordFromString } from "utils/quiz/getLettersRecordFromString.util";
+import { getLetterIndexInSentence } from "utils/quiz/getLetterIndexInSentence.util";
+import { isDesktop } from "utils/isDesktop.util";
+import { useCurrentAnswer } from "hooks/quiz/useCurrentAnswer.hook";
+import { AnswerType } from "models/Game.model";
 
 interface CashAnswerProps {
   shortId: string;
@@ -17,7 +18,7 @@ interface CashAnswerProps {
   questionIsOver: boolean;
 }
 
-const CashAnswer: React.FC<CashAnswerProps> = ({
+export const CashAnswer: React.FC<CashAnswerProps> = ({
   shortId,
   quizId,
   playerId,
@@ -137,7 +138,7 @@ const CashAnswer: React.FC<CashAnswerProps> = ({
                               answer: Object.values(
                                 answerLettersValuesRecord,
                               ).join(""),
-                              answerType: "cash",
+                              answerType: AnswerType.duo,
                               playerId,
                             });
                           }
@@ -175,7 +176,7 @@ const CashAnswer: React.FC<CashAnswerProps> = ({
           onClick={() =>
             setCurrentAnswer({
               answer: Object.values(answerLettersValuesRecord).join(""),
-              answerType: "cash",
+              answerType: AnswerType.cash,
               playerId,
             })
           }
@@ -219,5 +220,3 @@ const Input = styled.input<{ inputWidth: number }>`
 const InputsContainer = styled.div`
   margin-bottom: 20px;
 `;
-
-export default CashAnswer;

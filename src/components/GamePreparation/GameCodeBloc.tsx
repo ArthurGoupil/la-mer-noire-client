@@ -1,19 +1,17 @@
 import React from "react";
 import styled from "styled-components";
 
-import EStyles from "constants/Styling.constants";
+import { EStyles } from "constants/Styling.constants";
 
 interface GameCodeBlocProps {
   gameCode: string;
-  show?: boolean;
 }
 
-const GameCodeBloc: React.FC<GameCodeBlocProps> = ({
+export const GameCodeBloc: React.FC<GameCodeBlocProps> = ({
   gameCode,
-  show = true,
 }): JSX.Element => {
   return (
-    <GameCodeBlocContainer show={show} className="d-flex align-center">
+    <GameCodeBlocContainer className="d-flex align-center">
       <SmartphoneIcon src="/icons/phone-quiz.svg" />
       <CodeText className="d-flex align-end">
         Donnez le code de la partie à vos amis :<GameCode>{gameCode}</GameCode>
@@ -22,11 +20,10 @@ const GameCodeBloc: React.FC<GameCodeBlocProps> = ({
   );
 };
 
-const GameCodeBlocContainer = styled.div<{ show: boolean }>`
+const GameCodeBlocContainer = styled.div`
   border-radius: ${EStyles.radius};
   padding: 20px;
   border: 5px solid ${EStyles.blue};
-  display: ${(props) => (props.show ? "flex" : "none")};
 `;
 
 const SmartphoneIcon = styled.img`
@@ -57,5 +54,3 @@ const GameCode = styled.div`
     margin-top: 10px;
   }
 `;
-
-export default GameCodeBloc;

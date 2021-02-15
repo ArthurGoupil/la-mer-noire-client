@@ -1,5 +1,5 @@
 import React from "react";
-import { useQuery } from "@apollo/client";
+import { NetworkStatus, useQuery } from "@apollo/client";
 
 import { GET_TIMESTAMP } from "services/others.service";
 import { Answer, PlayerData } from "models/Game.model";
@@ -14,15 +14,18 @@ interface UseQuizRemainingTimeProps {
 interface UseQuizRemainingTimeReturn {
   remainingTime: number;
   questionIsOver: boolean;
+  networkStatus: NetworkStatus;
 }
 
-const useQuizTiming = ({
+export const useQuizTiming = ({
   players,
   playersAnswers,
   timestampReference,
   duration,
 }: UseQuizRemainingTimeProps): UseQuizRemainingTimeReturn => {
-  const { data } = useQuery(GET_TIMESTAMP, { fetchPolicy: "no-cache" });
+  const { data, networkStatus } = useQuery(GET_TIMESTAMP, {
+    fetchPolicy: "no-cache",
+  });
   const remainingTime = timestampReference + duration - data?.timestamp;
 
   const [questionIsOver, setQuestionIsOver] = React.useState<boolean>(false);
@@ -48,7 +51,6 @@ const useQuizTiming = ({
   return {
     remainingTime,
     questionIsOver,
+    networkStatus,
   };
 };
-
-export default useQuizTiming;

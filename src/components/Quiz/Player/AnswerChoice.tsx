@@ -1,9 +1,9 @@
 import React from "react";
 import styled from "styled-components";
 
-import EStyles from "constants/Styling.constants";
+import { EStyles } from "constants/Styling.constants";
 import { AnswerType } from "models/Game.model";
-import useCurrentAnswer from "hooks/quiz/useCurrentAnswer.hook";
+import { useCurrentAnswer } from "hooks/quiz/useCurrentAnswer.hook";
 
 interface AnswerChoiceProps {
   color: string;
@@ -15,7 +15,7 @@ interface AnswerChoiceProps {
   questionIsOver: boolean;
 }
 
-const AnswerChoice: React.FC<AnswerChoiceProps> = ({
+export const AnswerChoice: React.FC<AnswerChoiceProps> = ({
   color,
   quizAnswer,
   shortId,
@@ -75,5 +75,3 @@ const AnswerButton = styled.button<{
   box-shadow: ${(props) =>
     props.answerIsSelected ? `inset 0 0 10px 5px white` : "none"};
 `;
-
-export default AnswerChoice;

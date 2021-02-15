@@ -1,7 +1,7 @@
 import React from "react";
 import { useMutation } from "@apollo/client";
 
-import ECookieName from "constants/Cookies.constants";
+import { ECookieName } from "constants/Cookies.constants";
 import { Answer, AnswerType } from "models/Game.model";
 import { GIVE_ANSWER } from "services/games.service";
 import { getCookie, setCookie } from "utils/cookies.util";
@@ -22,7 +22,7 @@ interface SetCurrentAnswerProps {
   playerId: string;
 }
 
-const useCurrentAnswer = ({
+export const useCurrentAnswer = ({
   shortId,
   quizId,
 }: UseCurrentAnswerProps): UseCurrentAnswerReturn => {
@@ -66,5 +66,3 @@ const useCurrentAnswer = ({
 
   return { currentAnswer, setCurrentAnswer };
 };
-
-export default useCurrentAnswer;

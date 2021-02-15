@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 
-import useWindowHeight from "hooks/others/useWindowHeight.hook";
+import { useWindowHeight } from "hooks/others/useWindowHeight.hook";
 interface FullHeightContainerProps {
   children: React.ReactNode;
   padding?: string;
@@ -9,7 +9,7 @@ interface FullHeightContainerProps {
   className?: string;
 }
 
-const FullHeightContainer: React.FC<FullHeightContainerProps> = ({
+export const FullHeightContainer: React.FC<FullHeightContainerProps> = ({
   children,
   padding = "40px",
   minHeight = null,
@@ -41,5 +41,3 @@ const Container = styled.div<{
   position: relative;
   padding: ${(props) => props.padding};
 `;
-
-export default FullHeightContainer;

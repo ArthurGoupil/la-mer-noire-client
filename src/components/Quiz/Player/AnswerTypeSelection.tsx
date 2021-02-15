@@ -1,9 +1,9 @@
 import React from "react";
 import styled from "styled-components";
 
-import { AnswerTypeChoice } from "models/Game.model";
-import EStyles from "constants/Styling.constants";
-import FullHeightContainer from "components/Utils/FullHeightContainer";
+import { AnswerType, AnswerTypeChoice } from "models/Game.model";
+import { EStyles } from "constants/Styling.constants";
+import { FullHeightContainer } from "components/Utils/FullHeightContainer";
 
 interface AnswerTypeSelectionProps {
   quizId: string;
@@ -11,7 +11,7 @@ interface AnswerTypeSelectionProps {
   setAnswerTypeChoice: React.Dispatch<React.SetStateAction<AnswerTypeChoice>>;
 }
 
-const AnswerTypeSelection: React.FC<AnswerTypeSelectionProps> = ({
+export const AnswerTypeSelection: React.FC<AnswerTypeSelectionProps> = ({
   quizId,
   questionIsOver,
   setAnswerTypeChoice,
@@ -27,7 +27,9 @@ const AnswerTypeSelection: React.FC<AnswerTypeSelectionProps> = ({
         className="d-flex justify-center align-center"
         backgroundColor={EStyles.lightBlue}
         opacity={questionIsOver ? 0.6 : 1}
-        onClick={() => setAnswerTypeChoice({ quizId, answerType: "duo" })}
+        onClick={() =>
+          setAnswerTypeChoice({ quizId, answerType: AnswerType.duo })
+        }
       >
         DUO
       </AnswerTypeContainer>
@@ -36,7 +38,9 @@ const AnswerTypeSelection: React.FC<AnswerTypeSelectionProps> = ({
         className="d-flex justify-center align-center"
         backgroundColor={EStyles.yellow}
         opacity={questionIsOver ? 0.6 : 1}
-        onClick={() => setAnswerTypeChoice({ quizId, answerType: "carre" })}
+        onClick={() =>
+          setAnswerTypeChoice({ quizId, answerType: AnswerType.carre })
+        }
       >
         CARRÉ
       </AnswerTypeContainer>
@@ -45,7 +49,9 @@ const AnswerTypeSelection: React.FC<AnswerTypeSelectionProps> = ({
         className="d-flex justify-center align-center"
         backgroundColor={EStyles.orange}
         opacity={questionIsOver ? 0.6 : 1}
-        onClick={() => setAnswerTypeChoice({ quizId, answerType: "cash" })}
+        onClick={() =>
+          setAnswerTypeChoice({ quizId, answerType: AnswerType.cash })
+        }
       >
         CASH
       </AnswerTypeContainer>
@@ -68,5 +74,3 @@ const AnswerTypeContainer = styled.button<{
   opacity: ${(props) => props.opacity};
   border: none;
 `;
-
-export default AnswerTypeSelection;

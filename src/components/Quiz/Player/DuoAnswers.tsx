@@ -1,7 +1,8 @@
 import React from "react";
 
-import EStyles from "constants/Styling.constants";
-import AnswerChoice from "./AnswerChoice";
+import { EStyles } from "constants/Styling.constants";
+import { AnswerChoice } from "./AnswerChoice";
+import { AnswerType } from "models/Game.model";
 
 interface CarreAnswersProps {
   shortId: string;
@@ -11,7 +12,7 @@ interface CarreAnswersProps {
   questionIsOver: boolean;
 }
 
-const DuoAnswers: React.FC<CarreAnswersProps> = ({
+export const DuoAnswers: React.FC<CarreAnswersProps> = ({
   shortId,
   quizId,
   choices,
@@ -24,7 +25,7 @@ const DuoAnswers: React.FC<CarreAnswersProps> = ({
         color={EStyles.darkBlue}
         quizAnswer={choices[0]}
         shortId={shortId}
-        answerType="duo"
+        answerType={AnswerType.duo}
         quizId={quizId}
         playerId={playerId}
         questionIsOver={questionIsOver}
@@ -33,7 +34,7 @@ const DuoAnswers: React.FC<CarreAnswersProps> = ({
         color={EStyles.yellow}
         quizAnswer={choices[1]}
         shortId={shortId}
-        answerType="duo"
+        answerType={AnswerType.duo}
         quizId={quizId}
         playerId={playerId}
         questionIsOver={questionIsOver}
@@ -41,5 +42,3 @@ const DuoAnswers: React.FC<CarreAnswersProps> = ({
     </>
   );
 };
-
-export default DuoAnswers;

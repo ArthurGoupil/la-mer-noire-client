@@ -2,8 +2,8 @@ import React from "react";
 
 import { DuoAnswersIndexes, QuizItemData } from "models/Quiz.model";
 import { getCookie, setCookie } from "utils/cookies.util";
-import ECookieName from "constants/Cookies.constants";
-import getRandomDuoAnswersIndexes from "utils/quiz/getRandomDuoAnswersIndexes.util";
+import { ECookieName } from "constants/Cookies.constants";
+import { getRandomDuoAnswersIndexes } from "utils/quiz/getRandomDuoAnswersIndexes.util";
 
 interface UseDuoAnswersIndexesProps {
   shortId: string;
@@ -14,7 +14,7 @@ interface UseDuoAnswersIndexesReturn {
   duoAnswersIndexes: DuoAnswersIndexes;
 }
 
-const useDuoAnswersIndexes = ({
+export const useDuoAnswersIndexes = ({
   shortId,
   quizItemData,
 }: UseDuoAnswersIndexesProps): UseDuoAnswersIndexesReturn => {
@@ -49,5 +49,3 @@ const useDuoAnswersIndexes = ({
 
   return { duoAnswersIndexes };
 };
-
-export default useDuoAnswersIndexes;

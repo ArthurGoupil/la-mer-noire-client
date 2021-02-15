@@ -1,7 +1,7 @@
 import { useMutation } from "@apollo/client";
 import { useHistory } from "react-router-dom";
 
-import ECookieName from "constants/Cookies.constants";
+import { ECookieName } from "constants/Cookies.constants";
 import { ADD_PLAYER_TO_GAME } from "services/games.service";
 import { CREATE_PLAYER } from "services/players.service";
 import { setCookie } from "utils/cookies.util";
@@ -14,11 +14,11 @@ interface UsePlayerJoinGameReturn {
   handlePlayerJoinGame: ({ name }: HandlePlayerJoinGameProps) => Promise<void>;
 }
 
-export interface HandlePlayerJoinGameProps {
+interface HandlePlayerJoinGameProps {
   name: string;
 }
 
-const usePlayerJoinGame = ({
+export const usePlayerJoinGame = ({
   shortId,
 }: UsePlayerJoinGameProps): UsePlayerJoinGameReturn => {
   const history = useHistory();
@@ -41,5 +41,3 @@ const usePlayerJoinGame = ({
 
   return { handlePlayerJoinGame };
 };
-
-export default usePlayerJoinGame;

@@ -1,9 +1,9 @@
 import React from "react";
 import styled from "styled-components";
 
-import EStyles from "constants/Styling.constants";
+import { EStyles } from "constants/Styling.constants";
 
-const AnimatedSubmarine: React.FC<{}> = (): JSX.Element => {
+export const AnimatedSubmarine: React.FC<{}> = (): JSX.Element => {
   return (
     <SubmarineContainer>
       <SubmarineLightWrapper className="d-flex align-center">
@@ -22,8 +22,6 @@ const AnimatedSubmarine: React.FC<{}> = (): JSX.Element => {
     </SubmarineContainer>
   );
 };
-
-export default AnimatedSubmarine;
 
 const SubmarineContainer = styled.div`
   position: absolute;

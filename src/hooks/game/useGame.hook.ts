@@ -1,5 +1,5 @@
 import React from "react";
-import { ApolloError, useQuery } from "@apollo/client";
+import { NetworkStatus, useQuery } from "@apollo/client";
 
 import {
   GET_GAME,
@@ -20,14 +20,14 @@ interface Subscription {
 
 interface UseGameReturn {
   game: Game;
-  gameError: ApolloError | undefined;
+  networkStatus: NetworkStatus;
 }
 
-const useGame = ({
+export const useGame = ({
   shortId,
   subscribe = { stage: false, players: false },
 }: UseGameProps): UseGameReturn => {
-  const { subscribeToMore, data: { game } = {}, error: gameError } = useQuery(
+  const { subscribeToMore, data: { game } = {}, networkStatus } = useQuery(
     GET_GAME,
     {
       variables: { shortId },
@@ -59,7 +59,5 @@ const useGame = ({
     }
   }, [subscribeToMore, shortId]);
 
-  return { game, gameError };
+  return { game, networkStatus };
 };
-
-export default useGame;

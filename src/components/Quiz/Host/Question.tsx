@@ -1,16 +1,16 @@
 import React from "react";
 import styled from "styled-components";
 
-import FullWidthContainer from "components/Utils/FullWidthContainer";
+import { FullWidthContainer } from "components/Utils/FullWidthContainer";
 import { QuizItem } from "models/Quiz.model";
-import EStyles from "constants/Styling.constants";
+import { EStyles } from "constants/Styling.constants";
 
 interface QuestionDisplayProps {
   quizItem: QuizItem;
   showAnswers?: boolean;
 }
 
-const QuestionDisplay: React.FC<QuestionDisplayProps> = ({
+export const QuestionDisplay: React.FC<QuestionDisplayProps> = ({
   quizItem,
   showAnswers = true,
 }): JSX.Element => {
@@ -62,5 +62,3 @@ const AnswerContainer = styled.div<{ color: string }>`
   background-color: ${(props) => props.color};
   text-shadow: 2px 2px 0px ${EStyles.darkBlue};
 `;
-
-export default QuestionDisplay;

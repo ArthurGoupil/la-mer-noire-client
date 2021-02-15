@@ -4,9 +4,9 @@ interface GetStringFromAnswerTypeProps {
   answerType: AnswerType;
 }
 
-const getStringFromAnswerType = ({
+export const getStringFromAnswerType = ({
   answerType,
-}: GetStringFromAnswerTypeProps): string => {
+}: GetStringFromAnswerTypeProps): string | undefined => {
   switch (answerType) {
     case "duo":
       return "DUO";
@@ -16,5 +16,3 @@ const getStringFromAnswerType = ({
       return "CASH";
   }
 };
-
-export default getStringFromAnswerType;

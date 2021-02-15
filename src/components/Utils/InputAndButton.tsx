@@ -1,8 +1,8 @@
 import React from "react";
 import styled from "styled-components";
 
-import EStyles from "constants/Styling.constants";
-import Loader from "./Loader";
+import { EStyles } from "constants/Styling.constants";
+import { Loader } from "./Loader";
 
 interface InputAndButtonProps {
   handleSubmit: (value: string) => void;
@@ -12,10 +12,9 @@ interface InputAndButtonProps {
   placeholder?: string;
   valueMaxLength?: number;
   isLoading?: boolean;
-  show?: boolean;
 }
 
-const InputAndButton: React.FC<InputAndButtonProps> = ({
+export const InputAndButton: React.FC<InputAndButtonProps> = ({
   handleSubmit,
   buttonLabel,
   inputWidth = 250,
@@ -23,7 +22,6 @@ const InputAndButton: React.FC<InputAndButtonProps> = ({
   placeholder = "",
   valueMaxLength = 100,
   isLoading = false,
-  show = true,
 }): JSX.Element => {
   const [value, setValue] = React.useState<string>("");
 
@@ -36,7 +34,6 @@ const InputAndButton: React.FC<InputAndButtonProps> = ({
         }
       }}
       margin={margin}
-      show={show}
       className="d-flex justify-center align-center"
     >
       <Input
@@ -58,9 +55,8 @@ const InputAndButton: React.FC<InputAndButtonProps> = ({
   );
 };
 
-const Form = styled.form<{ margin: string; show: boolean }>`
+const Form = styled.form<{ margin: string }>`
   margin: ${(props) => props.margin};
-  display: ${(props) => (props.show ? "flex" : "none")};
 
   @media only screen and (max-width: ${EStyles.mobileBreakPoint}) {
     flex-direction: column;
@@ -106,5 +102,3 @@ const Button = styled.button`
 const LabelContainer = styled.div<{ isLoading: boolean }>`
   opacity: ${(props) => (props.isLoading ? 0 : 1)};
 `;
-
-export default InputAndButton;

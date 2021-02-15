@@ -1,90 +1,33 @@
 import React from "react";
-import styled from "styled-components";
 
-import EStyles from "constants/Styling.constants";
-import GameCodeBloc from "components/GamePreparation/GameCodeBloc";
-import PlayersList from "components/Utils/ItemsList";
-import LMNLogo from "components/Utils/LMNLogo";
-import FullHeightContainer from "components/Utils/FullHeightContainer";
-import Loader from "components/Utils/Loader";
-import useLaunchGame from "hooks/game/useLaunchGame.hook";
-import Button from "components/Utils/Button";
-import InputAndButton from "components/Utils/InputAndButton";
-import usePlayerJoinGame from "hooks/game/usePlayerJoinGame.hook";
-import EUserType from "constants/GameUserType.constants";
+import { EUserType } from "constants/GameUserType.constants";
 import { Game } from "models/Game.model";
+import { HostGamePreparation } from "components/GamePreparation/HostGamePreparation";
+import { JoinGamePreparation } from "components/GamePreparation/JoinGamePreparation";
+import { FullScreenError } from "components/Utils/FullScreenError";
 
 interface GameJoinProps {
   game: Game;
   userType: EUserType;
 }
 
-const GamePreparation: React.FC<GameJoinProps> = ({
+export const GamePreparationContainer: React.FC<GameJoinProps> = ({
   game,
   userType,
 }): JSX.Element => {
-  const { handleLaunchGameCounter, launchGameButtonLabel } = useLaunchGame({
-    shortId: game.shortId,
-  });
-  const { handlePlayerJoinGame } = usePlayerJoinGame({ shortId: game.shortId });
+  if (userType in EUserType) {
+    return {
+      host: <HostGamePreparation game={game} />,
+      join: <JoinGamePreparation game={game} userType={userType} />,
+      play: <JoinGamePreparation game={game} userType={userType} />,
+    }[userType];
+  }
 
-  return game ? (
-    <FullHeightContainer className="d-flex flex-column align-center">
-      <LMNLogo width="400px" margin={`20px 0 20px 0`} />
-      <div className="d-flex flex-column align-center space-around flex-grow">
-        <GameName>{game.name.toUpperCase()}</GameName>
-        <GameCodeBloc
-          gameCode={game.shortId}
-          show={userType === EUserType.host}
-        />
-        <InputAndButton
-          handleSubmit={async (value) =>
-            await handlePlayerJoinGame({ name: value })
-          }
-          buttonLabel="Rejoindre la partie"
-          placeholder="My lovely name"
-          margin={`0 0 20px 0`}
-          show={userType === "join"}
-        />
-        <div>
-          <PlayersTitle show={game.players.length > 0}>
-            Dans les starting blocks
-          </PlayersTitle>
-          <PlayersList
-            list={game.players.map((playerData) => playerData.player)}
-            labelKey="name"
-            className="d-flex justify-center flex-wrap"
-            maxWidth="600px"
-            margin={`0 0 40px 0`}
-            show={game.players.length > 0}
-          />
-        </div>
-        <Button
-          onClick={handleLaunchGameCounter}
-          label={launchGameButtonLabel}
-          show={userType === EUserType.host}
-        />
-      </div>
-    </FullHeightContainer>
-  ) : (
-    <FullHeightContainer className="d-flex justify-center align-center">
-      <Loader />
-    </FullHeightContainer>
+  return (
+    <FullScreenError
+      errorLabel={`Erreur de type "unknown game current state."`}
+      link="/"
+      linkLabel="Revenir au menu principal"
+    />
   );
 };
-
-const GameName = styled.h1`
-  color: ${EStyles.yellow};
-  text-shadow: 3px 3px 0 ${EStyles.redOrange};
-  text-align: center;
-  margin-bottom: 20px;
-`;
-const PlayersTitle = styled.h2<{ show: boolean }>`
-  color: ${EStyles.orange};
-  text-shadow: 3px 3px 0 ${EStyles.blue};
-  text-align: center;
-  margin-bottom: 10px;
-  display: ${(props) => (props.show ? "block" : "none")};
-`;
-
-export default GamePreparation;

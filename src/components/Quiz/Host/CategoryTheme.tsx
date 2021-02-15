@@ -1,4 +1,4 @@
-import EStyles from "constants/Styling.constants";
+import { EStyles } from "constants/Styling.constants";
 import React from "react";
 import styled from "styled-components";
 
@@ -8,7 +8,7 @@ interface CategoryThemeProps {
   subTheme: string;
 }
 
-const CategoryTheme: React.FC<CategoryThemeProps> = ({
+export const CategoryTheme: React.FC<CategoryThemeProps> = ({
   categoryName,
   theme,
   subTheme,
@@ -39,5 +39,3 @@ const SubThemeContainer = styled.div`
   font-weight: 300;
   margin-left: 20px;
 `;
-
-export default CategoryTheme;

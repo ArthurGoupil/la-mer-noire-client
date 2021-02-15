@@ -1,13 +1,15 @@
 import React from "react";
 import styled from "styled-components";
 
-import EStyles from "constants/Styling.constants";
+import { EStyles } from "constants/Styling.constants";
 
 interface GameNameProps {
   gameName: string;
 }
 
-const GameName: React.FC<GameNameProps> = ({ gameName }): JSX.Element => {
+export const GameName: React.FC<GameNameProps> = ({
+  gameName,
+}): JSX.Element => {
   return <Name>{gameName}</Name>;
 };
 
@@ -17,5 +19,3 @@ const Name = styled.h3`
   color: ${EStyles.yellow};
   text-shadow: 3px 3px 0 ${EStyles.redOrange};
 `;
-
-export default GameName;

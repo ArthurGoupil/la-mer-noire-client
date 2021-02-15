@@ -74,6 +74,12 @@ export const GIVE_ANSWER: DocumentNode = gql`
   }
 `;
 
+export const GENERATE_NEW_CURRENT_QUIZ_ITEM: DocumentNode = gql`
+  mutation GenerateNewCurrentQuizItem($shortId: String!, $level: String!) {
+    generateNewCurrentQuizItem(shortId: $shortId, level: $level)
+  }
+`;
+
 // SUBSCRIPTIONS
 
 export const GAME_PLAYERS_UPDATED: DocumentNode = gql`

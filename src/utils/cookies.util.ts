@@ -1,5 +1,5 @@
 import Cookies from "js-cookie";
-import ECookieName from "constants/Cookies.constants";
+import { ECookieName } from "constants/Cookies.constants";
 
 interface SetGameCookieProps {
   prefix: string;

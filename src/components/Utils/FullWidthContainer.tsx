@@ -7,7 +7,7 @@ interface FullWidthContainerProps {
   margin?: string;
 }
 
-const FullWidthContainer: React.FC<FullWidthContainerProps> = ({
+export const FullWidthContainer: React.FC<FullWidthContainerProps> = ({
   children,
   className = "d-flex flex-column align-center",
   margin = "0",
@@ -18,8 +18,6 @@ const FullWidthContainer: React.FC<FullWidthContainerProps> = ({
     </Container>
   );
 };
-
-export default FullWidthContainer;
 
 const Container = styled.div<{ margin: string }>`
   width: 100%;

@@ -1,42 +1,43 @@
 import React from "react";
 import { useParams } from "react-router-dom";
 
-import Loader from "components/Utils/Loader";
-import FullScreenError from "components/Utils/FullScreenError";
-import useGame from "hooks/game/useGame.hook";
-import EUserType from "constants/GameUserType.constants";
-import FullHeightContainer from "components/Utils/FullHeightContainer";
-import GameCurrentContainer from "components/Game/GameCurrentContainer";
+import { FullScreenError } from "components/Utils/FullScreenError";
+import { useGame } from "hooks/game/useGame.hook";
+import { EUserType } from "constants/GameUserType.constants";
+import { FullHeightLoader } from "components/Utils/FullHeightLoader";
+import { error, loading, ready } from "constants/NetworkStatuses.constants";
+import { GamePreparationContainer } from "./GamePreparation/GamePreparation.container";
+import { QuizContainer } from "containers/Game/Quiz/Quiz.container";
+import { getNetworkStatus } from "utils/networkStatus.util";
 
 interface Params {
   shortId: string;
   userType: EUserType;
 }
 
-const Game: React.FC<{}> = (): JSX.Element => {
+export const GameContainer: React.FC = (): JSX.Element => {
   const { shortId, userType } = useParams<Params>();
-  const { game, gameError } = useGame({
+  const { game, networkStatus } = useGame({
     shortId,
     subscribe: { stage: true, players: true },
   });
 
-  if (gameError) {
-    return (
+  const CurrentContainer = {
+    playersRegistration: (
+      <GamePreparationContainer game={game} userType={userType} />
+    ),
+    caPasseOuCaCash: <QuizContainer game={game} userType={userType} />,
+  }[game?.stage];
+
+  return {
+    [ready]: CurrentContainer,
+    [loading]: <FullHeightLoader />,
+    [error]: (
       <FullScreenError
-        errorLabel="Erreur lors du chargement de la partie."
+        errorLabel="La partie n'existe pas, vérifiez le code et réessayez."
         link="/"
         linkLabel="Revenir au menu principal"
       />
-    );
-  }
-
-  return game ? (
-    <GameCurrentContainer game={game} userType={userType} />
-  ) : (
-    <FullHeightContainer className="d-flex justify-center align-center">
-      <Loader />
-    </FullHeightContainer>
-  );
+    ),
+  }[getNetworkStatus(networkStatus)];
 };
-
-export default Game;

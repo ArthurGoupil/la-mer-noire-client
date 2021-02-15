@@ -2,7 +2,7 @@ import React from "react";
 import { useMutation } from "@apollo/client";
 
 import { UPDATE_GAME_STAGE } from "services/games.service";
-import EGameStage from "constants/GameStage.constants";
+import { EGameStage } from "constants/GameStage.constants";
 
 interface useLaunchGameProps {
   shortId: string;
@@ -13,7 +13,7 @@ interface UseLaunchGameReturn {
   launchGameButtonLabel: string;
 }
 
-const useLaunchGame = ({
+export const useLaunchGame = ({
   shortId,
 }: useLaunchGameProps): UseLaunchGameReturn => {
   const [launchCounter, setLaunchCounter] = React.useState<number | null>(null);
@@ -53,5 +53,3 @@ const useLaunchGame = ({
       : "Tout le monde est prêt !",
   };
 };
-
-export default useLaunchGame;

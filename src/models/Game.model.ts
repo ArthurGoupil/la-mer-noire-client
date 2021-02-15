@@ -1,4 +1,4 @@
-import EGameStage from "constants/GameStage.constants";
+import { EGameStage } from "constants/GameStage.constants";
 import { Player } from "models/Player.model";
 
 export interface Game {
@@ -33,7 +33,11 @@ export interface Answer {
   answerType: AnswerType;
 }
 
-export type AnswerType = "duo" | "carre" | "cash";
+export enum AnswerType {
+  duo = "duo",
+  carre = "carre",
+  cash = "cash",
+}
 
 export interface AnswerTypeChoice {
   quizId: string;

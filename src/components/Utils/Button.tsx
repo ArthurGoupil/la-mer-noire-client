@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 
-import EStyles from "constants/Styling.constants";
+import { EStyles } from "constants/Styling.constants";
 
 interface ButtonProps {
   onClick: () => void;
@@ -12,10 +12,9 @@ interface ButtonProps {
   backgroundColor?: string;
   borderColor?: string;
   hoverColor?: string;
-  show?: boolean;
 }
 
-const Button: React.FC<ButtonProps> = ({
+export const Button: React.FC<ButtonProps> = ({
   onClick,
   label,
   disabled = false,
@@ -24,7 +23,6 @@ const Button: React.FC<ButtonProps> = ({
   backgroundColor = EStyles.lightBlue,
   hoverColor = EStyles.darken_lightBlue,
   borderColor = EStyles.lightBlue,
-  show = true,
 }): JSX.Element => {
   return (
     <StyledButton
@@ -36,7 +34,6 @@ const Button: React.FC<ButtonProps> = ({
       backgroundColor={backgroundColor}
       hoverColor={hoverColor}
       borderColor={borderColor}
-      show={show}
     >
       {label}
     </StyledButton>
@@ -50,7 +47,6 @@ const StyledButton = styled.button<{
   backgroundColor: string;
   borderColor: string;
   hoverColor: string;
-  show: boolean;
 }>`
   min-width: 70px;
   color: ${(props) => props.color};
@@ -62,7 +58,6 @@ const StyledButton = styled.button<{
   border: ${(props) => `5px solid ${props.borderColor}`};
   outline: none;
   transition: 0.2s background-color;
-  display: ${(props) => (props.show ? "flex" : "none")};
   opacity: ${(props) => (props.disabled ? 0.7 : 1)};
   font-weight: 500;
 
@@ -70,5 +65,3 @@ const StyledButton = styled.button<{
     background-color: ${(props) => props.hoverColor};
   }
 `;
-
-export default Button;

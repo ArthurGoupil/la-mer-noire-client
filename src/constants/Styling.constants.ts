@@ -1,4 +1,4 @@
-const EStyles = {
+export const EStyles = {
   // COLORS
   darkBlue: "#0d3b66",
   blue: "#056CF2",
@@ -33,5 +33,3 @@ const EStyles = {
   mobileBreakPoint: "420px",
   tabletBreakPoint: "770px",
 };
-
-export default EStyles;

@@ -2,17 +2,17 @@ import { useMutation } from "@apollo/client";
 import React from "react";
 import { useHistory } from "react-router-dom";
 
-import InputAndButton from "components/Utils/InputAndButton";
-import FullHeightContainer from "components/Utils/FullHeightContainer";
-import LMNLogo from "components/Utils/LMNLogo";
+import { InputAndButton } from "components/Utils/InputAndButton";
+import { FullHeightContainer } from "components/Utils/FullHeightContainer";
+import { LMNLogo } from "components/Utils/LMNLogo";
 import { CREATE_GAME } from "services/games.service";
-import AnimatedSubmarine from "components/Utils/AnimatedSubmarine";
+import { AnimatedSubmarine } from "components/Utils/AnimatedSubmarine";
 
 interface HandleSubmitProps {
   name: string;
 }
 
-const CreateGame: React.FC<{}> = (): JSX.Element => {
+export const CreateGameContainer: React.FC<{}> = (): JSX.Element => {
   const history = useHistory();
   const [createGame, { loading }] = useMutation(CREATE_GAME);
 
@@ -35,5 +35,3 @@ const CreateGame: React.FC<{}> = (): JSX.Element => {
     </FullHeightContainer>
   );
 };
-
-export default CreateGame;

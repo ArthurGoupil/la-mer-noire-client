@@ -5,7 +5,7 @@ interface IsValidAnswerProps {
   givenAnswer: string;
 }
 
-const isValidAnswer = ({
+export const isValidAnswer = ({
   answer,
   givenAnswer,
 }: IsValidAnswerProps): boolean => {
@@ -23,5 +23,3 @@ const isValidAnswer = ({
   }
   return false;
 };
-
-export default isValidAnswer;

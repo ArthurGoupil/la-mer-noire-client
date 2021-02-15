@@ -3,7 +3,7 @@ interface GetLettersRecordFromString {
   returnsEmptyString: boolean;
 }
 
-const getLettersRecordFromString = ({
+export const getLettersRecordFromString = ({
   word,
   returnsEmptyString,
 }: GetLettersRecordFromString): Record<number, string> => {
@@ -17,5 +17,3 @@ const getLettersRecordFromString = ({
 
   return lettersRecord;
 };
-
-export default getLettersRecordFromString;

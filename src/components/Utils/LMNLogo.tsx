@@ -1,14 +1,14 @@
 import React from "react";
 import styled from "styled-components";
 
-import EStyles from "constants/Styling.constants";
+import { EStyles } from "constants/Styling.constants";
 
 interface LMNLogoProps {
   width: string;
   margin?: string;
 }
 
-const LMNLogo: React.FC<LMNLogoProps> = ({
+export const LMNLogo: React.FC<LMNLogoProps> = ({
   width,
   margin = "0",
 }): JSX.Element => {
@@ -84,5 +84,3 @@ const SVG = styled.svg`
   max-width: 100%;
   height: auto;
 `;
-
-export default LMNLogo;

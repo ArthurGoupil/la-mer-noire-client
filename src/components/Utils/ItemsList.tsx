@@ -3,7 +3,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 
-import EStyles from "constants/Styling.constants";
+import { EStyles } from "constants/Styling.constants";
 
 interface ItemsListProps {
   list: Record<string, any>[];
@@ -13,10 +13,9 @@ interface ItemsListProps {
   className?: string;
   margin?: string;
   maxWidth?: string;
-  show?: boolean;
 }
 
-const ItemsList: React.FC<ItemsListProps> = ({
+export const ItemsList: React.FC<ItemsListProps> = ({
   list,
   labelKey,
   linkBase,
@@ -24,10 +23,9 @@ const ItemsList: React.FC<ItemsListProps> = ({
   className = "",
   margin = "0",
   maxWidth = "auto",
-  show = true,
 }): JSX.Element => {
   return (
-    <List className={className} margin={margin} maxWidth={maxWidth} show={show}>
+    <List className={className} margin={margin} maxWidth={maxWidth}>
       {list.map((item: Record<string, any>, index: number) =>
         linkBase ? (
           <Link
@@ -44,10 +42,9 @@ const ItemsList: React.FC<ItemsListProps> = ({
   );
 };
 
-const List = styled.ul<{ margin: string; maxWidth: string; show: boolean }>`
+const List = styled.ul<{ margin: string; maxWidth: string }>`
   margin: ${(props) => props.margin};
   max-width: ${(props) => props.maxWidth};
-  display: ${(props) => (props.show ? "flex" : "none")};
 `;
 
 const Item = styled.li`
@@ -63,5 +60,3 @@ const Item = styled.li`
     filter: brightness(1.2);
   }
 `;
-
-export default ItemsList;

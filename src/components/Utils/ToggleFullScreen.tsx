@@ -1,9 +1,9 @@
 import React from "react";
 import styled from "styled-components";
 
-import useWindowHeight from "hooks/others/useWindowHeight.hook";
+import { useWindowHeight } from "hooks/others/useWindowHeight.hook";
 
-const ToggleFullScreen: React.FC = (): JSX.Element => {
+export const ToggleFullScreen: React.FC = (): JSX.Element => {
   const [isFullScreen, setIsFullScreen] = React.useState<boolean>(false);
   const { height } = useWindowHeight();
 
@@ -42,5 +42,3 @@ const FullScreenIcon = styled.img`
   cursor: pointer;
   z-index: 1;
 `;
-
-export default ToggleFullScreen;

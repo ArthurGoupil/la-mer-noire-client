@@ -4,7 +4,7 @@ import { useSubscription } from "@apollo/client";
 import { PLAYER_ANSWERED } from "services/games.service";
 import { getCookie, setCookie } from "utils/cookies.util";
 import { Answer, PlayerData } from "models/Game.model";
-import ECookieName from "constants/Cookies.constants";
+import { ECookieName } from "constants/Cookies.constants";
 import { QuizItemData } from "models/Quiz.model";
 
 interface UsePlayersAnswersProps {
@@ -17,7 +17,7 @@ interface UsePlayersAnswersReturn {
   playersAnswers: Record<string, Answer>;
 }
 
-const usePlayersAnswers = ({
+export const usePlayersAnswers = ({
   shortId,
   quizItemData,
   players,
@@ -34,6 +34,22 @@ const usePlayersAnswers = ({
       cookieName: ECookieName.playersAnswers,
     }) || {},
   );
+
+  React.useEffect(() => {
+    if (quizItemData) {
+      if (
+        playersAnswers[Object.keys(playersAnswers)[0]]?.quizId !==
+        quizItemData.quizId
+      ) {
+        setPlayersAnswers({});
+        setCookie({
+          prefix: shortId,
+          cookieName: ECookieName.playersAnswers,
+          cookieValue: {},
+        });
+      }
+    }
+  }, [quizItemData]);
 
   React.useEffect(() => {
     if (
@@ -60,5 +76,3 @@ const usePlayersAnswers = ({
 
   return { playersAnswers };
 };
-
-export default usePlayersAnswers;

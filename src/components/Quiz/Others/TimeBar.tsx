@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 
-import EStyles from "constants/Styling.constants";
+import { EStyles } from "constants/Styling.constants";
 
 interface TimeBarProps {
   totalTime: number;
@@ -10,7 +10,7 @@ interface TimeBarProps {
   isHost?: boolean;
 }
 
-const TimeBar: React.FC<TimeBarProps> = ({
+export const TimeBar: React.FC<TimeBarProps> = ({
   totalTime,
   remainingTime,
   questionIsOver,
@@ -78,5 +78,3 @@ const Bar = styled.div<{
     }
   }
 `;
-
-export default TimeBar;

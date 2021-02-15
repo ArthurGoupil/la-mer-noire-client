@@ -2,7 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 
-import FullHeightContainer from "components/Utils/FullHeightContainer";
+import { FullHeightContainer } from "components/Utils/FullHeightContainer";
 
 interface FullScreenErrorProps {
   errorLabel: string;
@@ -10,7 +10,7 @@ interface FullScreenErrorProps {
   linkLabel?: string;
 }
 
-const FullScreenError: React.FC<FullScreenErrorProps> = ({
+export const FullScreenError: React.FC<FullScreenErrorProps> = ({
   errorLabel,
   link,
   linkLabel,
@@ -36,5 +36,3 @@ const LinkWrapper = styled.div`
   text-decoration: underline;
   text-align: center;
 `;
-
-export default FullScreenError;

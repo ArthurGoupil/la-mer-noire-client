@@ -9,13 +9,13 @@ import styled from "styled-components";
 import "constants/Styling.constants.ts";
 import "styles/reset.css";
 import "styles/index.css";
-import EStyles from "constants/Styling.constants";
-import Home from "containers/Home.container";
-import Game from "containers/Game/Game.container";
-import CreateGame from "containers/Game/CreateGame.container";
-import useWindowHeight from "hooks/others/useWindowHeight.hook";
-import ToggleFullScreen from "components/Utils/ToggleFullScreen";
-import isDesktop from "utils/isDesktop.util";
+import { EStyles } from "constants/Styling.constants";
+import { HomeContainer } from "containers/Home.container";
+import { GameContainer } from "containers/Game/Game.container";
+import { CreateGameContainer } from "containers/Game/CreateGame.container";
+import { useWindowHeight } from "hooks/others/useWindowHeight.hook";
+import { ToggleFullScreen } from "components/Utils/ToggleFullScreen";
+import { isDesktop } from "utils/isDesktop.util";
 
 const App: React.FC = (): JSX.Element => {
   const { height } = useWindowHeight();
@@ -60,13 +60,13 @@ const App: React.FC = (): JSX.Element => {
           {isDesktop() && <ToggleFullScreen />}
           <Switch>
             <Route path="/games/:shortId/:userType">
-              <Game />
+              <GameContainer />
             </Route>
             <Route path="/create">
-              <CreateGame />
+              <CreateGameContainer />
             </Route>
             <Route path="/">
-              <Home />
+              <HomeContainer />
             </Route>
           </Switch>
         </Main>

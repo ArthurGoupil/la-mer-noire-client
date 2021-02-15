@@ -2,9 +2,9 @@ import React from "react";
 import styled from "styled-components";
 
 import { AnswerType } from "models/Game.model";
-import EStyles from "constants/Styling.constants";
-import getStringFromAnswerType from "utils/quiz/getStringFromAnswerType";
-import FullWidthContainer from "components/Utils/FullWidthContainer";
+import { EStyles } from "constants/Styling.constants";
+import { getStringFromAnswerType } from "utils/quiz/getStringFromAnswerType";
+import { FullWidthContainer } from "components/Utils/FullWidthContainer";
 
 interface PlayerAnswerProps {
   playerName: string;
@@ -14,7 +14,7 @@ interface PlayerAnswerProps {
   questionIsOver: boolean;
 }
 
-const PlayerAnswer: React.FC<PlayerAnswerProps> = ({
+export const PlayerAnswer: React.FC<PlayerAnswerProps> = ({
   playerName,
   answerType,
   isGoodAnswer,
@@ -95,5 +95,3 @@ const AnswerTypeContainer = styled.div<{
   font-weight: 400;
   z-index: 2;
 `;
-
-export default PlayerAnswer;
