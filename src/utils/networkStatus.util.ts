@@ -6,9 +6,7 @@ interface GetGlobalNetworkStatusProps {
   booleanCondition?: boolean;
 }
 
-export const getNetworkStatus = (
-  networkStatus: NetworkStatus,
-): NetworkStatus => {
+export const getNS = (networkStatus: NetworkStatus): NetworkStatus => {
   switch (networkStatus) {
     case 1:
       return loading;
@@ -36,10 +34,10 @@ export const getGlobalNetworkStatus = ({
   let mergedNetworkStatus: number = ready;
 
   for (let i = 0; i < networkStatuses.length; i++) {
-    if (getNetworkStatus(networkStatuses[i]) === error) {
+    if (getNS(networkStatuses[i]) === error) {
       mergedNetworkStatus = error;
       break;
-    } else if (getNetworkStatus(networkStatuses[i]) === loading) {
+    } else if (getNS(networkStatuses[i]) === loading) {
       mergedNetworkStatus = loading;
     }
   }

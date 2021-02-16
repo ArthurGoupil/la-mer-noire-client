@@ -8,7 +8,7 @@ import { FullHeightLoader } from "components/Utils/FullHeightLoader";
 import { error, loading, ready } from "constants/NetworkStatuses.constants";
 import { GamePreparationContainer } from "./GamePreparation/GamePreparation.container";
 import { QuizContainer } from "containers/Game/Quiz/Quiz.container";
-import { getNetworkStatus } from "utils/networkStatus.util";
+import { getNS } from "utils/networkStatus.util";
 
 interface Params {
   shortId: string;
@@ -19,7 +19,11 @@ export const GameContainer: React.FC = (): JSX.Element => {
   const { shortId, userType } = useParams<Params>();
   const { game, networkStatus } = useGame({
     shortId,
-    subscribe: { stage: true, players: true },
+    subscribe: {
+      stage: true,
+      players: true,
+      currentQuizItem: userType === EUserType.play,
+    },
   });
 
   const CurrentContainer = {
@@ -39,5 +43,5 @@ export const GameContainer: React.FC = (): JSX.Element => {
         linkLabel="Revenir au menu principal"
       />
     ),
-  }[getNetworkStatus(networkStatus)];
+  }[getNS(networkStatus)];
 };

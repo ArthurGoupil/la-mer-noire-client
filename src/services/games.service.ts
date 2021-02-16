@@ -116,3 +116,11 @@ export const PLAYER_ANSWERED: DocumentNode = gql`
     }
   }
 `;
+
+export const CURRENT_QUIZ_ITEM_UPDATED: DocumentNode = gql`
+  subscription CurrentQuizItemUpdated($shortId: String!) {
+    currentQuizItemUpdated(shortId: $shortId) {
+      ${gameData}
+    }
+  }
+`;

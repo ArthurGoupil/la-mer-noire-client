@@ -5,6 +5,7 @@ import {
   GET_GAME,
   GAME_STAGE_UPDATED,
   GAME_PLAYERS_UPDATED,
+  CURRENT_QUIZ_ITEM_UPDATED,
 } from "services/games.service";
 import { Game } from "models/Game.model";
 
@@ -16,6 +17,7 @@ interface UseGameProps {
 interface Subscription {
   stage?: boolean;
   players?: boolean;
+  currentQuizItem?: boolean;
 }
 
 interface UseGameReturn {
@@ -25,7 +27,7 @@ interface UseGameReturn {
 
 export const useGame = ({
   shortId,
-  subscribe = { stage: false, players: false },
+  subscribe = { stage: false, players: false, currentQuizItem: false },
 }: UseGameProps): UseGameReturn => {
   const { subscribeToMore, data: { game } = {}, networkStatus } = useQuery(
     GET_GAME,
@@ -53,6 +55,17 @@ export const useGame = ({
         updateQuery: (prev, { subscriptionData }) => {
           if (!subscriptionData.data) return prev;
           const newFeedItem = subscriptionData.data.gamePlayersUpdated;
+          return newFeedItem;
+        },
+      });
+    }
+    if (subscribe.currentQuizItem) {
+      subscribeToMore({
+        document: CURRENT_QUIZ_ITEM_UPDATED,
+        variables: { shortId },
+        updateQuery: (prev, { subscriptionData }) => {
+          if (!subscriptionData.data) return prev;
+          const newFeedItem = subscriptionData.data.currentQuizItemUpdated;
           return newFeedItem;
         },
       });

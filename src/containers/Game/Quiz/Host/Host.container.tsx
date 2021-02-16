@@ -10,12 +10,11 @@ import { StageName } from "components/Quiz/Host/StageName";
 import { FullScreenError } from "components/Utils/FullScreenError";
 import { FullWidthContainer } from "components/Utils/FullWidthContainer";
 import { GET_QUIZ_ITEM_DATA } from "services/quizzes.service";
-import { usePlayersAnswers } from "hooks/quiz/usePlayersAnswers.hook";
 import { error, loading, ready } from "constants/NetworkStatuses.constants";
 import { FullHeightLoader } from "components/Utils/FullHeightLoader";
 import { CaPasseOuCaCashContainer } from "./CaPasseOuCaCash.container";
 import { EQuizStage } from "constants/GameStage.constants";
-import { getNetworkStatus } from "utils/networkStatus.util";
+import { getNS } from "utils/networkStatus.util";
 
 interface HostProps {
   game: Game;
@@ -37,12 +36,6 @@ export const HostContainer: React.FC<HostProps> = ({ game }): JSX.Element => {
     variables: { quizId, level, quizItemId, createdAtTimestamp },
   });
 
-  const { playersAnswers } = usePlayersAnswers({
-    shortId: game.shortId,
-    quizItemData,
-    players: game.players,
-  });
-
   return {
     [ready]: (
       <FullHeightContainer className="d-flex flex-column align-center">
@@ -61,7 +54,6 @@ export const HostContainer: React.FC<HostProps> = ({ game }): JSX.Element => {
               <CaPasseOuCaCashContainer
                 game={game}
                 quizItemData={quizItemData}
-                playersAnswers={playersAnswers}
               />
             ),
           }[(stage as unknown) as EQuizStage]
@@ -76,7 +68,7 @@ export const HostContainer: React.FC<HostProps> = ({ game }): JSX.Element => {
         linkLabel="Retourner au menu principal"
       />
     ),
-  }[getNetworkStatus(networkStatus)];
+  }[getNS(networkStatus)];
 };
 
 const EmptyDivForFullScreenIcon = styled.div`

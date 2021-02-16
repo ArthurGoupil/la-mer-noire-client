@@ -25,7 +25,7 @@ export const GamePreparationContainer: React.FC<GameJoinProps> = ({
 
   return (
     <FullScreenError
-      errorLabel={`Erreur de type "unknown game current state."`}
+      errorLabel={`Erreur de type "unknown user type."`}
       link="/"
       linkLabel="Revenir au menu principal"
     />

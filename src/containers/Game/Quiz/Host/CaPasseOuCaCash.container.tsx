@@ -3,7 +3,7 @@ import React from "react";
 import { FullWidthContainer } from "components/Utils/FullWidthContainer";
 import { CategoryTheme } from "components/Quiz/Host/CategoryTheme";
 import { QuestionDisplay } from "components/Quiz/Host/Question";
-import { Answer, Game, PlayerData } from "models/Game.model";
+import { Game, PlayerData } from "models/Game.model";
 import { isValidAnswer } from "utils/quiz/isValidAnswer.util";
 import { TimeBar } from "components/Quiz/Others/TimeBar";
 import { PlayerAnswer } from "components/Quiz/Host/PlayerAnswer";
@@ -17,40 +17,50 @@ import { error, loading, ready } from "constants/NetworkStatuses.constants";
 import { FullHeightLoader } from "components/Utils/FullHeightLoader";
 import { FullScreenError } from "components/Utils/FullScreenError";
 import { QuizItemData } from "models/Quiz.model";
-import { getNetworkStatus } from "utils/networkStatus.util";
+import { getNS } from "utils/networkStatus.util";
+import { usePlayersAnswers } from "hooks/quiz/usePlayersAnswers.hook";
 
 interface CaPasseOuCaCashContainerProps {
   game: Game;
   quizItemData: QuizItemData;
-  playersAnswers: Record<string, Answer>;
 }
 
 export const CaPasseOuCaCashContainer: React.FC<CaPasseOuCaCashContainerProps> = ({
   game,
   quizItemData,
-  playersAnswers,
 }): JSX.Element => {
+  const { playersAnswers } = usePlayersAnswers({
+    shortId: game.shortId,
+    quizItemData,
+    players: game.players,
+  });
+
   const { remainingTime, questionIsOver, networkStatus } = useQuizTiming({
     players: game.players,
     playersAnswers,
     timestampReference: quizItemData.createdAtTimestamp,
     duration: 30,
+    isHost: true,
   });
 
   const [generateNewCurrentQuizItem] = useMutation(
     GENERATE_NEW_CURRENT_QUIZ_ITEM,
     {
       refetchQueries: [
-        { query: GET_GAME, variables: { shortId: game.shortId } },
+        {
+          query: GET_GAME,
+          variables: { shortId: game.shortId },
+        },
       ],
     },
   );
 
   React.useEffect(() => {
     if (questionIsOver) {
-      generateNewCurrentQuizItem({
-        variables: { shortId: game.shortId, level: "expert" },
-      });
+      (async () =>
+        await generateNewCurrentQuizItem({
+          variables: { shortId: game.shortId, level: "beginner" },
+        }))();
     }
   }, [questionIsOver]);
 
@@ -94,5 +104,5 @@ export const CaPasseOuCaCashContainer: React.FC<CaPasseOuCaCashContainerProps> =
     [error]: (
       <FullScreenError errorLabel="Erreur de communication avec le serveur. Veuillez recharger la page." />
     ),
-  }[getNetworkStatus(networkStatus)];
+  }[getNS(networkStatus)];
 };

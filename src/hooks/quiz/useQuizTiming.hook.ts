@@ -9,6 +9,7 @@ interface UseQuizRemainingTimeProps {
   playersAnswers: Record<string, Answer>;
   timestampReference: number;
   duration: number;
+  isHost?: boolean;
 }
 
 interface UseQuizRemainingTimeReturn {
@@ -22,6 +23,7 @@ export const useQuizTiming = ({
   playersAnswers,
   timestampReference,
   duration,
+  isHost = false,
 }: UseQuizRemainingTimeProps): UseQuizRemainingTimeReturn => {
   const { data, networkStatus } = useQuery(GET_TIMESTAMP, {
     fetchPolicy: "no-cache",
@@ -41,11 +43,9 @@ export const useQuizTiming = ({
   }, [remainingTime]);
 
   React.useEffect(() => {
-    if (Object.keys(playersAnswers).length === players.length) {
+    if (Object.keys(playersAnswers).length === players.length && isHost) {
       setQuestionIsOver(true);
     }
-
-    return;
   }, [playersAnswers]);
 
   return {

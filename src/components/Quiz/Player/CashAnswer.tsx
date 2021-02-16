@@ -138,7 +138,7 @@ export const CashAnswer: React.FC<CashAnswerProps> = ({
                               answer: Object.values(
                                 answerLettersValuesRecord,
                               ).join(""),
-                              answerType: AnswerType.duo,
+                              answerType: AnswerType.cash,
                               playerId,
                             });
                           }
