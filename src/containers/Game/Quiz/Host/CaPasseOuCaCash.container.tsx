@@ -65,7 +65,7 @@ export const CaPasseOuCaCashContainer: React.FC<CaPasseOuCaCashContainerProps> =
           await generateNewCurrentQuizItem({
             variables: { shortId: game.shortId, level: "beginner" },
           }))();
-      }, 1000);
+      }, 3000);
     }
   }, [doneQuestionsRecord]);
 
@@ -91,6 +91,7 @@ export const CaPasseOuCaCashContainer: React.FC<CaPasseOuCaCashContainerProps> =
               );
             })}
           </div>
+          {doneQuestionsRecord[quizItemData.quizId] && quizItemData.quiz.answer}
         </div>
         <CategoryTheme
           categoryName={quizItemData.category.name}
