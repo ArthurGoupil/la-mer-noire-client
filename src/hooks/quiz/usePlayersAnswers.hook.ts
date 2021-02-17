@@ -15,6 +15,7 @@ interface UsePlayersAnswersProps {
 
 interface UsePlayersAnswersReturn {
   playersAnswers: Record<string, Answer>;
+  allPlayersHaveAnswered: boolean;
 }
 
 export const usePlayersAnswers = ({
@@ -35,6 +36,11 @@ export const usePlayersAnswers = ({
     }) || {},
   );
 
+  const [
+    allPlayersHaveAnswered,
+    setAllPlayersHaveAnswered,
+  ] = React.useState<boolean>(false);
+
   React.useEffect(() => {
     if (quizItemData) {
       if (
@@ -47,6 +53,7 @@ export const usePlayersAnswers = ({
           cookieName: ECookieName.playersAnswers,
           cookieValue: {},
         });
+        setAllPlayersHaveAnswered(false);
       }
     }
   }, [quizItemData]);
@@ -65,6 +72,9 @@ export const usePlayersAnswers = ({
           answerType: playerAnswered.answerType,
         };
       }
+      if (Object.keys(playersAnswers).length === players.length) {
+        setAllPlayersHaveAnswered(true);
+      }
       setPlayersAnswers({ ...playersAnswers });
       setCookie({
         prefix: shortId,
@@ -74,5 +84,5 @@ export const usePlayersAnswers = ({
     }
   }, [playerAnswered]);
 
-  return { playersAnswers };
+  return { playersAnswers, allPlayersHaveAnswered };
 };

@@ -22,7 +22,8 @@ export const GameContainer: React.FC = (): JSX.Element => {
     subscribe: {
       stage: true,
       players: true,
-      currentQuizItem: userType === EUserType.play,
+      currentQuizItem:
+        userType === EUserType.play || userType === EUserType.join,
     },
   });
 

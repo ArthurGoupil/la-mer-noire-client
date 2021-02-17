@@ -8,7 +8,7 @@ import { FullHeightContainer } from "components/Utils/FullHeightContainer";
 import { TimeBar } from "components/Quiz/Others/TimeBar";
 import { useQuery } from "@apollo/client";
 import { GET_QUIZ_ITEM_DATA } from "services/quizzes.service";
-import { useQuizTiming } from "hooks/quiz/useQuizTiming.hook";
+import { useQuizLifetime } from "hooks/quiz/useQuizLifetime.hook";
 import { usePlayersAnswers } from "hooks/quiz/usePlayersAnswers.hook";
 import { useDuoAnswersIndexes } from "hooks/quiz/useDuoAnswersIndexes.hook";
 import { error, loading, ready } from "constants/NetworkStatuses.constants";
@@ -16,6 +16,7 @@ import { DuoCarreCashAnswerContainer } from "./DuoCarreCashAnswer.container";
 import { EQuizStage } from "constants/GameStage.constants";
 import { getGlobalNetworkStatus } from "utils/networkStatus.util";
 import { FullHeightLoader } from "components/Utils/FullHeightLoader";
+import { EQuizDuration } from "constants/QuizDuration.constants";
 
 interface PlayerProps {
   game: Game;
@@ -25,6 +26,7 @@ export const PlayerContainer: React.FC<PlayerProps> = ({
   game,
 }): JSX.Element => {
   const { stage, shortId, currentQuizItem } = game;
+
   const { quizId, level, quizItemId, createdAtTimestamp } = currentQuizItem;
 
   const playerId = getCookie<string>({
@@ -39,7 +41,7 @@ export const PlayerContainer: React.FC<PlayerProps> = ({
     variables: { quizId, level, quizItemId, createdAtTimestamp },
   });
 
-  const { playersAnswers } = usePlayersAnswers({
+  const { allPlayersHaveAnswered } = usePlayersAnswers({
     shortId,
     quizItemData,
     players: game.players,
@@ -52,13 +54,14 @@ export const PlayerContainer: React.FC<PlayerProps> = ({
 
   const {
     remainingTime,
-    questionIsOver,
+    doneQuestionsRecord,
     networkStatus: remainingTimeNetworkStatus,
-  } = useQuizTiming({
-    players: game.players,
-    playersAnswers,
+  } = useQuizLifetime({
+    shortId,
+    quizId: quizItemData?.quizId,
+    allPlayersHaveAnswered,
     timestampReference: quizItemData?.createdAtTimestamp,
-    duration: 30,
+    duration: EQuizDuration.caPasseOuCaCash,
   });
 
   const networkStatus = getGlobalNetworkStatus({
@@ -73,9 +76,9 @@ export const PlayerContainer: React.FC<PlayerProps> = ({
         padding="10px 20px"
       >
         <TimeBar
-          totalTime={30}
+          totalTime={EQuizDuration.caPasseOuCaCash}
           remainingTime={remainingTime}
-          questionIsOver={questionIsOver}
+          allPlayersHaveAnswered={allPlayersHaveAnswered}
         />
         {
           {
@@ -85,7 +88,7 @@ export const PlayerContainer: React.FC<PlayerProps> = ({
                 quizItemData={quizItemData}
                 playerId={playerId}
                 duoAnswersIndexes={duoAnswersIndexes}
-                questionIsOver={questionIsOver}
+                questionIsOver={doneQuestionsRecord[quizItemData?.quizId]}
               />
             ),
           }[(stage as unknown) as EQuizStage]

@@ -7,7 +7,7 @@ import { Game, PlayerData } from "models/Game.model";
 import { isValidAnswer } from "utils/quiz/isValidAnswer.util";
 import { TimeBar } from "components/Quiz/Others/TimeBar";
 import { PlayerAnswer } from "components/Quiz/Host/PlayerAnswer";
-import { useQuizTiming } from "hooks/quiz/useQuizTiming.hook";
+import { useQuizLifetime } from "hooks/quiz/useQuizLifetime.hook";
 import { useMutation } from "@apollo/client";
 import {
   GENERATE_NEW_CURRENT_QUIZ_ITEM,
@@ -19,6 +19,7 @@ import { FullScreenError } from "components/Utils/FullScreenError";
 import { QuizItemData } from "models/Quiz.model";
 import { getNS } from "utils/networkStatus.util";
 import { usePlayersAnswers } from "hooks/quiz/usePlayersAnswers.hook";
+import { EQuizDuration } from "constants/QuizDuration.constants";
 
 interface CaPasseOuCaCashContainerProps {
   game: Game;
@@ -29,19 +30,21 @@ export const CaPasseOuCaCashContainer: React.FC<CaPasseOuCaCashContainerProps> =
   game,
   quizItemData,
 }): JSX.Element => {
-  const { playersAnswers } = usePlayersAnswers({
+  const { playersAnswers, allPlayersHaveAnswered } = usePlayersAnswers({
     shortId: game.shortId,
     quizItemData,
     players: game.players,
   });
 
-  const { remainingTime, questionIsOver, networkStatus } = useQuizTiming({
-    players: game.players,
-    playersAnswers,
-    timestampReference: quizItemData.createdAtTimestamp,
-    duration: 30,
-    isHost: true,
-  });
+  const { remainingTime, doneQuestionsRecord, networkStatus } = useQuizLifetime(
+    {
+      shortId: game.shortId,
+      quizId: quizItemData.quizId,
+      allPlayersHaveAnswered,
+      timestampReference: quizItemData.createdAtTimestamp,
+      duration: EQuizDuration.caPasseOuCaCash,
+    },
+  );
 
   const [generateNewCurrentQuizItem] = useMutation(
     GENERATE_NEW_CURRENT_QUIZ_ITEM,
@@ -56,13 +59,15 @@ export const CaPasseOuCaCashContainer: React.FC<CaPasseOuCaCashContainerProps> =
   );
 
   React.useEffect(() => {
-    if (questionIsOver) {
-      (async () =>
-        await generateNewCurrentQuizItem({
-          variables: { shortId: game.shortId, level: "beginner" },
-        }))();
+    if (doneQuestionsRecord[quizItemData.quizId]) {
+      setTimeout(() => {
+        (async () =>
+          await generateNewCurrentQuizItem({
+            variables: { shortId: game.shortId, level: "beginner" },
+          }))();
+      }, 1000);
     }
-  }, [questionIsOver]);
+  }, [doneQuestionsRecord]);
 
   return {
     [ready]: (
@@ -81,7 +86,7 @@ export const CaPasseOuCaCashContainer: React.FC<CaPasseOuCaCashContainerProps> =
                     givenAnswer: playersAnswers[playerData.player._id]?.answer,
                   })}
                   noMarginRight={index === game.players.length - 1}
-                  questionIsOver={questionIsOver}
+                  questionIsOver={doneQuestionsRecord[quizItemData.quizId]}
                 />
               );
             })}
@@ -93,9 +98,9 @@ export const CaPasseOuCaCashContainer: React.FC<CaPasseOuCaCashContainerProps> =
           subTheme={quizItemData.subTheme}
         />
         <TimeBar
-          totalTime={30}
+          totalTime={EQuizDuration.caPasseOuCaCash}
           remainingTime={remainingTime}
-          questionIsOver={questionIsOver}
+          allPlayersHaveAnswered={allPlayersHaveAnswered}
           isHost
         />
       </FullWidthContainer>

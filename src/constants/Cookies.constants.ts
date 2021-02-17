@@ -4,4 +4,5 @@ export enum ECookieName {
   answerTypeChoice = "answerTypeChoice",
   playersAnswers = "playersAnswers",
   duoAnswersIndexes = "duoAnswersIndexes",
+  doneQuestionsRecord = "doneQuestionsRecord",
 }
