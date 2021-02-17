@@ -2,7 +2,7 @@ import React from "react";
 import { useQuery } from "@apollo/client";
 import styled from "styled-components";
 
-import { Game, QuizItemId, QuizItemLevel } from "models/Game.model";
+import { Game } from "models/Game.model";
 import { FullHeightContainer } from "components/Utils/FullHeightContainer";
 import { LMNLogo } from "components/Utils/LMNLogo";
 import { GameName } from "components/Quiz/Host/GameName";
@@ -15,6 +15,7 @@ import { FullHeightLoader } from "components/Utils/FullHeightLoader";
 import { CaPasseOuCaCashContainer } from "./CaPasseOuCaCash.container";
 import { EQuizStage } from "constants/GameStage.constants";
 import { getNS } from "utils/networkStatus.util";
+import { QuizItemId, QuizItemLevel } from "models/Quiz.model";
 
 interface HostProps {
   game: Game;

@@ -32,7 +32,9 @@ export const useQuizLifetime = ({
   const remainingTime = timestampReference + duration - data?.timestamp;
 
   React.useEffect(() => {
-    (async () => await refetch())();
+    if (timestampReference) {
+      (async () => await refetch())();
+    }
   }, [timestampReference]);
 
   const [doneQuestionsRecord, setDoneQuestionsRecord] = React.useState<
@@ -48,10 +50,13 @@ export const useQuizLifetime = ({
     let timeout: NodeJS.Timeout;
     if (remainingTime && !doneQuestionsRecord[quizId]) {
       timeout = setTimeout(() => {
-        setDoneQuestionsRecord({
-          ...doneQuestionsRecord,
-          [quizId]: true,
+        doneQuestionsRecord[quizId] = true;
+        setCookie({
+          prefix: shortId,
+          cookieName: ECookieName.doneQuestionsRecord,
+          cookieValue: doneQuestionsRecord,
         });
+        setDoneQuestionsRecord({ ...doneQuestionsRecord });
       }, remainingTime * 1000);
     }
     return () => clearTimeout(timeout);

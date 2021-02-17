@@ -11,6 +11,7 @@ interface UsePlayersAnswersProps {
   shortId: string;
   quizItemData: QuizItemData;
   players: PlayerData[];
+  isGeneratingNewCurrentQuizItem?: boolean;
 }
 
 interface UsePlayersAnswersReturn {
@@ -22,6 +23,7 @@ export const usePlayersAnswers = ({
   shortId,
   quizItemData,
   players,
+  isGeneratingNewCurrentQuizItem,
 }: UsePlayersAnswersProps): UsePlayersAnswersReturn => {
   const { data: { playerAnswered } = {} } = useSubscription(PLAYER_ANSWERED, {
     variables: { shortId },
@@ -42,18 +44,23 @@ export const usePlayersAnswers = ({
   ] = React.useState<boolean>(false);
 
   React.useEffect(() => {
+    if (isGeneratingNewCurrentQuizItem) {
+      setAllPlayersHaveAnswered(false);
+    }
+  }, [isGeneratingNewCurrentQuizItem]);
+
+  React.useEffect(() => {
     if (quizItemData) {
-      if (
-        playersAnswers[Object.keys(playersAnswers)[0]]?.quizId !==
-        quizItemData.quizId
-      ) {
+      if (Object.values(playersAnswers)[0]?.quizId !== quizItemData.quizId) {
         setPlayersAnswers({});
         setCookie({
           prefix: shortId,
           cookieName: ECookieName.playersAnswers,
           cookieValue: {},
         });
-        setAllPlayersHaveAnswered(false);
+        if (!isGeneratingNewCurrentQuizItem) {
+          setAllPlayersHaveAnswered(false);
+        }
       }
     }
   }, [quizItemData]);

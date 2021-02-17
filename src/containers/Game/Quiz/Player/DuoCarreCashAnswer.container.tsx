@@ -8,6 +8,7 @@ import { CarreAnswers } from "components/Quiz/Player/CarreAnswers";
 import { CashAnswer } from "components/Quiz/Player/CashAnswer";
 import { AnswerType } from "models/Game.model";
 import { FullScreenError } from "components/Utils/FullScreenError";
+import { useCurrentAnswer } from "hooks/quiz/useCurrentAnswer.hook";
 
 interface DuoCarreCashAnswerContainerProps {
   shortId: string;
@@ -27,6 +28,10 @@ export const DuoCarreCashAnswerContainer: React.FC<DuoCarreCashAnswerContainerPr
   const { answerTypeChoice, setAnswerTypeChoice } = useAnswerTypeChoice({
     shortId,
   });
+  const { currentAnswer, setCurrentAnswer } = useCurrentAnswer({
+    shortId,
+    quizId: quizItemData.quizId,
+  });
 
   if (answerTypeChoice?.quizId !== quizItemData.quizId) {
     return (
@@ -42,30 +47,33 @@ export const DuoCarreCashAnswerContainer: React.FC<DuoCarreCashAnswerContainerPr
     return {
       duo: (
         <DuoAnswers
-          shortId={shortId}
           quizId={quizItemData.quizId}
           choices={duoAnswersIndexes.indexes.map(
             (answerIndex: number) => quizItemData.quiz.choices[answerIndex],
           )}
           playerId={playerId}
+          currentAnswer={currentAnswer}
+          onClick={setCurrentAnswer}
           questionIsOver={questionIsOver}
         />
       ),
       carre: (
         <CarreAnswers
-          shortId={shortId}
           quizId={quizItemData.quizId}
           choices={quizItemData.quiz.choices}
           playerId={playerId}
+          currentAnswer={currentAnswer}
+          onClick={setCurrentAnswer}
           questionIsOver={questionIsOver}
         />
       ),
       cash: (
         <CashAnswer
-          shortId={shortId}
           quizId={quizItemData.quizId}
           playerId={playerId}
           answer={quizItemData.quiz.answer}
+          currentAnswer={currentAnswer}
+          onSubmit={setCurrentAnswer}
           questionIsOver={questionIsOver}
         />
       ),

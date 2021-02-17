@@ -5,4 +5,5 @@ export enum ECookieName {
   playersAnswers = "playersAnswers",
   duoAnswersIndexes = "duoAnswersIndexes",
   doneQuestionsRecord = "doneQuestionsRecord",
+  caPasseOuCaCashQuestionNumber = "caPasseOuCaCashQuestionNumber",
 }

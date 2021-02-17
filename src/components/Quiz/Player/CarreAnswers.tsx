@@ -2,21 +2,24 @@ import React from "react";
 
 import { EStyles } from "constants/Styling.constants";
 import { AnswerChoice } from "./AnswerChoice";
-import { AnswerType } from "models/Game.model";
+import { Answer, AnswerType } from "models/Game.model";
+import { SetCurrentAnswerProps } from "hooks/quiz/useCurrentAnswer.hook";
 
 interface CarreAnswersProps {
-  shortId: string;
   quizId: string;
   choices: string[];
   playerId: string;
+  currentAnswer: Answer | null;
+  onClick: (value: SetCurrentAnswerProps) => Promise<void>;
   questionIsOver: boolean;
 }
 
 export const CarreAnswers: React.FC<CarreAnswersProps> = ({
-  shortId,
   quizId,
   choices,
   playerId,
+  currentAnswer,
+  onClick,
   questionIsOver,
 }): JSX.Element => {
   return (
@@ -24,37 +27,41 @@ export const CarreAnswers: React.FC<CarreAnswersProps> = ({
       <AnswerChoice
         color={EStyles.darkBlue}
         quizAnswer={choices[0]}
-        shortId={shortId}
         quizId={quizId}
         answerType={AnswerType.carre}
         playerId={playerId}
+        currentAnswer={currentAnswer}
+        onClick={onClick}
         questionIsOver={questionIsOver}
       />
       <AnswerChoice
         color={EStyles.yellow}
         quizAnswer={choices[1]}
-        shortId={shortId}
         quizId={quizId}
         answerType={AnswerType.carre}
         playerId={playerId}
+        currentAnswer={currentAnswer}
+        onClick={onClick}
         questionIsOver={questionIsOver}
       />
       <AnswerChoice
         color={EStyles.orange}
         quizAnswer={choices[2]}
-        shortId={shortId}
         quizId={quizId}
         answerType={AnswerType.carre}
         playerId={playerId}
+        currentAnswer={currentAnswer}
+        onClick={onClick}
         questionIsOver={questionIsOver}
       />
       <AnswerChoice
         color={EStyles.turquoise}
         quizAnswer={choices[3]}
-        shortId={shortId}
         quizId={quizId}
         answerType={AnswerType.carre}
         playerId={playerId}
+        currentAnswer={currentAnswer}
+        onClick={onClick}
         questionIsOver={questionIsOver}
       />
     </>

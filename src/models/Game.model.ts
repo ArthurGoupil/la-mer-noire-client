@@ -1,5 +1,6 @@
 import { EGameStage } from "constants/GameStage.constants";
 import { Player } from "models/Player.model";
+import { QuizItemId, QuizItemLevel } from "./Quiz.model";
 
 export interface Game {
   _id: string;
@@ -24,8 +25,6 @@ export interface CurrentQuizItem {
   quizItemId: QuizItemId;
   createdAtTimestamp: number;
 }
-export type QuizItemId = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10;
-export type QuizItemLevel = "beginner" | "intermediate" | "expert";
 
 export interface Answer {
   quizId: string;

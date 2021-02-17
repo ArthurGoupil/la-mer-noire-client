@@ -37,8 +37,11 @@ export const useGame = ({
   );
 
   React.useEffect(() => {
+    let unsubscribeStage: () => void;
+    let unsubscribePlayers: () => void;
+    let unsubscribeCurrentQuizItem: () => void;
     if (subscribe.stage) {
-      subscribeToMore({
+      unsubscribeStage = subscribeToMore({
         document: GAME_STAGE_UPDATED,
         variables: { shortId },
         updateQuery: (prev, { subscriptionData }) => {
@@ -49,7 +52,7 @@ export const useGame = ({
       });
     }
     if (subscribe.players) {
-      subscribeToMore({
+      unsubscribePlayers = subscribeToMore({
         document: GAME_PLAYERS_UPDATED,
         variables: { shortId },
         updateQuery: (prev, { subscriptionData }) => {
@@ -60,7 +63,7 @@ export const useGame = ({
       });
     }
     if (subscribe.currentQuizItem) {
-      subscribeToMore({
+      unsubscribeCurrentQuizItem = subscribeToMore({
         document: CURRENT_QUIZ_ITEM_UPDATED,
         variables: { shortId },
         updateQuery: (prev, { subscriptionData }) => {
@@ -70,6 +73,12 @@ export const useGame = ({
         },
       });
     }
+
+    return () => {
+      if (unsubscribeStage) unsubscribeStage();
+      if (unsubscribePlayers) unsubscribePlayers();
+      if (unsubscribeCurrentQuizItem) unsubscribeCurrentQuizItem();
+    };
   }, [subscribeToMore, shortId]);
 
   return { game, networkStatus };

@@ -25,7 +25,7 @@ interface PlayerProps {
 export const PlayerContainer: React.FC<PlayerProps> = ({
   game,
 }): JSX.Element => {
-  const { stage, shortId, currentQuizItem } = game;
+  const { stage, shortId, currentQuizItem, players } = game;
 
   const { quizId, level, quizItemId, createdAtTimestamp } = currentQuizItem;
 
@@ -41,7 +41,7 @@ export const PlayerContainer: React.FC<PlayerProps> = ({
     variables: { quizId, level, quizItemId, createdAtTimestamp },
   });
 
-  const { allPlayersHaveAnswered } = usePlayersAnswers({
+  const { playersAnswers, allPlayersHaveAnswered } = usePlayersAnswers({
     shortId,
     quizItemData,
     players: game.players,
@@ -78,7 +78,7 @@ export const PlayerContainer: React.FC<PlayerProps> = ({
         <TimeBar
           totalTime={EQuizDuration.caPasseOuCaCash}
           remainingTime={remainingTime}
-          allPlayersHaveAnswered={allPlayersHaveAnswered}
+          isOver={players.length === Object.keys(playersAnswers).length}
         />
         {
           {

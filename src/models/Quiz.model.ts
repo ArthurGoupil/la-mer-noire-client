@@ -1,5 +1,8 @@
 import { Category } from "models/Category.model";
 
+export type QuizItemId = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10;
+export type QuizItemLevel = "beginner" | "intermediate" | "expert";
+
 export interface QuizItem {
   quizItemId: number;
   question: string;
@@ -13,6 +16,7 @@ export interface QuizItemData {
   category: Category;
   theme: string;
   subTheme: string;
+  level: QuizItemLevel;
   createdAtTimestamp: number;
   quiz: QuizItem;
 }

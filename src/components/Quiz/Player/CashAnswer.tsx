@@ -7,22 +7,24 @@ import { Button } from "components/Utils/Button";
 import { getLettersRecordFromString } from "utils/quiz/getLettersRecordFromString.util";
 import { getLetterIndexInSentence } from "utils/quiz/getLetterIndexInSentence.util";
 import { isDesktop } from "utils/isDesktop.util";
-import { useCurrentAnswer } from "hooks/quiz/useCurrentAnswer.hook";
-import { AnswerType } from "models/Game.model";
+import { SetCurrentAnswerProps } from "hooks/quiz/useCurrentAnswer.hook";
+import { Answer, AnswerType } from "models/Game.model";
 
 interface CashAnswerProps {
-  shortId: string;
   quizId: string;
   playerId: string;
   answer: string;
+  currentAnswer: Answer | null;
+  onSubmit: (value: SetCurrentAnswerProps) => Promise<void>;
   questionIsOver: boolean;
 }
 
 export const CashAnswer: React.FC<CashAnswerProps> = ({
-  shortId,
   quizId,
   playerId,
   answer,
+  currentAnswer,
+  onSubmit,
   questionIsOver,
 }): JSX.Element => {
   const [
@@ -31,11 +33,6 @@ export const CashAnswer: React.FC<CashAnswerProps> = ({
   ] = React.useState<Record<string, string>>(
     getLettersRecordFromString({ word: answer, returnsEmptyString: true }),
   );
-
-  const { currentAnswer, setCurrentAnswer } = useCurrentAnswer({
-    shortId,
-    quizId,
-  });
 
   React.useEffect(() => {
     if (currentAnswer?.quizId === quizId) {
@@ -134,13 +131,14 @@ export const CashAnswer: React.FC<CashAnswerProps> = ({
                                 letterIndexInFullAnswer - 1
                               ]?.current?.focus();
                           } else if (e.key === "Enter") {
-                            setCurrentAnswer({
-                              answer: Object.values(
-                                answerLettersValuesRecord,
-                              ).join(""),
-                              answerType: AnswerType.cash,
-                              playerId,
-                            });
+                            (async () =>
+                              await onSubmit({
+                                answer: Object.values(
+                                  answerLettersValuesRecord,
+                                ).join(""),
+                                answerType: AnswerType.cash,
+                                playerId,
+                              }))();
                           }
                         }
                       }}
@@ -173,8 +171,8 @@ export const CashAnswer: React.FC<CashAnswerProps> = ({
               ? "Too late !"
               : "Réponse envoyée !"
           }
-          onClick={() =>
-            setCurrentAnswer({
+          onClick={async () =>
+            await onSubmit({
               answer: Object.values(answerLettersValuesRecord).join(""),
               answerType: AnswerType.cash,
               playerId,

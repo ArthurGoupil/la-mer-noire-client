@@ -20,6 +20,15 @@ import { QuizItemData } from "models/Quiz.model";
 import { getNS } from "utils/networkStatus.util";
 import { usePlayersAnswers } from "hooks/quiz/usePlayersAnswers.hook";
 import { EQuizDuration } from "constants/QuizDuration.constants";
+import { getCookie, setCookie } from "utils/cookies.util";
+import { ECookieName } from "constants/Cookies.constants";
+import {
+  getLevelByQuestionNumber,
+  StringQuestionNumber,
+} from "utils/quiz/getLevelByQuestionNumber.util";
+import styled from "styled-components";
+import { EStyles } from "constants/Styling.constants";
+import { getLevelString } from "utils/quiz/getLevelString.util";
 
 interface CaPasseOuCaCashContainerProps {
   game: Game;
@@ -30,10 +39,28 @@ export const CaPasseOuCaCashContainer: React.FC<CaPasseOuCaCashContainerProps> =
   game,
   quizItemData,
 }): JSX.Element => {
+  const [
+    generateNewCurrentQuizItem,
+    { loading: isGeneratingNewCurrentQuizItem },
+  ] = useMutation(GENERATE_NEW_CURRENT_QUIZ_ITEM, {
+    refetchQueries: [
+      {
+        query: GET_GAME,
+        variables: { shortId: game.shortId },
+      },
+    ],
+  });
+
+  const questionNumber: StringQuestionNumber = getCookie({
+    prefix: game.shortId,
+    cookieName: ECookieName.caPasseOuCaCashQuestionNumber,
+  });
+
   const { playersAnswers, allPlayersHaveAnswered } = usePlayersAnswers({
     shortId: game.shortId,
     quizItemData,
     players: game.players,
+    isGeneratingNewCurrentQuizItem,
   });
 
   const { remainingTime, doneQuestionsRecord, networkStatus } = useQuizLifetime(
@@ -46,26 +73,29 @@ export const CaPasseOuCaCashContainer: React.FC<CaPasseOuCaCashContainerProps> =
     },
   );
 
-  const [generateNewCurrentQuizItem] = useMutation(
-    GENERATE_NEW_CURRENT_QUIZ_ITEM,
-    {
-      refetchQueries: [
-        {
-          query: GET_GAME,
-          variables: { shortId: game.shortId },
-        },
-      ],
-    },
-  );
-
   React.useEffect(() => {
     if (doneQuestionsRecord[quizItemData.quizId]) {
-      setTimeout(() => {
-        (async () =>
-          await generateNewCurrentQuizItem({
-            variables: { shortId: game.shortId, level: "beginner" },
-          }))();
-      }, 3000);
+      const newQuestionNumber: StringQuestionNumber = JSON.stringify(
+        parseInt(questionNumber) + 1,
+      ) as StringQuestionNumber;
+      if (parseInt(newQuestionNumber) < 10) {
+        setTimeout(() => {
+          setCookie({
+            prefix: game.shortId,
+            cookieName: ECookieName.caPasseOuCaCashQuestionNumber,
+            cookieValue: newQuestionNumber,
+          });
+          (async () =>
+            await generateNewCurrentQuizItem({
+              variables: {
+                shortId: game.shortId,
+                level: getLevelByQuestionNumber({
+                  questionNumber: newQuestionNumber,
+                }),
+              },
+            }))();
+        }, 3000);
+      }
     }
   }, [doneQuestionsRecord]);
 
@@ -73,6 +103,19 @@ export const CaPasseOuCaCashContainer: React.FC<CaPasseOuCaCashContainerProps> =
     [ready]: (
       <FullWidthContainer className="d-flex flex-column align-center space-between flex-grow">
         <div className="d-flex flex-column align-center justify-center flex-grow">
+          <FullWidthContainer className="d-flex flex-start">
+            <QuestionLevel
+              color={
+                {
+                  beginner: EStyles.turquoise,
+                  intermediate: EStyles.yellow,
+                  expert: EStyles.orange,
+                }[quizItemData.level]
+              }
+            >
+              {getLevelString({ level: quizItemData.level }).toUpperCase()}
+            </QuestionLevel>
+          </FullWidthContainer>
           <QuestionDisplay quizItem={quizItemData.quiz} showAnswers={false} />
           <div className="d-flex">
             {game.players.map((playerData: PlayerData, index: number) => {
@@ -101,7 +144,7 @@ export const CaPasseOuCaCashContainer: React.FC<CaPasseOuCaCashContainerProps> =
         <TimeBar
           totalTime={EQuizDuration.caPasseOuCaCash}
           remainingTime={remainingTime}
-          allPlayersHaveAnswered={allPlayersHaveAnswered}
+          isOver={game.players.length === Object.keys(playersAnswers).length}
           isHost
         />
       </FullWidthContainer>
@@ -112,3 +155,9 @@ export const CaPasseOuCaCashContainer: React.FC<CaPasseOuCaCashContainerProps> =
     ),
   }[getNS(networkStatus)];
 };
+
+const QuestionLevel = styled.div<{ color: string }>`
+  font-family: "Boogaloo", cursive;
+  font-size: 25px;
+  color: ${(props) => props.color};
+`;

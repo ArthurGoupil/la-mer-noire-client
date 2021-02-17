@@ -3,6 +3,8 @@ import { useMutation } from "@apollo/client";
 
 import { UPDATE_GAME_STAGE } from "services/games.service";
 import { EGameStage } from "constants/GameStage.constants";
+import { setCookie } from "utils/cookies.util";
+import { ECookieName } from "constants/Cookies.constants";
 
 interface useLaunchGameProps {
   shortId: string;
@@ -20,6 +22,11 @@ export const useLaunchGame = ({
   const [updateGameStage] = useMutation(UPDATE_GAME_STAGE);
 
   const launchGame = async () => {
+    setCookie({
+      prefix: shortId,
+      cookieName: ECookieName.caPasseOuCaCashQuestionNumber,
+      cookieValue: "1",
+    });
     await updateGameStage({
       variables: { stage: EGameStage.caPasseOuCaCash, shortId },
     });

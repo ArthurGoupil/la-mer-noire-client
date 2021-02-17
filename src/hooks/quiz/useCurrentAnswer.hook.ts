@@ -16,7 +16,7 @@ interface UseCurrentAnswerProps {
   quizId: string;
 }
 
-interface SetCurrentAnswerProps {
+export interface SetCurrentAnswerProps {
   answer: string;
   answerType: AnswerType;
   playerId: string;
@@ -34,14 +34,6 @@ export const useCurrentAnswer = ({
       cookieName: ECookieName.currentAnswer,
     }),
   );
-
-  React.useEffect(() => {
-    if (quizId) {
-      if (currentAnswer && currentAnswer?.quizId !== quizId) {
-        setCurrentAnswerState(null);
-      }
-    }
-  }, [quizId]);
 
   const setCurrentAnswer = async ({
     answer,

@@ -6,14 +6,14 @@ import { EStyles } from "constants/Styling.constants";
 interface TimeBarProps {
   totalTime: number;
   remainingTime: number;
-  allPlayersHaveAnswered: boolean;
+  isOver: boolean;
   isHost?: boolean;
 }
 
 export const TimeBar: React.FC<TimeBarProps> = ({
   totalTime,
   remainingTime,
-  allPlayersHaveAnswered,
+  isOver,
   isHost = false,
 }): JSX.Element => {
   const initialWidth = 100 - (100 * remainingTime) / totalTime + "%";
@@ -30,7 +30,7 @@ export const TimeBar: React.FC<TimeBarProps> = ({
         ref={barRef}
         initialWidth={initialWidth}
         remainingTime={remainingTime}
-        allPlayersHaveAnswered={allPlayersHaveAnswered}
+        isOver={isOver}
         currentWidth={barRef.current?.clientWidth as number}
         containerWidth={barContainerRef.current?.clientWidth as number}
       />
@@ -49,7 +49,7 @@ const BarContainer = styled.div<{ margin: string }>`
 const Bar = styled.div<{
   initialWidth: string;
   remainingTime: number;
-  allPlayersHaveAnswered: boolean;
+  isOver: boolean;
   currentWidth: number;
   containerWidth: number;
 }>`
@@ -62,7 +62,7 @@ const Bar = styled.div<{
   );
   border-radius: ${EStyles.miniRadius};
   animation: ${(props) =>
-    !props.allPlayersHaveAnswered
+    !props.isOver
       ? `normalTransformX ${props.remainingTime}s linear`
       : "overTransformX 0.5s ease-out"};
 

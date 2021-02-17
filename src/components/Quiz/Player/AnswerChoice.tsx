@@ -2,33 +2,30 @@ import React from "react";
 import styled from "styled-components";
 
 import { EStyles } from "constants/Styling.constants";
-import { AnswerType } from "models/Game.model";
-import { useCurrentAnswer } from "hooks/quiz/useCurrentAnswer.hook";
+import { Answer, AnswerType } from "models/Game.model";
+import { SetCurrentAnswerProps } from "hooks/quiz/useCurrentAnswer.hook";
 
 interface AnswerChoiceProps {
   color: string;
   quizAnswer: string;
-  shortId: string;
   quizId: string;
   answerType: AnswerType;
   playerId: string;
+  currentAnswer: Answer | null;
+  onClick: (value: SetCurrentAnswerProps) => Promise<void>;
   questionIsOver: boolean;
 }
 
 export const AnswerChoice: React.FC<AnswerChoiceProps> = ({
   color,
   quizAnswer,
-  shortId,
   quizId,
   answerType,
   playerId,
+  currentAnswer,
+  onClick,
   questionIsOver,
 }): JSX.Element => {
-  const { currentAnswer, setCurrentAnswer } = useCurrentAnswer({
-    shortId,
-    quizId,
-  });
-
   const answerIsSelected =
     currentAnswer?.answer === quizAnswer && currentAnswer?.quizId === quizId;
 
@@ -47,7 +44,7 @@ export const AnswerChoice: React.FC<AnswerChoiceProps> = ({
       anotherAnswerIsSelected={anotherAnswerIsSelected}
       onClick={async () => {
         if (currentAnswer?.quizId !== quizId) {
-          setCurrentAnswer({ answer: quizAnswer, answerType, playerId });
+          await onClick({ answer: quizAnswer, answerType, playerId });
         }
       }}
     >

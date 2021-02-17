@@ -22,6 +22,7 @@ export const GET_QUIZ_ITEM_DATA: DocumentNode = gql`
       }
       theme
       subTheme
+      level
       createdAtTimestamp
       quiz {
         quizItemId
