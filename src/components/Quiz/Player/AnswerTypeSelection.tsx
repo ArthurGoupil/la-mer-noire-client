@@ -47,7 +47,7 @@ export const AnswerTypeSelection: React.FC<AnswerTypeSelectionProps> = ({
       <AnswerTypeContainer
         disabled={questionIsOver}
         className="d-flex justify-center align-center"
-        backgroundColor={EStyles.orange}
+        backgroundColor={EStyles.redOrange}
         opacity={questionIsOver ? 0.6 : 1}
         onClick={() =>
           setAnswerTypeChoice({ quizId, answerType: AnswerType.cash })

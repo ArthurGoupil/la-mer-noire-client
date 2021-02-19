@@ -43,7 +43,7 @@ const CodeText = styled.div`
 
 const GameCode = styled.div`
   font-family: "Boogaloo", cursive;
-  color: ${EStyles.orange};
+  color: ${EStyles.redOrange};
   font-size: 30px;
   line-height: 30px;
   margin-left: 10px;

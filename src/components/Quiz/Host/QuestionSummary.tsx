@@ -38,14 +38,19 @@ export const QuestionSummary: React.FC<QuestionSummary> = ({
       className="d-flex flex-column justify-center align-center"
     >
       <AnswerContainer>
-        Réponse : <Answer>{quizAnswer.toUpperCase()}</Answer>
+        La réponse était <Answer>{quizAnswer.toUpperCase()}</Answer>
       </AnswerContainer>
       {players.map((playerData, index) => {
         return (
           <PlayerAnswerContainer key={index} className="d-flex">
             <PlayerName>{playerData.player.name}</PlayerName>
             {questionSummary[playerData.player._id].answer ? (
-              <>a répondu {questionSummary[playerData.player._id].answer}</>
+              <>
+                a répondu{" "}
+                <PlayerAnswer>
+                  {questionSummary[playerData.player._id].answer.toUpperCase()}
+                </PlayerAnswer>
+              </>
             ) : (
               " n'a pas répondu."
             )}
@@ -75,18 +80,26 @@ const QuestionSummaryContainer = styled.div<{ opacity: number }>`
 
 const AnswerContainer = styled.div`
   font-size: 23px;
-  margin-bottom: 20px;
+  margin-bottom: 30px;
+  text-align: center;
 `;
 
 const Answer = styled.span`
   font-family: "Boogaloo", cursive;
   font-size: 30px;
   line-height: 30px;
-  color: ${EStyles.orange};
+  color: ${EStyles.redOrange};
 `;
 
 const PlayerAnswerContainer = styled.div`
   margin-bottom: 10px;
+`;
+
+const PlayerAnswer = styled.span`
+  font-family: "Boogaloo", cursive;
+  line-height: 27px;
+  margin-left: 10px;
+  color: ${EStyles.turquoise};
 `;
 
 const PlayerName = styled.span`
@@ -104,10 +117,10 @@ const AdditionalPointsContainer = styled.div<{ width: number | undefined }>`
 
 const AdditionalPoints = styled.div`
   font-family: "Boogaloo", cursive;
-  margin-left: 5px;
+  margin-left: 0px;
   font-size: 25px;
   color: ${EStyles.lightBlue};
-  width: 40px;
   position: absolute;
   left: 0;
+  padding-left: 10px;
 `;

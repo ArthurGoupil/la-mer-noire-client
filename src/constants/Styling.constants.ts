@@ -5,9 +5,9 @@ export const EStyles = {
   lightBlue: "#05AFF2",
   turquoise: "#18dcbf",
   yellow: "#F2CB05",
-  red: "#A62103",
-  redOrange: "#D03C29",
-  orange: "#F9564F",
+  red: "#D03C29",
+  redOrange: "#F9564F",
+  orange: "#FE7F2D",
   // DARKEN COLORS
   darken_darkBlue: "#0c345a",
   darken_blue: "#0462dc",

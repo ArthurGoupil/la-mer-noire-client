@@ -45,7 +45,7 @@ export const CarreAnswers: React.FC<CarreAnswersProps> = ({
         questionIsOver={questionIsOver}
       />
       <AnswerChoice
-        color={EStyles.orange}
+        color={EStyles.redOrange}
         quizAnswer={choices[2]}
         quizId={quizId}
         answerType={AnswerType.carre}

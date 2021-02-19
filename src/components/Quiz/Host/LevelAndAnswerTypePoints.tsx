@@ -20,7 +20,7 @@ export const LevelAndAnswerTypePoints: React.FC<LevelAndAnswerTypePointsProps> =
           {
             beginner: EStyles.turquoise,
             intermediate: EStyles.yellow,
-            expert: EStyles.orange,
+            expert: EStyles.redOrange,
           }[level]
         }
       >

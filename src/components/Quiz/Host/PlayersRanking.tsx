@@ -44,33 +44,46 @@ export const PlayersRanking: React.FC<PlayersRankingProps> = ({
     return () => clearTimeout(timeout);
   }, []);
 
-  console.log(rankingRef.current?.clientHeight);
-
   return (
     <RankingContainer ref={rankingRef} opacity={opacity}>
       <RankingTitle>CLASSEMENT</RankingTitle>
       <Flipper flipKey={JSON.stringify(playersRanking)}>
         <ul className="list">
-          {playersRanking.map((playerRanking) => (
-            <Flipped
-              key={playerRanking.playerId}
-              flipId={playerRanking.playerId}
-            >
-              <PlayerRanking className="d-flex justify-end align-center">
-                {players
-                  .find(
-                    (playerData) =>
-                      playerData.player._id === playerRanking.playerId,
-                  )
-                  ?.player.name.toUpperCase()}{" "}
-                <PlayerPoints className="d-flex justify-center align-center">
-                  {isNewRanking
-                    ? playerRanking.totalPoints
-                    : playerRanking.formerTotalPoints}
-                </PlayerPoints>
-              </PlayerRanking>
-            </Flipped>
-          ))}
+          {playersRanking.map((playerRanking, index) => {
+            return (
+              <Flipped
+                key={playerRanking.playerId}
+                flipId={playerRanking.playerId}
+              >
+                <PlayerRankingContainer className="d-flex space-between align-center">
+                  <PlayerRank className="d-flex justify-start align-center">
+                    {index + 1}
+                  </PlayerRank>
+                  <PlayerName className="d-flex justify-center align-center">
+                    {players
+                      .find(
+                        (playerData) =>
+                          playerData.player._id === playerRanking.playerId,
+                      )
+                      ?.player.name.toUpperCase()}
+                  </PlayerName>
+                  <PlayerPointsContainer className="d-flex justify-center align-center">
+                    <PlayerPoints
+                      shouldRotate={
+                        isNewRanking &&
+                        playerRanking.totalPoints !==
+                          playerRanking.formerTotalPoints
+                      }
+                    >
+                      {isNewRanking
+                        ? playerRanking.totalPoints
+                        : playerRanking.formerTotalPoints}
+                    </PlayerPoints>
+                  </PlayerPointsContainer>
+                </PlayerRankingContainer>
+              </Flipped>
+            );
+          })}
         </ul>
       </Flipper>
     </RankingContainer>
@@ -83,27 +96,58 @@ const RankingContainer = styled.div<{ opacity: number }>`
 `;
 
 const RankingTitle = styled.h2`
-  text-shadow: 2px 2px 0 ${EStyles.orange};
-  margin-bottom: 20px;
+  text-shadow: 2px 2px 0 ${EStyles.redOrange};
+  margin-bottom: 30px;
+  text-align: center;
 `;
 
-const PlayerRanking = styled.li`
-  min-width: 150px;
+const PlayerRankingContainer = styled.li`
+  height: 45px;
   font-family: "Boogaloo", cursive;
-  padding: 10px;
+  margin: 10px;
+`;
+
+const PlayerRank = styled.span`
+  height: 100%;
+  margin-right: 20px;
+  border-radius: 5px;
+  padding-right: 3px;
+  font-size: 30px;
+  color: white;
+  text-shadow: 2px 2px 0 ${EStyles.red};
+`;
+
+const PlayerName = styled.span`
+  min-width: 150px;
+  height: 100%;
+  font-size: 20px;
   background: linear-gradient(
     to bottom,
     ${EStyles.blue} 0%,
     ${EStyles.lightBlue} 150%
   );
   border-radius: 5px;
-  margin: 10px;
+  text-shadow: 2px 2px 0 ${EStyles.blue};
 `;
 
-const PlayerPoints = styled.span`
-  width: 30px;
-  height: 30px;
-  border-radius: 15px;
-  background-color: ${EStyles.orange};
-  margin-left: 20px;
+const PlayerPointsContainer = styled.span`
+  width: 45px;
+  height: 100%;
+  background: linear-gradient(
+    to bottom,
+    ${EStyles.orange} 0%,
+    ${EStyles.redOrange} 170%
+  );
+  margin-left: 5px;
+  border-radius: 5px;
+  padding-right: 3px;
+`;
+
+const PlayerPoints = styled.span<{ shouldRotate: boolean }>`
+  font-size: 30px;
+  color: white;
+  text-shadow: 2px 2px 0 ${EStyles.red};
+  transform: ${(props) =>
+    props.shouldRotate ? "rotate(720deg)" : "rotate(0deg)"};
+  transition: transform 1s;
 `;

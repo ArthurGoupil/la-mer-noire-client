@@ -19,7 +19,7 @@ export const StageName: React.FC<StageNameProps> = ({
 
 const Name = styled.h2`
   font-size: 50px;
-  color: ${EStyles.orange};
+  color: ${EStyles.redOrange};
   text-shadow: 2px 2px 0 ${EStyles.yellow};
   text-align: center;
   font-style: italic;

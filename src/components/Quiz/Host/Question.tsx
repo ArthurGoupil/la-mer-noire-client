@@ -31,7 +31,7 @@ export const QuestionDisplay: React.FC<QuestionDisplayProps> = ({
             </AnswerContainer>
           </FullWidthContainer>
           <FullWidthContainer className="d-flex justify-center">
-            <AnswerContainer color={EStyles.orange}>
+            <AnswerContainer color={EStyles.redOrange}>
               {quizItem.choices[2]}
             </AnswerContainer>
             <AnswerContainer color={EStyles.turquoise}>

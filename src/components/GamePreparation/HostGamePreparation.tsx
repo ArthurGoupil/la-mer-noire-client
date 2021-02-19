@@ -58,7 +58,7 @@ const GameName = styled.h1`
   margin-bottom: 20px;
 `;
 const PlayersTitle = styled.h2`
-  color: ${EStyles.orange};
+  color: ${EStyles.redOrange};
   text-shadow: 3px 3px 0 ${EStyles.blue};
   text-align: center;
   margin-bottom: 10px;
