@@ -47,7 +47,7 @@ export const PlayerAnswer: React.FC<PlayerAnswerProps> = ({
           }
           fontSize={answerTypeString ? "18px" : "12px"}
         >
-          {answerTypeString || "EN ATTENTE"}
+          {answerTypeString || (questionIsOver ? "TOO LATE !" : "EN ATTENTE")}
         </AnswerTypeContainer>
       </FullWidthContainer>
     </PlayerAnswerContainer>

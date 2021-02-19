@@ -42,3 +42,8 @@ export interface AnswerTypeChoice {
   quizId: string;
   answerType: AnswerType;
 }
+
+export interface CaPasseOuCaCashState {
+  questionNumber: number;
+  playersPoints: Record<string, number>;
+}

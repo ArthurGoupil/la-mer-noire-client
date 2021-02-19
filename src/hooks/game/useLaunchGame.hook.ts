@@ -5,9 +5,11 @@ import { UPDATE_GAME_STAGE } from "services/games.service";
 import { EGameStage } from "constants/GameStage.constants";
 import { setCookie } from "utils/cookies.util";
 import { ECookieName } from "constants/Cookies.constants";
+import { PlayerData } from "models/Game.model";
 
 interface useLaunchGameProps {
   shortId: string;
+  players: PlayerData[];
 }
 
 interface UseLaunchGameReturn {
@@ -17,6 +19,7 @@ interface UseLaunchGameReturn {
 
 export const useLaunchGame = ({
   shortId,
+  players,
 }: useLaunchGameProps): UseLaunchGameReturn => {
   const [launchCounter, setLaunchCounter] = React.useState<number | null>(null);
   const [updateGameStage] = useMutation(UPDATE_GAME_STAGE);
@@ -24,8 +27,16 @@ export const useLaunchGame = ({
   const launchGame = async () => {
     setCookie({
       prefix: shortId,
-      cookieName: ECookieName.caPasseOuCaCashQuestionNumber,
-      cookieValue: "1",
+      cookieName: ECookieName.caPasseOuCaCashState,
+      cookieValue: {
+        questionNumber: 1,
+        playersPoints: players.reduce(
+          (acc: Record<string, number>, cur: PlayerData) => {
+            return { ...acc, [cur.player._id]: 0 };
+          },
+          {},
+        ),
+      },
     });
     await updateGameStage({
       variables: { stage: EGameStage.caPasseOuCaCash, shortId },

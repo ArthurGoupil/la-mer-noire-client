@@ -3,7 +3,7 @@ import React from "react";
 import { FullWidthContainer } from "components/Utils/FullWidthContainer";
 import { CategoryTheme } from "components/Quiz/Host/CategoryTheme";
 import { QuestionDisplay } from "components/Quiz/Host/Question";
-import { Game, PlayerData } from "models/Game.model";
+import { CaPasseOuCaCashState, Game, PlayerData } from "models/Game.model";
 import { isValidAnswer } from "utils/quiz/isValidAnswer.util";
 import { TimeBar } from "components/Quiz/Others/TimeBar";
 import { PlayerAnswer } from "components/Quiz/Host/PlayerAnswer";
@@ -24,11 +24,11 @@ import { getCookie, setCookie } from "utils/cookies.util";
 import { ECookieName } from "constants/Cookies.constants";
 import {
   getLevelByQuestionNumber,
-  StringQuestionNumber,
+  QuestionNumber,
 } from "utils/quiz/getLevelByQuestionNumber.util";
-import styled from "styled-components";
-import { EStyles } from "constants/Styling.constants";
-import { getLevelString } from "utils/quiz/getLevelString.util";
+import { useCaPasseOuCaCashQuestionSummary } from "hooks/game/useCaPasseOuCaCashQuestionSummary.hook";
+import { LevelAndAnswerTypePoints } from "components/Quiz/Host/LevelAndAnswerTypePoints";
+import { SummaryModal } from "components/Quiz/Host/SummaryModal";
 
 interface CaPasseOuCaCashContainerProps {
   game: Game;
@@ -51,10 +51,12 @@ export const CaPasseOuCaCashContainer: React.FC<CaPasseOuCaCashContainerProps> =
     ],
   });
 
-  const questionNumber: StringQuestionNumber = getCookie({
-    prefix: game.shortId,
-    cookieName: ECookieName.caPasseOuCaCashQuestionNumber,
-  });
+  const caPasseOuCaCashState: CaPasseOuCaCashState = getCookie<CaPasseOuCaCashState>(
+    {
+      prefix: game.shortId,
+      cookieName: ECookieName.caPasseOuCaCashState,
+    },
+  );
 
   const { playersAnswers, allPlayersHaveAnswered } = usePlayersAnswers({
     shortId: game.shortId,
@@ -73,18 +75,38 @@ export const CaPasseOuCaCashContainer: React.FC<CaPasseOuCaCashContainerProps> =
     },
   );
 
+  const { questionSummary } = useCaPasseOuCaCashQuestionSummary({
+    previousPlayersPoints: caPasseOuCaCashState.playersPoints,
+    playersAnswers,
+    quizAnswer: quizItemData.quiz.answer,
+    quizLevel: quizItemData.level,
+    questionIsOver: doneQuestionsRecord[quizItemData.quizId],
+  });
+
+  const [
+    isReadyForNextQuestion,
+    setIsReadyForNextQuestion,
+  ] = React.useState<boolean>(false);
+
   React.useEffect(() => {
-    if (doneQuestionsRecord[quizItemData.quizId]) {
-      const newQuestionNumber: StringQuestionNumber = JSON.stringify(
-        parseInt(questionNumber) + 1,
-      ) as StringQuestionNumber;
-      if (parseInt(newQuestionNumber) < 10) {
+    if (isReadyForNextQuestion && questionSummary) {
+      const newQuestionNumber: QuestionNumber = (caPasseOuCaCashState.questionNumber +
+        1) as QuestionNumber;
+      if (newQuestionNumber < 10) {
+        setCookie({
+          prefix: game.shortId,
+          cookieName: ECookieName.caPasseOuCaCashState,
+          cookieValue: {
+            questionNumber: newQuestionNumber,
+            playersPoints: Object.keys(questionSummary).reduce(
+              (acc: Record<string, number>, cur: string) => {
+                return { ...acc, [cur]: questionSummary[cur].totalPoints };
+              },
+              {},
+            ),
+          },
+        });
         setTimeout(() => {
-          setCookie({
-            prefix: game.shortId,
-            cookieName: ECookieName.caPasseOuCaCashQuestionNumber,
-            cookieValue: newQuestionNumber,
-          });
           (async () =>
             await generateNewCurrentQuizItem({
               variables: {
@@ -94,27 +116,18 @@ export const CaPasseOuCaCashContainer: React.FC<CaPasseOuCaCashContainerProps> =
                 }),
               },
             }))();
+          setIsReadyForNextQuestion(false);
         }, 3000);
       }
     }
-  }, [doneQuestionsRecord]);
+  }, [isReadyForNextQuestion, questionSummary]);
 
   return {
     [ready]: (
       <FullWidthContainer className="d-flex flex-column align-center space-between flex-grow">
         <div className="d-flex flex-column align-center justify-center flex-grow">
-          <FullWidthContainer className="d-flex flex-start">
-            <QuestionLevel
-              color={
-                {
-                  beginner: EStyles.turquoise,
-                  intermediate: EStyles.yellow,
-                  expert: EStyles.orange,
-                }[quizItemData.level]
-              }
-            >
-              {getLevelString({ level: quizItemData.level }).toUpperCase()}
-            </QuestionLevel>
+          <FullWidthContainer className="d-flex flex-start align-end">
+            <LevelAndAnswerTypePoints level={quizItemData.level} />
           </FullWidthContainer>
           <QuestionDisplay quizItem={quizItemData.quiz} showAnswers={false} />
           <div className="d-flex">
@@ -134,6 +147,16 @@ export const CaPasseOuCaCashContainer: React.FC<CaPasseOuCaCashContainerProps> =
               );
             })}
           </div>
+          <div>
+            {game.players.map((playerData) => {
+              return (
+                <div key={playerData.player._id}>
+                  {playerData.player.name} :{" "}
+                  {caPasseOuCaCashState.playersPoints[playerData.player._id]}
+                </div>
+              );
+            })}
+          </div>
           {doneQuestionsRecord[quizItemData.quizId] && quizItemData.quiz.answer}
         </div>
         <CategoryTheme
@@ -147,6 +170,14 @@ export const CaPasseOuCaCashContainer: React.FC<CaPasseOuCaCashContainerProps> =
           isOver={game.players.length === Object.keys(playersAnswers).length}
           isHost
         />
+        {questionSummary && doneQuestionsRecord[quizItemData.quizId] && (
+          <SummaryModal
+            quizAnswer={quizItemData.quiz.answer}
+            questionSummary={questionSummary}
+            players={game.players}
+            onReady={() => setIsReadyForNextQuestion(true)}
+          />
+        )}
       </FullWidthContainer>
     ),
     [loading]: <FullHeightLoader />,
@@ -155,9 +186,3 @@ export const CaPasseOuCaCashContainer: React.FC<CaPasseOuCaCashContainerProps> =
     ),
   }[getNS(networkStatus)];
 };
-
-const QuestionLevel = styled.div<{ color: string }>`
-  font-family: "Boogaloo", cursive;
-  font-size: 25px;
-  color: ${(props) => props.color};
-`;

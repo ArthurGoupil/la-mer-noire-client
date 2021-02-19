@@ -130,7 +130,7 @@ export const CashAnswer: React.FC<CashAnswerProps> = ({
                               answerLettersRefsRecord[
                                 letterIndexInFullAnswer - 1
                               ]?.current?.focus();
-                          } else if (e.key === "Enter") {
+                          } else if (e.key === "Enter" && isPossibleToSubmit) {
                             (async () =>
                               await onSubmit({
                                 answer: Object.values(

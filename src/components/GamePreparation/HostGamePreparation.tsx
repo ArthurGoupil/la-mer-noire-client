@@ -19,6 +19,7 @@ export const HostGamePreparation: React.FC<HostGamePreparationProps> = ({
 }): JSX.Element => {
   const { handleLaunchGameCounter, launchGameButtonLabel } = useLaunchGame({
     shortId: game.shortId,
+    players: game.players,
   });
 
   return (
