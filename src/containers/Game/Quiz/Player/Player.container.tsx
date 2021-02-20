@@ -5,7 +5,6 @@ import { FullScreenError } from "components/Utils/FullScreenError";
 import { getCookie } from "utils/cookies.util";
 import { ECookieName } from "constants/Cookies.constants";
 import { FullHeightContainer } from "components/Utils/FullHeightContainer";
-import { TimeBar } from "components/Quiz/Others/TimeBar";
 import { useQuery } from "@apollo/client";
 import { GET_QUIZ_ITEM_DATA } from "services/quizzes.service";
 import { useQuizLifetime } from "hooks/quiz/useQuizLifetime.hook";
@@ -25,7 +24,7 @@ interface PlayerProps {
 export const PlayerContainer: React.FC<PlayerProps> = ({
   game,
 }): JSX.Element => {
-  const { stage, shortId, currentQuizItem, players } = game;
+  const { stage, shortId, currentQuizItem } = game;
 
   const { quizId, level, quizItemId, createdAtTimestamp } = currentQuizItem;
 
@@ -41,7 +40,7 @@ export const PlayerContainer: React.FC<PlayerProps> = ({
     variables: { quizId, level, quizItemId, createdAtTimestamp },
   });
 
-  const { playersAnswers, allPlayersHaveAnswered } = usePlayersAnswers({
+  const { allPlayersHaveAnswered } = usePlayersAnswers({
     shortId,
     quizItemData,
     players: game.players,
@@ -53,7 +52,6 @@ export const PlayerContainer: React.FC<PlayerProps> = ({
   });
 
   const {
-    remainingTime,
     doneQuestionsRecord,
     networkStatus: remainingTimeNetworkStatus,
   } = useQuizLifetime({
@@ -75,11 +73,6 @@ export const PlayerContainer: React.FC<PlayerProps> = ({
         className="d-flex flex-column align-center"
         padding="10px 20px"
       >
-        <TimeBar
-          totalTime={EQuizDuration.caPasseOuCaCash}
-          remainingTime={remainingTime}
-          isOver={players.length === Object.keys(playersAnswers).length}
-        />
         {
           {
             caPasseOuCaCash: (

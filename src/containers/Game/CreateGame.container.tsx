@@ -30,6 +30,7 @@ export const CreateGameContainer: React.FC<{}> = (): JSX.Element => {
         buttonLabel="Créer la partie"
         valueMaxLength={40}
         isLoading={loading}
+        placeholder="Nom de la partie"
       />
       <AnimatedSubmarine />
     </FullHeightContainer>

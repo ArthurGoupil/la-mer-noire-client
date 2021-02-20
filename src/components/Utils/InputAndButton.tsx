@@ -20,7 +20,7 @@ export const InputAndButton: React.FC<InputAndButtonProps> = ({
   inputWidth = 250,
   margin = "0",
   placeholder = "",
-  valueMaxLength = 100,
+  valueMaxLength = 50,
   isLoading = false,
 }): JSX.Element => {
   const [value, setValue] = React.useState<string>("");
@@ -47,7 +47,12 @@ export const InputAndButton: React.FC<InputAndButtonProps> = ({
         className="d-flex"
         placeholder={placeholder}
       />
-      <Button type="submit" className="d-flex justify-center align-center">
+      <Button
+        disabled={value.length === 0}
+        type="submit"
+        className="d-flex justify-center align-center"
+        isDisabled={value.length === 0}
+      >
         <LabelContainer isLoading={isLoading}>{buttonLabel}</LabelContainer>
         {isLoading && <Loader isForButton />}
       </Button>
@@ -82,7 +87,7 @@ const Input = styled.input<{ inputWidth: number }>`
   }
 `;
 
-const Button = styled.button`
+const Button = styled.button<{ isDisabled: boolean }>`
   background-color: ${EStyles.lightBlue};
   text-align: center;
   padding: 10px;
@@ -93,9 +98,12 @@ const Button = styled.button`
   transition: 0.2s background-color;
   white-space: nowrap;
   font-weight: 500;
+  opacity: ${(props) => (props.isDisabled ? 0.7 : 1)};
+  cursor: ${(props) => (props.isDisabled ? "not-allowed" : "pointer")};
 
   &:hover {
-    background-color: ${EStyles.darken_lightBlue};
+    background-color: ${(props) =>
+      props.isDisabled ? EStyles.lightBlue : EStyles.darken_lightBlue};
   }
 `;
 

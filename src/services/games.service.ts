@@ -47,8 +47,8 @@ export const CREATE_GAME: DocumentNode = gql`
 `;
 
 export const ADD_PLAYER_TO_GAME: DocumentNode = gql`
-  mutation AddPlayerToGame($shortId: String!, $playerId: ID!) {
-    addPlayerToGame(shortId: $shortId, playerId: $playerId)
+  mutation AddPlayerToGame($shortId: String!, $name: String!) {
+    addPlayerToGame(shortId: $shortId, name: $name)
   }
 `;
 

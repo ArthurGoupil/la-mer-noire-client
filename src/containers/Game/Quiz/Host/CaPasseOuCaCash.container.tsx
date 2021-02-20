@@ -147,17 +147,6 @@ export const CaPasseOuCaCashContainer: React.FC<CaPasseOuCaCashContainerProps> =
               );
             })}
           </div>
-          <div>
-            {game.players.map((playerData) => {
-              return (
-                <div key={playerData.player._id}>
-                  {playerData.player.name} :{" "}
-                  {caPasseOuCaCashState.playersPoints[playerData.player._id]}
-                </div>
-              );
-            })}
-          </div>
-          {doneQuestionsRecord[quizItemData.quizId] && quizItemData.quiz.answer}
         </div>
         <CategoryTheme
           categoryName={quizItemData.category.name}
@@ -166,7 +155,7 @@ export const CaPasseOuCaCashContainer: React.FC<CaPasseOuCaCashContainerProps> =
         />
         <TimeBar
           totalTime={EQuizDuration.caPasseOuCaCash}
-          remainingTime={remainingTime}
+          remainingTime={remainingTime - 1}
           isOver={game.players.length === Object.keys(playersAnswers).length}
           isHost
         />

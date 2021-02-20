@@ -18,7 +18,6 @@ export const QuestionSummary: React.FC<QuestionSummary> = ({
   players,
   opacity,
 }): JSX.Element => {
-  const additionalPointsRef = React.useRef<HTMLDivElement>(null);
   const [
     additionalPointsAreVisible,
     setAdditionalPointsAreVisible,
@@ -41,6 +40,8 @@ export const QuestionSummary: React.FC<QuestionSummary> = ({
         La réponse était <Answer>{quizAnswer.toUpperCase()}</Answer>
       </AnswerContainer>
       {players.map((playerData, index) => {
+        const additionalPointsRef = React.useRef<HTMLDivElement>(null);
+
         return (
           <PlayerAnswerContainer key={index} className="d-flex">
             <PlayerName>{playerData.player.name}</PlayerName>

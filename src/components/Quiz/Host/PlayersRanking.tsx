@@ -59,7 +59,7 @@ export const PlayersRanking: React.FC<PlayersRankingProps> = ({
                   <PlayerRank className="d-flex justify-start align-center">
                     {index + 1}
                   </PlayerRank>
-                  <PlayerName className="d-flex justify-center align-center">
+                  <PlayerName className="d-flex justify-center align-center flex-grow">
                     {players
                       .find(
                         (playerData) =>
@@ -128,6 +128,7 @@ const PlayerName = styled.span`
   );
   border-radius: 5px;
   text-shadow: 2px 2px 0 ${EStyles.blue};
+  padding: 0 15px;
 `;
 
 const PlayerPointsContainer = styled.span`

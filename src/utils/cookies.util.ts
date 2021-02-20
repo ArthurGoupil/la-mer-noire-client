@@ -21,5 +21,7 @@ export const setCookie = ({
   cookieName,
   cookieValue,
 }: SetGameCookieProps): void => {
-  Cookies.set(`${prefix.toUpperCase()}-${cookieName}`, cookieValue);
+  Cookies.set(`${prefix.toUpperCase()}-${cookieName}`, cookieValue, {
+    expires: 1,
+  });
 };

@@ -91,7 +91,8 @@ const SummaryModalContainer = styled.div<{
   height: number | undefined;
   opacity: number;
 }>`
-  width: 40%;
+  min-width: 40%;
+  max-width: 80%;
   height: ${(props) => props.height && props.height + 80}px;
   padding: 40px;
   background: linear-gradient(
