@@ -59,9 +59,11 @@ const StyledButton = styled.button<{
   outline: none;
   transition: 0.2s background-color;
   opacity: ${(props) => (props.disabled ? 0.7 : 1)};
+  cursor: ${(props) => (props.disabled ? "not-allowed" : "pointer")};
   font-weight: 500;
 
   &:hover {
-    background-color: ${(props) => props.hoverColor};
+    background-color: ${(props) =>
+      props.disabled ? props.backgroundColor : props.hoverColor};
   }
 `;

@@ -1,14 +1,12 @@
-import React from "react";
-import styled from "styled-components";
-
-import { EStyles } from "constants/Styling.constants";
-import { FullHeightContainer } from "components/Utils/FullHeightContainer";
 import { Button } from "components/Utils/Button";
-import { getLettersRecordFromString } from "utils/quiz/getLettersRecordFromString.util";
-import { getLetterIndexInSentence } from "utils/quiz/getLetterIndexInSentence.util";
-import { isDesktop } from "utils/isDesktop.util";
+import { FullHeightContainer } from "components/Utils/FullHeightContainer";
+import { FullWidthContainer } from "components/Utils/FullWidthContainer";
+import { EStyles } from "constants/Styling.constants";
 import { SetCurrentAnswerProps } from "hooks/quiz/useCurrentAnswer.hook";
 import { Answer, AnswerType } from "models/Game.model";
+import React from "react";
+import styled from "styled-components";
+import { isDesktop } from "utils/isDesktop.util";
 
 interface CashAnswerProps {
   quizId: string;
@@ -27,139 +25,119 @@ export const CashAnswer: React.FC<CashAnswerProps> = ({
   onSubmit,
   questionIsOver,
 }): JSX.Element => {
-  const [
-    answerLettersValuesRecord,
-    setAnswerLettersValuesRecord,
-  ] = React.useState<Record<string, string>>(
-    getLettersRecordFromString({ word: answer, returnsEmptyString: true }),
+  const answerWords = answer.split(/ /);
+  const answerWordsRefs = answerWords.map(() =>
+    React.createRef<HTMLInputElement>(),
+  );
+  const [givenAnswer, setGivenAnswer] = React.useState<string[]>(
+    answerWords.map(() => ""),
   );
 
-  React.useEffect(() => {
-    if (currentAnswer?.quizId === quizId) {
-      setAnswerLettersValuesRecord(
-        getLettersRecordFromString({
-          word: currentAnswer.answer,
-          returnsEmptyString: false,
-        }),
-      );
+  console.log(answer);
+
+  const longestWord = answerWords.reduce((acc: string, cur: string) => {
+    if (cur.length > acc.length) {
+      return cur;
     }
-  }, []);
-
-  let longestWordLength = 0;
-
-  const answerWords = answer.split(" ");
-  const answerLettersRefsRecord: Record<
-    string,
-    React.RefObject<HTMLInputElement>
-  > = {};
-  answerWords.forEach((word, wordIndex) => {
-    if (word.length > longestWordLength) {
-      longestWordLength = word.length;
-    }
-    word.split("").forEach((letter, letterIndex) => {
-      const ref = React.createRef();
-      const letterIndexInFullAnswer = getLetterIndexInSentence({
-        sentence: answerWords,
-        wordIndex,
-        letterIndex,
-      });
-      answerLettersRefsRecord[
-        letterIndexInFullAnswer
-      ] = ref as React.RefObject<HTMLInputElement>;
-    });
-  });
-
-  // innerWidth minus padding, minus margin of each input
-  const inputWidth =
-    longestWordLength > 4
-      ? (window.innerWidth - 40 - longestWordLength * 4) / longestWordLength
-      : (window.innerWidth - 40 - 4 * 4) / 4;
+    return acc;
+  }, "");
 
   const isPossibleToAnswer =
     quizId !== currentAnswer?.quizId && !questionIsOver;
   const isPossibleToSubmit =
     isPossibleToAnswer &&
-    Object.keys(answerLettersValuesRecord).reduce((acc, cur) => {
-      return (
-        acc &&
-        answerLettersValuesRecord[cur].length === 1 &&
-        answerLettersValuesRecord[cur] !== " "
-      );
+    givenAnswer.reduce((acc, cur, index) => {
+      return acc && cur.length === answerWords[index].length;
     }, true);
+
+  // 60 is 2*20px of main container padding & 2*10px of padding inside input
+  // 12.95px is letter width at 18px (default font-size value)
+  const fullWidthFactor =
+    longestWord.length > 7
+      ? (window.innerWidth - 60) / (longestWord.length * 12.95)
+      : (window.innerWidth - 60) / (9 * 12.95);
 
   return (
     <FullHeightContainer
-      minHeight="100%"
+      height="100%"
       padding="0"
       className="d-flex flex-column align-center flex-grow"
     >
-      <div className="d-flex flex-column">
-        <InputsContainer>
-          {answerWords.map((word, wordIndex) => {
-            return (
-              <div key={wordIndex} className="d-flex flex-wrap">
-                {word.split("").map((letter, letterIndex) => {
-                  const letterIndexInFullAnswer = getLetterIndexInSentence({
-                    sentence: answerWords,
-                    wordIndex,
-                    letterIndex,
-                  });
+      <FullWidthContainer className="d-flex flex-column align-start">
+        <InputsContainer className="d-flex flex-column align-start">
+          {givenAnswer.map((word: string, wordIndex: number) => {
+            const inputWidth =
+              answerWords[wordIndex].length * 12.95 * fullWidthFactor + 20;
+            const fontSize = 18 * fullWidthFactor;
+            const lineHeight = 25 * fullWidthFactor;
+            const letterSpacing = 2 * fullWidthFactor;
+            const placeholdersContainerWidth = inputWidth - 20;
 
-                  return (
-                    <Input
-                      type="text"
-                      autoFocus={letterIndexInFullAnswer === 0}
-                      readOnly={!isPossibleToAnswer}
-                      ref={answerLettersRefsRecord[letterIndexInFullAnswer]}
-                      key={letterIndex}
-                      value={answerLettersValuesRecord[
-                        letterIndexInFullAnswer
-                      ]?.toUpperCase()}
-                      onClick={() => {
-                        answerLettersRefsRecord[
-                          letterIndexInFullAnswer
-                        ].current?.setSelectionRange(1, 1);
-                      }}
-                      onKeyDown={(e) => {
-                        if (isPossibleToAnswer) {
-                          if (e.key === "Backspace") {
-                            setAnswerLettersValuesRecord({
-                              ...answerLettersValuesRecord,
-                              [letterIndexInFullAnswer]: "",
-                            }),
-                              answerLettersRefsRecord[
-                                letterIndexInFullAnswer - 1
-                              ]?.current?.focus();
-                          } else if (e.key === "Enter" && isPossibleToSubmit) {
-                            (async () =>
-                              await onSubmit({
-                                answer: Object.values(
-                                  answerLettersValuesRecord,
-                                ).join(""),
-                                answerType: AnswerType.cash,
-                                playerId,
-                              }))();
-                          }
-                        }
-                      }}
-                      onChange={(e) => {
-                        setAnswerLettersValuesRecord({
-                          ...answerLettersValuesRecord,
-                          [letterIndexInFullAnswer]: e.target.value.slice(
-                            e.target.value.length - 1,
-                          ),
-                        });
-                        if (e.target.value.length > 0) {
-                          answerLettersRefsRecord[
-                            letterIndexInFullAnswer + 1
-                          ]?.current?.focus();
-                        }
-                      }}
-                      inputWidth={inputWidth}
-                    />
-                  );
-                })}
-              </div>
+            return (
+              <InputWrapper
+                key={wordIndex}
+                width={inputWidth}
+                fullWidthFactor={fullWidthFactor}
+                className="d-flex justify-center"
+              >
+                <InputPlaceholdersContainer
+                  width={placeholdersContainerWidth}
+                  className="d-flex  align-end"
+                >
+                  {answerWords[wordIndex]
+                    .split("")
+                    .map((letter, letterIndex) => {
+                      // 12.95px of letter width - 2px of letterSpacing
+                      const placeholderWidth = (12.95 - 2) * fullWidthFactor;
+                      // 1.85px is a little bit less than letterSpacing
+                      const marginLeft =
+                        letterIndex === 0 ? 0 : 1.85 * fullWidthFactor;
+                      return (
+                        <InputPlaceholder
+                          key={letterIndex}
+                          width={placeholderWidth}
+                          marginLeft={marginLeft}
+                        />
+                      );
+                    })}
+                </InputPlaceholdersContainer>
+                <Input
+                  ref={answerWordsRefs[wordIndex]}
+                  spellCheck={false}
+                  value={givenAnswer[wordIndex]}
+                  onKeyDown={(e) => {
+                    if (
+                      e.key === "Backspace" &&
+                      wordIndex !== 0 &&
+                      givenAnswer[wordIndex].length === 0
+                    ) {
+                      answerWordsRefs[wordIndex - 1].current?.focus();
+                    }
+                  }}
+                  onChange={(e) => {
+                    if (e.target.value.length < answerWords[wordIndex].length) {
+                      givenAnswer[wordIndex] = e.target.value.toUpperCase();
+                      setGivenAnswer([...givenAnswer]);
+                    } else if (
+                      wordIndex !== answerWords.length - 1 &&
+                      e.target.value.length === answerWords[wordIndex].length
+                    ) {
+                      givenAnswer[wordIndex] = e.target.value.toUpperCase();
+                      setGivenAnswer([...givenAnswer]);
+                      answerWordsRefs[wordIndex + 1].current?.focus();
+                    } else if (
+                      e.target.value.length === answerWords[wordIndex].length
+                    ) {
+                      givenAnswer[wordIndex] = e.target.value.toUpperCase();
+                      setGivenAnswer([...givenAnswer]);
+                    }
+                  }}
+                  fontSize={fontSize}
+                  lineHeight={lineHeight}
+                  letterSpacing={letterSpacing}
+                  disabled={!isPossibleToAnswer}
+                />
+              </InputWrapper>
             );
           })}
         </InputsContainer>
@@ -173,15 +151,15 @@ export const CashAnswer: React.FC<CashAnswerProps> = ({
           }
           onClick={async () =>
             await onSubmit({
-              answer: Object.values(answerLettersValuesRecord).join(""),
+              answer: givenAnswer.join(" "),
               answerType: AnswerType.cash,
               playerId,
             })
           }
-          margin="0 10px"
+          margin="0"
           disabled={!isPossibleToSubmit}
         />
-      </div>
+      </FullWidthContainer>
       {!isDesktop() && (
         <div className="d-flex flex-grow align-center">
           <Button
@@ -190,7 +168,7 @@ export const CashAnswer: React.FC<CashAnswerProps> = ({
             borderColor={EStyles.blue}
             hoverColor={EStyles.darken_blue}
             onClick={() => {
-              answerLettersRefsRecord[0]?.current?.focus();
+              answerWordsRefs[0]?.current?.focus();
             }}
             margin="0 10px"
             disabled={!isPossibleToAnswer}
@@ -201,20 +179,58 @@ export const CashAnswer: React.FC<CashAnswerProps> = ({
   );
 };
 
-const Input = styled.input<{ inputWidth: number }>`
-  width: ${(props) => props.inputWidth}px;
-  height: ${(props) => props.inputWidth}px;
-  color: white;
-  background-color: rgba(0, 0, 0, 0.2);
-  border: none;
-  margin: 12px 2px 2px 2px;
-  border-radius: 5px;
-  text-align: center;
-  outline-color: ${EStyles.turquoise};
-  font-size: ${(props) => props.inputWidth * 0.6}px;
-  line-height: ${(props) => props.inputWidth}px;
+const InputsContainer = styled.div`
+  width: 100%;
+  padding-top: 10px;
+  margin-bottom: 20px;
 `;
 
-const InputsContainer = styled.div`
-  margin-bottom: 20px;
+const InputWrapper = styled.div<{
+  width: number | undefined;
+  fullWidthFactor: number;
+}>`
+  width: ${(props) => props.width}px;
+  height: ${(props) => 25 * props.fullWidthFactor + 10}px;
+  margin: 5px 0;
+  position: relative;
+  background-color: rgba(0, 0, 0, 0.2);
+  border-radius: ${(props) => 5 * props.fullWidthFactor}px;
+`;
+
+const Input = styled.input<{
+  fontSize: number;
+  lineHeight: number;
+  letterSpacing: number;
+}>`
+  font-family: "Roboto Mono", monospace;
+  width: 100%;
+  height: 100%;
+  font-size: ${(props) => props.fontSize}px;
+  line-height: ${(props) => props.lineHeight}px;
+  color: white;
+  border: none;
+  background-color: transparent;
+  text-align: left;
+  outline-color: ${EStyles.turquoise};
+  letter-spacing: ${(props) => props.letterSpacing}px;
+  padding: 10px;
+
+  position: absolute;
+`;
+
+const InputPlaceholdersContainer = styled.div<{ width: number }>`
+  width: ${(props) => props.width}px;
+  height: 100%;
+  position: absolute;
+  bottom: 10%;
+  pointer-events: none;
+`;
+
+const InputPlaceholder = styled.div<{ width: number; marginLeft: number }>`
+  width: ${(props) => props.width}px;
+  height: 3px;
+  background-color: ${EStyles.lightBlue};
+  pointer-events: none;
+  margin-left: ${(props) => props.marginLeft}px;
+  border-radius: 5px;
 `;

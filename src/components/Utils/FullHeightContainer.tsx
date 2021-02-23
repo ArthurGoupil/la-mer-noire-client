@@ -1,21 +1,21 @@
+import { useWindowHeight } from "hooks/others/useWindowHeight.hook";
 import React from "react";
 import styled from "styled-components";
 
-import { useWindowHeight } from "hooks/others/useWindowHeight.hook";
 interface FullHeightContainerProps {
   children: React.ReactNode;
   padding?: string;
-  minHeight?: string | null;
+  height?: string;
   className?: string;
 }
 
 export const FullHeightContainer: React.FC<FullHeightContainerProps> = ({
   children,
   padding = "40px",
-  minHeight = null,
+  height = "100%",
   className = "d-flex justify-center align-center",
 }): JSX.Element => {
-  const { height } = useWindowHeight();
+  const { height: minHeight } = useWindowHeight();
 
   return (
     <Container
@@ -30,13 +30,13 @@ export const FullHeightContainer: React.FC<FullHeightContainerProps> = ({
 };
 
 const Container = styled.div<{
-  height: number;
-  minHeight: string | null;
+  height: string;
+  minHeight: number;
   padding: string;
 }>`
   width: 100%;
-  height: 100%;
-  min-height: ${(props) => props.minHeight || props.height}px;
+  height: ${(props) => props.height};
+  min-height: ${(props) => props.minHeight}px;
   overflow: hidden;
   position: relative;
   padding: ${(props) => props.padding};

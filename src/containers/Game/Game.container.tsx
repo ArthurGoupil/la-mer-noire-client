@@ -5,7 +5,6 @@ import { FullScreenError } from "components/Utils/FullScreenError";
 import { useGame } from "hooks/game/useGame.hook";
 import { EUserType } from "constants/GameUserType.constants";
 import { FullHeightLoader } from "components/Utils/FullHeightLoader";
-import { error, loading, ready } from "constants/NetworkStatuses.constants";
 import { GamePreparationContainer } from "./GamePreparation/GamePreparation.container";
 import { QuizContainer } from "containers/Game/Quiz/Quiz.container";
 import { getNS } from "utils/networkStatus.util";
@@ -21,23 +20,20 @@ export const GameContainer: React.FC = (): JSX.Element => {
     shortId,
     subscribe: {
       stage: true,
-      players: true,
-      currentQuizItem:
-        userType === EUserType.play || userType === EUserType.join,
     },
   });
 
   const CurrentContainer = {
     playersRegistration: (
-      <GamePreparationContainer game={game} userType={userType} />
+      <GamePreparationContainer shortId={shortId} userType={userType} />
     ),
-    caPasseOuCaCash: <QuizContainer game={game} userType={userType} />,
+    caPasseOuCaCash: <QuizContainer shortId={shortId} userType={userType} />,
   }[game?.stage];
 
   return {
-    [ready]: CurrentContainer,
-    [loading]: <FullHeightLoader />,
-    [error]: (
+    ready: CurrentContainer,
+    loading: <FullHeightLoader />,
+    error: (
       <FullScreenError
         errorLabel="La partie n'existe pas, vérifiez le code et réessayez."
         link="/"

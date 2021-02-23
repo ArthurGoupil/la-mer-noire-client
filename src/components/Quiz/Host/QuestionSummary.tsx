@@ -4,6 +4,7 @@ import styled from "styled-components";
 import { EStyles } from "constants/Styling.constants";
 import { PlayerData } from "models/Game.model";
 import { PlayerSummary } from "hooks/game/useCaPasseOuCaCashQuestionSummary.hook";
+import { isValidAnswer } from "utils/quiz/isValidAnswer.util";
 
 interface QuestionSummary {
   quizAnswer: string;
@@ -26,7 +27,7 @@ export const QuestionSummary: React.FC<QuestionSummary> = ({
   React.useEffect(() => {
     const timeout = setTimeout(() => {
       setAdditionalPointsAreVisible(true);
-    }, 2000);
+    }, 4000);
 
     return () => clearTimeout(timeout);
   }, []);
@@ -48,12 +49,22 @@ export const QuestionSummary: React.FC<QuestionSummary> = ({
             {questionSummary[playerData.player._id].answer ? (
               <>
                 a répondu{" "}
-                <PlayerAnswer>
+                <PlayerAnswer
+                  color={
+                    isValidAnswer({
+                      answer: quizAnswer,
+                      givenAnswer:
+                        questionSummary[playerData.player._id].answer,
+                    })
+                      ? "SpringGreen"
+                      : "Tomato"
+                  }
+                >
                   {questionSummary[playerData.player._id].answer.toUpperCase()}
                 </PlayerAnswer>
               </>
             ) : (
-              " n'a pas répondu."
+              <EmptyAnswer> n'a pas répondu.</EmptyAnswer>
             )}
             <AdditionalPointsContainer
               width={
@@ -80,27 +91,36 @@ const QuestionSummaryContainer = styled.div<{ opacity: number }>`
 `;
 
 const AnswerContainer = styled.div`
-  font-size: 23px;
-  margin-bottom: 30px;
+  font-size: 30px;
+  line-height: 35px;
+  margin-bottom: 60px;
   text-align: center;
 `;
 
 const Answer = styled.span`
   font-family: "Boogaloo", cursive;
-  font-size: 30px;
-  line-height: 30px;
-  color: ${EStyles.redOrange};
+  font-size: 40px;
+  line-height: 35px;
+  color: SpringGreen;
+  margin-left: 10px;
 `;
 
 const PlayerAnswerContainer = styled.div`
   margin-bottom: 10px;
+  font-size: 25px;
+  line-height: 30px;
 `;
 
-const PlayerAnswer = styled.span`
+const PlayerAnswer = styled.span<{ color: string }>`
   font-family: "Boogaloo", cursive;
-  line-height: 27px;
+  font-size: 30px;
+  line-height: 32px;
   margin-left: 10px;
-  color: ${EStyles.turquoise};
+  color: ${(props) => props.color};
+`;
+
+const EmptyAnswer = styled.span`
+  color: tomato;
 `;
 
 const PlayerName = styled.span`
@@ -119,7 +139,7 @@ const AdditionalPointsContainer = styled.div<{ width: number | undefined }>`
 const AdditionalPoints = styled.div`
   font-family: "Boogaloo", cursive;
   margin-left: 0px;
-  font-size: 25px;
+  font-size: 30px;
   color: ${EStyles.lightBlue};
   position: absolute;
   left: 0;

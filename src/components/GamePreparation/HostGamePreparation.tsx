@@ -3,7 +3,7 @@ import styled from "styled-components";
 
 import { EStyles } from "constants/Styling.constants";
 import { GameCodeBloc } from "components/GamePreparation/GameCodeBloc";
-import { ItemsList } from "components/Utils/ItemsList";
+import { PlayersList } from "components/GamePreparation/PlayersList";
 import { LMNLogo } from "components/Utils/LMNLogo";
 import { FullHeightContainer } from "components/Utils/FullHeightContainer";
 import { useLaunchGame } from "hooks/game/useLaunchGame.hook";
@@ -32,17 +32,12 @@ export const HostGamePreparation: React.FC<HostGamePreparationProps> = ({
           {game.players.length > 0 && (
             <>
               <PlayersTitle>Dans les starting blocks</PlayersTitle>
-              <ItemsList
-                list={game.players.map((playerData) => playerData.player)}
-                labelKey="name"
-                className="d-flex justify-center flex-wrap"
-                maxWidth="600px"
-                margin={`0 0 40px 0`}
-              />
+              <PlayersList playersList={game.players} />
             </>
           )}
         </div>
         <Button
+          disabled={game.players.length < 1}
           onClick={handleLaunchGameCounter}
           label={launchGameButtonLabel}
         />

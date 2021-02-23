@@ -10,7 +10,6 @@ import { GET_QUIZ_ITEM_DATA } from "services/quizzes.service";
 import { useQuizLifetime } from "hooks/quiz/useQuizLifetime.hook";
 import { usePlayersAnswers } from "hooks/quiz/usePlayersAnswers.hook";
 import { useDuoAnswersIndexes } from "hooks/quiz/useDuoAnswersIndexes.hook";
-import { error, loading, ready } from "constants/NetworkStatuses.constants";
 import { DuoCarreCashAnswerContainer } from "./DuoCarreCashAnswer.container";
 import { EQuizStage } from "constants/GameStage.constants";
 import { getGlobalNetworkStatus } from "utils/networkStatus.util";
@@ -68,7 +67,7 @@ export const PlayerContainer: React.FC<PlayerProps> = ({
   });
 
   return {
-    [ready]: (
+    ready: (
       <FullHeightContainer
         className="d-flex flex-column align-center"
         padding="10px 20px"
@@ -88,8 +87,8 @@ export const PlayerContainer: React.FC<PlayerProps> = ({
         }
       </FullHeightContainer>
     ),
-    [loading]: <FullHeightLoader />,
-    [error]: (
+    loading: <FullHeightLoader />,
+    error: (
       <FullScreenError
         errorLabel="Erreur lors du chargement du quiz."
         link="/"

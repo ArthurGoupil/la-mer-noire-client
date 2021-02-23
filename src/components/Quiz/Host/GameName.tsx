@@ -10,7 +10,7 @@ interface GameNameProps {
 export const GameName: React.FC<GameNameProps> = ({
   gameName,
 }): JSX.Element => {
-  return <Name>{gameName}</Name>;
+  return <Name>{gameName.toUpperCase()}</Name>;
 };
 
 const Name = styled.h3`

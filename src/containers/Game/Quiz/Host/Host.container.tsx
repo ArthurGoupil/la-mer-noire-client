@@ -10,7 +10,6 @@ import { StageName } from "components/Quiz/Host/StageName";
 import { FullScreenError } from "components/Utils/FullScreenError";
 import { FullWidthContainer } from "components/Utils/FullWidthContainer";
 import { GET_QUIZ_ITEM_DATA } from "services/quizzes.service";
-import { error, loading, ready } from "constants/NetworkStatuses.constants";
 import { FullHeightLoader } from "components/Utils/FullHeightLoader";
 import { CaPasseOuCaCashContainer } from "./CaPasseOuCaCash.container";
 import { EQuizStage } from "constants/GameStage.constants";
@@ -38,7 +37,7 @@ export const HostContainer: React.FC<HostProps> = ({ game }): JSX.Element => {
   });
 
   return {
-    [ready]: (
+    ready: (
       <FullHeightContainer className="d-flex flex-column align-center">
         <FullWidthContainer
           className="d-flex space-between"
@@ -61,8 +60,8 @@ export const HostContainer: React.FC<HostProps> = ({ game }): JSX.Element => {
         }
       </FullHeightContainer>
     ),
-    [loading]: <FullHeightLoader />,
-    [error]: (
+    loading: <FullHeightLoader />,
+    error: (
       <FullScreenError
         errorLabel="Erreur ! Quiz non trouvé."
         link="/"

@@ -4,6 +4,7 @@ import styled from "styled-components";
 import { AnswerType, AnswerTypeChoice } from "models/Game.model";
 import { EStyles } from "constants/Styling.constants";
 import { FullHeightContainer } from "components/Utils/FullHeightContainer";
+import { useWindowHeight } from "hooks/others/useWindowHeight.hook";
 
 interface AnswerTypeSelectionProps {
   quizId: string;
@@ -16,10 +17,12 @@ export const AnswerTypeSelection: React.FC<AnswerTypeSelectionProps> = ({
   questionIsOver,
   setAnswerTypeChoice,
 }): JSX.Element => {
+  const { height } = useWindowHeight();
+
   return (
     <FullHeightContainer
-      minHeight="100%"
       padding="0"
+      height={`${height}px`}
       className="d-flex flex-column align-center flex-grow"
     >
       <AnswerTypeContainer
@@ -64,7 +67,7 @@ const AnswerTypeContainer = styled.button<{
   opacity: number;
 }>`
   width: 100%;
-  flex: 1;
+  height: calc(100% / 3 - 80px / 3);
   font-family: "Boogaloo", cursive;
   font-size: 30px;
   text-shadow: 3px 3px 0px ${EStyles.darkBlue};

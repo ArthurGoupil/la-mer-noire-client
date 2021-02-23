@@ -1,49 +1,50 @@
 import { NetworkStatus } from "@apollo/client";
-import { error, loading, ready } from "constants/NetworkStatuses.constants";
 
 interface GetGlobalNetworkStatusProps {
   networkStatuses: NetworkStatus[];
   booleanCondition?: boolean;
 }
 
-export const getNS = (networkStatus: NetworkStatus): NetworkStatus => {
+type NS = "ready" | "loading" | "error";
+
+export const getNS = (networkStatus: NetworkStatus): NS => {
   switch (networkStatus) {
     case 1:
-      return loading;
+      return "loading";
     case 2:
-      return loading;
+      return "loading";
     case 3:
-      return loading;
+      return "loading";
     case 4:
-      return loading;
+      return "loading";
     case 6:
-      return loading;
+      return "loading";
     case 7:
-      return ready;
+      return "ready";
     case 8:
-      return error;
+      return "error";
     default:
-      return loading;
+      return "loading";
   }
 };
 
 export const getGlobalNetworkStatus = ({
   networkStatuses,
   booleanCondition = true,
-}: GetGlobalNetworkStatusProps): NetworkStatus => {
-  let mergedNetworkStatus: number = ready;
+}: GetGlobalNetworkStatusProps): NS => {
+  let mergedNetworkStatus: NS = "ready";
 
   for (let i = 0; i < networkStatuses.length; i++) {
-    if (getNS(networkStatuses[i]) === error) {
-      mergedNetworkStatus = error;
+    if (getNS(networkStatuses[i]) === "error") {
+      mergedNetworkStatus = "error";
       break;
-    } else if (getNS(networkStatuses[i]) === loading) {
-      mergedNetworkStatus = loading;
+    } else if (getNS(networkStatuses[i]) === "loading") {
+      mergedNetworkStatus = "loading";
     }
   }
 
-  if (!booleanCondition && mergedNetworkStatus !== error) {
-    return loading;
+  if (!booleanCondition && mergedNetworkStatus !== "error") {
+    return "loading";
   }
 
   return mergedNetworkStatus;

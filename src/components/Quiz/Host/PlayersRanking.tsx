@@ -39,7 +39,7 @@ export const PlayersRanking: React.FC<PlayersRankingProps> = ({
         ...playersRanking.sort((a, b) => b.totalPoints - a.totalPoints),
       ]);
       setIsNewRanking(true);
-    }, 7000);
+    }, 9000);
 
     return () => clearTimeout(timeout);
   }, []);
@@ -50,14 +50,19 @@ export const PlayersRanking: React.FC<PlayersRankingProps> = ({
       <Flipper flipKey={JSON.stringify(playersRanking)}>
         <ul className="list">
           {playersRanking.map((playerRanking, index) => {
+            const playerRank =
+              playersRanking[index - 1]?.totalPoints ===
+              playerRanking.totalPoints
+                ? "-"
+                : index + 1;
             return (
               <Flipped
                 key={playerRanking.playerId}
                 flipId={playerRanking.playerId}
               >
                 <PlayerRankingContainer className="d-flex space-between align-center">
-                  <PlayerRank className="d-flex justify-start align-center">
-                    {index + 1}
+                  <PlayerRank className="d-flex justify-end align-center">
+                    {playerRank}
                   </PlayerRank>
                   <PlayerName className="d-flex justify-center align-center flex-grow">
                     {players
@@ -93,41 +98,46 @@ export const PlayersRanking: React.FC<PlayersRankingProps> = ({
 const RankingContainer = styled.div<{ opacity: number }>`
   opacity: ${(props) => props.opacity};
   transition: opacity 0.5s;
+  z-index: 1;
 `;
 
 const RankingTitle = styled.h2`
   text-shadow: 2px 2px 0 ${EStyles.redOrange};
-  margin-bottom: 30px;
+  margin-bottom: 50px;
   text-align: center;
+  font-size: 50px;
+  line-height: 50px;
 `;
 
 const PlayerRankingContainer = styled.li`
-  height: 45px;
+  height: 50px;
   font-family: "Boogaloo", cursive;
-  margin: 10px;
+  margin-bottom: 15px;
+  margin-right: 10px;
 `;
 
 const PlayerRank = styled.span`
+  min-width: 30px;
   height: 100%;
-  margin-right: 20px;
+  margin-right: 15px;
   border-radius: 5px;
   padding-right: 3px;
-  font-size: 30px;
+  font-size: 40px;
   color: white;
   text-shadow: 2px 2px 0 ${EStyles.red};
 `;
 
 const PlayerName = styled.span`
-  min-width: 150px;
+  min-width: 200px;
   height: 100%;
-  font-size: 20px;
+  font-size: 30px;
   background: linear-gradient(
     to bottom,
     ${EStyles.blue} 0%,
     ${EStyles.lightBlue} 150%
   );
   border-radius: 5px;
-  text-shadow: 2px 2px 0 ${EStyles.blue};
+  text-shadow: 2px 2px 0 ${EStyles.darkBlue};
   padding: 0 15px;
 `;
 
@@ -139,7 +149,7 @@ const PlayerPointsContainer = styled.span`
     ${EStyles.orange} 0%,
     ${EStyles.redOrange} 170%
   );
-  margin-left: 5px;
+  margin-left: 10px;
   border-radius: 5px;
   padding-right: 3px;
 `;

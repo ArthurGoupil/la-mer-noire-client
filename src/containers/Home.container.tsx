@@ -1,5 +1,6 @@
 import React from "react";
 import styled from "styled-components";
+import NoSleep from "nosleep.js";
 
 import { Link, useHistory } from "react-router-dom";
 import { FullHeightContainer } from "components/Utils/FullHeightContainer";
@@ -16,6 +17,8 @@ export const HomeContainer: React.FC = (): JSX.Element => {
     GET_GAME,
   );
 
+  const noSleep = new NoSleep();
+
   React.useEffect(() => {
     if (data && !error) {
       history.push(`/games/${data.game.shortId}/join`);
@@ -26,9 +29,10 @@ export const HomeContainer: React.FC = (): JSX.Element => {
     <FullHeightContainer className="d-flex flex-column align-center justify-center">
       <LMNLogo width="500px" margin={`0 0 20px 0`} />
       <InputAndButton
-        handleSubmit={(value) =>
-          triggerGetGame({ variables: { shortId: value } })
-        }
+        handleSubmit={(value) => {
+          triggerGetGame({ variables: { shortId: value } });
+          noSleep.enable();
+        }}
         buttonLabel="Rejoindre la partie"
         inputWidth={130}
         margin={`0 0 15px 0`}

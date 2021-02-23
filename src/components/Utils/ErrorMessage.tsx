@@ -25,4 +25,5 @@ const ErrorMessageContainer = styled.div<{ margin: string }>`
   color: ${EStyles.redOrange};
   margin: ${(props) => props.margin};
   font-size: 15px;
+  text-align: center;
 `;

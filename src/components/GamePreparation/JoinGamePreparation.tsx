@@ -2,7 +2,7 @@ import React from "react";
 import styled from "styled-components";
 
 import { EStyles } from "constants/Styling.constants";
-import { ItemsList } from "components/Utils/ItemsList";
+import { PlayersList } from "components/GamePreparation/PlayersList";
 import { LMNLogo } from "components/Utils/LMNLogo";
 import { FullHeightContainer } from "components/Utils/FullHeightContainer";
 import { InputAndButton } from "components/Utils/InputAndButton";
@@ -51,13 +51,7 @@ export const JoinGamePreparation: React.FC<JoinGamePreparationProps> = ({
           {game.players.length > 0 && (
             <>
               <PlayersTitle>Dans les starting blocks</PlayersTitle>
-              <ItemsList
-                list={game.players.map((playerData) => playerData.player)}
-                labelKey="name"
-                className="d-flex justify-center flex-wrap"
-                maxWidth="600px"
-                margin={`0 0 40px 0`}
-              />
+              <PlayersList playersList={game.players} />
             </>
           )}
         </div>

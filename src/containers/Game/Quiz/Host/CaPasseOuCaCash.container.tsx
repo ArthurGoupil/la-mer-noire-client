@@ -13,7 +13,6 @@ import {
   GENERATE_NEW_CURRENT_QUIZ_ITEM,
   GET_GAME,
 } from "services/games.service";
-import { error, loading, ready } from "constants/NetworkStatuses.constants";
 import { FullHeightLoader } from "components/Utils/FullHeightLoader";
 import { FullScreenError } from "components/Utils/FullScreenError";
 import { QuizItemData } from "models/Quiz.model";
@@ -28,7 +27,7 @@ import {
 } from "utils/quiz/getLevelByQuestionNumber.util";
 import { useCaPasseOuCaCashQuestionSummary } from "hooks/game/useCaPasseOuCaCashQuestionSummary.hook";
 import { LevelAndAnswerTypePoints } from "components/Quiz/Host/LevelAndAnswerTypePoints";
-import { SummaryModal } from "components/Quiz/Host/SummaryModal";
+import { SummaryTransition } from "components/Quiz/Host/SummaryTransition";
 
 interface CaPasseOuCaCashContainerProps {
   game: Game;
@@ -92,6 +91,7 @@ export const CaPasseOuCaCashContainer: React.FC<CaPasseOuCaCashContainerProps> =
     if (isReadyForNextQuestion && questionSummary) {
       const newQuestionNumber: QuestionNumber = (caPasseOuCaCashState.questionNumber +
         1) as QuestionNumber;
+
       if (newQuestionNumber < 10) {
         setCookie({
           prefix: game.shortId,
@@ -123,7 +123,7 @@ export const CaPasseOuCaCashContainer: React.FC<CaPasseOuCaCashContainerProps> =
   }, [isReadyForNextQuestion, questionSummary]);
 
   return {
-    [ready]: (
+    ready: (
       <FullWidthContainer className="d-flex flex-column align-center space-between flex-grow">
         <div className="d-flex flex-column align-center justify-center flex-grow">
           <FullWidthContainer className="d-flex flex-start align-end">
@@ -160,7 +160,7 @@ export const CaPasseOuCaCashContainer: React.FC<CaPasseOuCaCashContainerProps> =
           isHost
         />
         {questionSummary && doneQuestionsRecord[quizItemData.quizId] && (
-          <SummaryModal
+          <SummaryTransition
             quizAnswer={quizItemData.quiz.answer}
             questionSummary={questionSummary}
             players={game.players}
@@ -169,8 +169,8 @@ export const CaPasseOuCaCashContainer: React.FC<CaPasseOuCaCashContainerProps> =
         )}
       </FullWidthContainer>
     ),
-    [loading]: <FullHeightLoader />,
-    [error]: (
+    loading: <FullHeightLoader />,
+    error: (
       <FullScreenError errorLabel="Erreur de communication avec le serveur. Veuillez recharger la page." />
     ),
   }[getNS(networkStatus)];
