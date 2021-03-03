@@ -16,7 +16,7 @@ import { useCaPasseOuCaCashState } from "hooks/game/useCaPasseOuCaCashState.hook
 import { QuizInfosScreen } from "components/Quiz/Host/QuizInfosScreen";
 import { useNonNullQuizItemData } from "hooks/quiz/useNonNullQuizItemData.hook";
 import { QuizLayout } from "components/Quiz/Host/QuizLayout";
-import { getWavesBackgroundGradient } from "utils/quiz/getWavesBackgroundGradient.util";
+import { getLevelGradient } from "utils/quiz/getLevelGradient.util";
 import { QuestionSummary } from "components/Quiz/Host/QuestionSummary";
 import { PlayersRanking } from "components/Quiz/Host/PlayersRanking";
 import { ECaPasseOuCaCashStatesTopScreensStatesNames } from "constants/CaPasseOuCaCash.constants";
@@ -123,7 +123,7 @@ export const CaPasseOuCaCashContainer: React.FC<CaPasseOuCaCashContainerProps> =
         caPasseOuCaCashState.stateName.includes("quizInfosScreen") ||
         caPasseOuCaCashState.stateName === "question",
       shouldLeave: false,
-      wavesBackgroundGradient: getWavesBackgroundGradient({
+      wavesBackgroundGradient: getLevelGradient({
         quizLevel: caPasseOuCaCashState.quizLevel,
       }),
     },
@@ -137,10 +137,7 @@ export const CaPasseOuCaCashContainer: React.FC<CaPasseOuCaCashContainerProps> =
       topScreens={topScreens}
     >
       <div className="d-flex flex-column align-center justify-center flex-grow">
-        <QuestionDisplay
-          quizItem={nonNullQuizItemData.quiz}
-          quizLevel={nonNullQuizItemData.level}
-        />
+        <QuestionDisplay quizItem={nonNullQuizItemData.quiz} />
         <div className="d-flex flex-wrap">
           {game.players.map((playerData: PlayerData, index: number) => {
             return (
@@ -168,6 +165,9 @@ export const CaPasseOuCaCashContainer: React.FC<CaPasseOuCaCashContainerProps> =
         totalTime={EQuizDuration.caPasseOuCaCash}
         remainingTime={remainingTime - 1}
         isOver={game.players.length === Object.keys(playersAnswers).length}
+        backgroundGradient={getLevelGradient({
+          quizLevel: caPasseOuCaCashState.quizLevel,
+        })}
       />
     </QuizLayout>
   );

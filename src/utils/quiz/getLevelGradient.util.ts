@@ -1,11 +1,11 @@
 import { EStyles } from "constants/Styling.constants";
 import { QuizLevel } from "models/Quiz.model";
 
-interface GetWavesBackgroundGradientProps {
+interface GetLevelGradientProps {
   quizLevel: QuizLevel;
 }
 
-export const getWavesBackgroundGradient = ({ quizLevel }: GetWavesBackgroundGradientProps) => {
+export const getLevelGradient = ({ quizLevel }: GetLevelGradientProps) => {
   return {
     beginner: [EStyles.turquoise, EStyles.lightBlue],
     intermediate: [EStyles.yellow, EStyles.orange],

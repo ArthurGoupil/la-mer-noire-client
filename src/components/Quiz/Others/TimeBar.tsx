@@ -7,12 +7,14 @@ interface TimeBarProps {
   totalTime: number;
   remainingTime: number;
   isOver: boolean;
+  backgroundGradient: string[];
 }
 
 export const TimeBar: React.FC<TimeBarProps> = ({
   totalTime,
   remainingTime,
   isOver,
+  backgroundGradient,
 }): JSX.Element => {
   const initialWidth = 100 - (100 * remainingTime) / totalTime + "%";
   const barContainerRef = React.useRef<HTMLDivElement>(null);
@@ -34,6 +36,7 @@ export const TimeBar: React.FC<TimeBarProps> = ({
         currentWidth={barCurrentWidth as number}
         containerWidth={barContainerRef.current?.clientWidth as number}
         opacity={remainingTime ? 1 : 0}
+        background={`linear-gradient(to bottom, ${backgroundGradient[0]} 20%, ${backgroundGradient[1]} 100%);`}
       />
     </BarContainer>
   );
@@ -53,10 +56,11 @@ const Bar = styled.div<{
   currentWidth: number;
   containerWidth: number;
   opacity: number;
+  background: string;
 }>`
   width: 100%;
   height: 40px;
-  background: linear-gradient(to bottom, ${EStyles.red} 20%, ${EStyles.darken_redOrange} 100%);
+  background: ${(props) => props.background};
   border-radius: 5px;
   opacity: ${(props) => props.opacity};
   transition: opacity 0.5s;
