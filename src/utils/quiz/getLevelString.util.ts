@@ -1,13 +1,13 @@
-import { QuizItemLevel } from "models/Quiz.model";
+import { QuizLevel } from "models/Quiz.model";
 
 interface GetLevelStringProps {
-  level: QuizItemLevel;
+  quizLevel: QuizLevel;
 }
 
-export const getLevelString = ({ level }: GetLevelStringProps) => {
+export const getLevelString = ({ quizLevel }: GetLevelStringProps) => {
   return {
     beginner: "débutant",
     intermediate: "intermédiaire",
     expert: "expert",
-  }[level];
+  }[quizLevel];
 };

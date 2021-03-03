@@ -25,9 +25,7 @@ export const ToggleFullScreen: React.FC = (): JSX.Element => {
 
   return (
     <FullScreenIcon
-      src={
-        !isFullScreen ? "/icons/fullscreen.svg" : "/icons/exit-fullscreen.svg"
-      }
+      src={!isFullScreen ? "/icons/fullscreen.svg" : "/icons/exit-fullscreen.svg"}
       onClick={handleClick}
     />
   );

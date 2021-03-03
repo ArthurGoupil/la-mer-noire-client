@@ -15,10 +15,7 @@ interface UseAnswerTypeChoiceReturn {
 export const useAnswerTypeChoice = ({
   shortId,
 }: UseAnswerTypeChoiceProps): UseAnswerTypeChoiceReturn => {
-  const [
-    answerTypeChoice,
-    setAnswerTypeChoice,
-  ] = React.useState<AnswerTypeChoice>(
+  const [answerTypeChoice, setAnswerTypeChoice] = React.useState<AnswerTypeChoice>(
     getCookie({ prefix: shortId, cookieName: ECookieName.answerTypeChoice }),
   );
 
@@ -28,7 +25,7 @@ export const useAnswerTypeChoice = ({
       cookieName: ECookieName.answerTypeChoice,
       cookieValue: answerTypeChoice,
     });
-  }, [answerTypeChoice]);
+  }, [answerTypeChoice, shortId]);
 
   return { answerTypeChoice, setAnswerTypeChoice };
 };

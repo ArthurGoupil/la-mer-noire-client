@@ -12,7 +12,7 @@ export const getNS = (networkStatus: NetworkStatus): NS => {
     case 1:
       return "loading";
     case 2:
-      return "loading";
+      return "ready";
     case 3:
       return "loading";
     case 4:

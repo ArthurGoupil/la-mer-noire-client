@@ -4,10 +4,11 @@ import { useHistory } from "react-router-dom";
 import NoSleep from "nosleep.js";
 
 import { InputAndButton } from "components/Utils/InputAndButton";
-import { FullHeightContainer } from "components/Utils/FullHeightContainer";
+import { FullHeightLayout } from "components/Utils/FullHeightLayout";
 import { LMNLogo } from "components/Utils/LMNLogo";
 import { CREATE_GAME } from "services/games.service";
 import { AnimatedSubmarine } from "components/Utils/AnimatedSubmarine";
+import { resetCookies } from "utils/cookies.util";
 
 interface HandleSubmitProps {
   name: string;
@@ -19,13 +20,13 @@ export const CreateGameContainer: React.FC<{}> = (): JSX.Element => {
   const [createGame, { loading }] = useMutation(CREATE_GAME);
 
   const handleSubmit = async ({ name }: HandleSubmitProps) => {
-    const createdGame = (await createGame({ variables: { name } })).data
-      .createGame;
+    resetCookies();
+    const createdGame = (await createGame({ variables: { name } })).data.createGame;
     history.push(`/games/${createdGame.shortId}/host`);
   };
 
   return (
-    <FullHeightContainer className="d-flex flex-column align-center justify-center">
+    <FullHeightLayout className="d-flex flex-column align-center justify-center">
       <LMNLogo width="500px" margin={`0 0 20px 0`} />
       <InputAndButton
         handleSubmit={async (value) => {
@@ -38,6 +39,6 @@ export const CreateGameContainer: React.FC<{}> = (): JSX.Element => {
         placeholder="Nom de la partie"
       />
       <AnimatedSubmarine />
-    </FullHeightContainer>
+    </FullHeightLayout>
   );
 };

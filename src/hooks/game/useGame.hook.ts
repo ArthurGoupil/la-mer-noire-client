@@ -29,12 +29,9 @@ export const useGame = ({
   shortId,
   subscribe = { stage: false, players: false, currentQuizItem: false },
 }: UseGameProps): UseGameReturn => {
-  const { subscribeToMore, data: { game } = {}, networkStatus } = useQuery(
-    GET_GAME,
-    {
-      variables: { shortId },
-    },
-  );
+  const { subscribeToMore, data: { game } = {}, networkStatus } = useQuery(GET_GAME, {
+    variables: { shortId },
+  });
 
   React.useEffect(() => {
     let unsubscribeStage: () => void;
@@ -79,7 +76,7 @@ export const useGame = ({
       if (unsubscribePlayers) unsubscribePlayers();
       if (unsubscribeCurrentQuizItem) unsubscribeCurrentQuizItem();
     };
-  }, [subscribeToMore, shortId]);
+  }, [subscribeToMore, shortId, subscribe.stage, subscribe.players, subscribe.currentQuizItem]);
 
   return { game, networkStatus };
 };

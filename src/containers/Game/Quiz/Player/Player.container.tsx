@@ -4,28 +4,22 @@ import { Game } from "models/Game.model";
 import { FullScreenError } from "components/Utils/FullScreenError";
 import { getCookie } from "utils/cookies.util";
 import { ECookieName } from "constants/Cookies.constants";
-import { FullHeightContainer } from "components/Utils/FullHeightContainer";
+import { FullHeightLayout } from "components/Utils/FullHeightLayout";
 import { useQuery } from "@apollo/client";
 import { GET_QUIZ_ITEM_DATA } from "services/quizzes.service";
-import { useQuizLifetime } from "hooks/quiz/useQuizLifetime.hook";
-import { usePlayersAnswers } from "hooks/quiz/usePlayersAnswers.hook";
-import { useDuoAnswersIndexes } from "hooks/quiz/useDuoAnswersIndexes.hook";
 import { DuoCarreCashAnswerContainer } from "./DuoCarreCashAnswer.container";
 import { EQuizStage } from "constants/GameStage.constants";
 import { getGlobalNetworkStatus } from "utils/networkStatus.util";
 import { FullHeightLoader } from "components/Utils/FullHeightLoader";
-import { EQuizDuration } from "constants/QuizDuration.constants";
+import { useDuoAnswersIndexes } from "hooks/quiz/useDuoAnswersIndexes.hook";
 
 interface PlayerProps {
   game: Game;
 }
 
-export const PlayerContainer: React.FC<PlayerProps> = ({
-  game,
-}): JSX.Element => {
-  const { stage, shortId, currentQuizItem } = game;
-
-  const { quizId, level, quizItemId, createdAtTimestamp } = currentQuizItem;
+export const PlayerContainer: React.FC<PlayerProps> = ({ game }): JSX.Element => {
+  const { stage, currentQuizItem } = game;
+  const { quizId, level, quizItemId } = currentQuizItem;
 
   const playerId = getCookie<string>({
     prefix: game.shortId,
@@ -36,13 +30,8 @@ export const PlayerContainer: React.FC<PlayerProps> = ({
     data: { quizItemData } = { quizItemData: null },
     networkStatus: quizItemDataNetworkStatus,
   } = useQuery(GET_QUIZ_ITEM_DATA, {
-    variables: { quizId, level, quizItemId, createdAtTimestamp },
-  });
-
-  const { allPlayersHaveAnswered } = usePlayersAnswers({
-    shortId,
-    quizItemData,
-    players: game.players,
+    variables: { quizId, level, quizItemId },
+    skip: !quizId || !level || !quizItemId,
   });
 
   const { duoAnswersIndexes } = useDuoAnswersIndexes({
@@ -50,42 +39,27 @@ export const PlayerContainer: React.FC<PlayerProps> = ({
     quizItemData,
   });
 
-  const {
-    doneQuestionsRecord,
-    networkStatus: remainingTimeNetworkStatus,
-  } = useQuizLifetime({
-    shortId,
-    quizId: quizItemData?.quizId,
-    allPlayersHaveAnswered,
-    timestampReference: quizItemData?.createdAtTimestamp,
-    duration: EQuizDuration.caPasseOuCaCash,
-  });
-
   const networkStatus = getGlobalNetworkStatus({
-    networkStatuses: [quizItemDataNetworkStatus, remainingTimeNetworkStatus],
+    networkStatuses: [quizItemDataNetworkStatus],
     booleanCondition: duoAnswersIndexes !== undefined,
   });
 
   return {
     ready: (
-      <FullHeightContainer
-        className="d-flex flex-column align-center"
-        padding="10px 20px"
-      >
+      <FullHeightLayout className="d-flex flex-column align-center" padding="10px 20px">
         {
           {
             caPasseOuCaCash: (
               <DuoCarreCashAnswerContainer
-                shortId={shortId}
+                game={game}
                 quizItemData={quizItemData}
-                playerId={playerId}
                 duoAnswersIndexes={duoAnswersIndexes}
-                questionIsOver={doneQuestionsRecord[quizItemData?.quizId]}
+                playerId={playerId}
               />
             ),
           }[(stage as unknown) as EQuizStage]
         }
-      </FullHeightContainer>
+      </FullHeightLayout>
     ),
     loading: <FullHeightLoader />,
     error: (

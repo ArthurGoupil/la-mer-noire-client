@@ -6,38 +6,56 @@ import { DuoAnswersIndexes, QuizItemData } from "models/Quiz.model";
 import { DuoAnswers } from "components/Quiz/Player/DuoAnswers";
 import { CarreAnswers } from "components/Quiz/Player/CarreAnswers";
 import { CashAnswer } from "components/Quiz/Player/CashAnswer";
-import { AnswerType } from "models/Game.model";
+import { AnswerType, Game } from "models/Game.model";
 import { FullScreenError } from "components/Utils/FullScreenError";
 import { useCurrentAnswer } from "hooks/quiz/useCurrentAnswer.hook";
+import { useNonNullQuizItemData } from "hooks/quiz/useNonNullQuizItemData.hook";
+import { usePlayersAnswers } from "hooks/quiz/usePlayersAnswers.hook";
+import { EQuizDuration } from "constants/QuizDuration.constants";
+import { useQuizLifetime } from "hooks/quiz/useQuizLifetime.hook";
 
 interface DuoCarreCashAnswerContainerProps {
-  shortId: string;
+  game: Game;
   quizItemData: QuizItemData;
-  playerId: string;
   duoAnswersIndexes: DuoAnswersIndexes;
-  questionIsOver: boolean;
+  playerId: string;
 }
 
 export const DuoCarreCashAnswerContainer: React.FC<DuoCarreCashAnswerContainerProps> = ({
-  shortId,
+  game,
   quizItemData,
-  playerId,
   duoAnswersIndexes,
-  questionIsOver,
+  playerId,
 }): JSX.Element => {
   const { answerTypeChoice, setAnswerTypeChoice } = useAnswerTypeChoice({
-    shortId,
-  });
-  const { currentAnswer, setCurrentAnswer } = useCurrentAnswer({
-    shortId,
-    quizId: quizItemData.quizId,
+    shortId: game.shortId,
   });
 
-  if (answerTypeChoice?.quizId !== quizItemData.quizId) {
+  const { nonNullQuizItemData } = useNonNullQuizItemData({ quizItemData });
+
+  const { currentAnswer, setCurrentAnswer } = useCurrentAnswer({
+    shortId: game.shortId,
+    quizItemSignature: nonNullQuizItemData.quizItemSignature,
+  });
+
+  const { allPlayersHaveAnswered } = usePlayersAnswers({
+    shortId: game.shortId,
+    quizItemSignature: nonNullQuizItemData.quizItemSignature,
+    players: game.players,
+  });
+
+  const { questionsRecord } = useQuizLifetime({
+    shortId: game.shortId,
+    quizItemSignature: nonNullQuizItemData.quizItemSignature,
+    allPlayersHaveAnswered,
+    duration: EQuizDuration.caPasseOuCaCash,
+  });
+
+  if (answerTypeChoice?.quizItemSignature !== nonNullQuizItemData.quizItemSignature) {
     return (
       <AnswerTypeSelection
-        quizId={quizItemData.quizId}
-        questionIsOver={questionIsOver}
+        quizItemSignature={nonNullQuizItemData.quizItemSignature}
+        questionIsOver={questionsRecord[nonNullQuizItemData.quizItemSignature]?.isDone}
         setAnswerTypeChoice={setAnswerTypeChoice}
       />
     );
@@ -47,34 +65,34 @@ export const DuoCarreCashAnswerContainer: React.FC<DuoCarreCashAnswerContainerPr
     return {
       duo: (
         <DuoAnswers
-          quizId={quizItemData.quizId}
+          quizItemSignature={nonNullQuizItemData.quizItemSignature}
           choices={duoAnswersIndexes.indexes.map(
-            (answerIndex: number) => quizItemData.quiz.choices[answerIndex],
+            (answerIndex: number) => nonNullQuizItemData.quiz.choices[answerIndex],
           )}
           playerId={playerId}
           currentAnswer={currentAnswer}
           onClick={setCurrentAnswer}
-          questionIsOver={questionIsOver}
+          questionIsOver={questionsRecord[nonNullQuizItemData.quizItemSignature]?.isDone}
         />
       ),
       carre: (
         <CarreAnswers
-          quizId={quizItemData.quizId}
-          choices={quizItemData.quiz.choices}
+          quizItemSignature={nonNullQuizItemData.quizItemSignature}
+          choices={nonNullQuizItemData.quiz.choices}
           playerId={playerId}
           currentAnswer={currentAnswer}
           onClick={setCurrentAnswer}
-          questionIsOver={questionIsOver}
+          questionIsOver={questionsRecord[nonNullQuizItemData.quizItemSignature]?.isDone}
         />
       ),
       cash: (
         <CashAnswer
-          quizId={quizItemData.quizId}
+          quizItemSignature={nonNullQuizItemData.quizItemSignature}
           playerId={playerId}
-          answer={quizItemData.quiz.answer}
+          answer={nonNullQuizItemData.quiz.answer}
           currentAnswer={currentAnswer}
           onSubmit={setCurrentAnswer}
-          questionIsOver={questionIsOver}
+          questionIsOver={questionsRecord[nonNullQuizItemData.quizItemSignature]?.isDone}
         />
       ),
     }[answerTypeChoice.answerType];

@@ -3,24 +3,24 @@ import styled from "styled-components";
 
 import { AnswerType, AnswerTypeChoice } from "models/Game.model";
 import { EStyles } from "constants/Styling.constants";
-import { FullHeightContainer } from "components/Utils/FullHeightContainer";
+import { FullHeightLayout } from "components/Utils/FullHeightLayout";
 import { useWindowHeight } from "hooks/others/useWindowHeight.hook";
 
 interface AnswerTypeSelectionProps {
-  quizId: string;
+  quizItemSignature: string;
   questionIsOver: boolean;
   setAnswerTypeChoice: React.Dispatch<React.SetStateAction<AnswerTypeChoice>>;
 }
 
 export const AnswerTypeSelection: React.FC<AnswerTypeSelectionProps> = ({
-  quizId,
+  quizItemSignature,
   questionIsOver,
   setAnswerTypeChoice,
 }): JSX.Element => {
   const { height } = useWindowHeight();
 
   return (
-    <FullHeightContainer
+    <FullHeightLayout
       padding="0"
       height={`${height}px`}
       className="d-flex flex-column align-center flex-grow"
@@ -30,9 +30,7 @@ export const AnswerTypeSelection: React.FC<AnswerTypeSelectionProps> = ({
         className="d-flex justify-center align-center"
         backgroundColor={EStyles.lightBlue}
         opacity={questionIsOver ? 0.6 : 1}
-        onClick={() =>
-          setAnswerTypeChoice({ quizId, answerType: AnswerType.duo })
-        }
+        onClick={() => setAnswerTypeChoice({ quizItemSignature, answerType: AnswerType.duo })}
       >
         DUO
       </AnswerTypeContainer>
@@ -41,24 +39,20 @@ export const AnswerTypeSelection: React.FC<AnswerTypeSelectionProps> = ({
         className="d-flex justify-center align-center"
         backgroundColor={EStyles.yellow}
         opacity={questionIsOver ? 0.6 : 1}
-        onClick={() =>
-          setAnswerTypeChoice({ quizId, answerType: AnswerType.carre })
-        }
+        onClick={() => setAnswerTypeChoice({ quizItemSignature, answerType: AnswerType.carre })}
       >
         CARRÉ
       </AnswerTypeContainer>
       <AnswerTypeContainer
         disabled={questionIsOver}
         className="d-flex justify-center align-center"
-        backgroundColor={EStyles.redOrange}
+        backgroundColor={EStyles.red}
         opacity={questionIsOver ? 0.6 : 1}
-        onClick={() =>
-          setAnswerTypeChoice({ quizId, answerType: AnswerType.cash })
-        }
+        onClick={() => setAnswerTypeChoice({ quizItemSignature, answerType: AnswerType.cash })}
       >
         CASH
       </AnswerTypeContainer>
-    </FullHeightContainer>
+    </FullHeightLayout>
   );
 };
 

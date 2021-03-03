@@ -3,10 +3,7 @@ interface GetRandomDuoAnswers {
   answer: string;
 }
 
-export const getRandomDuoAnswersIndexes = ({
-  choices,
-  answer,
-}: GetRandomDuoAnswers) => {
+export const getRandomDuoAnswersIndexes = ({ choices, answer }: GetRandomDuoAnswers) => {
   const duoAnswers = [];
 
   const indexes = [0, 1, 2, 3];

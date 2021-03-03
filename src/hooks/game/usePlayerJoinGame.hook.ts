@@ -4,7 +4,7 @@ import { useHistory } from "react-router-dom";
 
 import { ECookieName } from "constants/Cookies.constants";
 import { ADD_PLAYER_TO_GAME } from "services/games.service";
-import { setCookie } from "utils/cookies.util";
+import { resetCookies, setCookie } from "utils/cookies.util";
 
 interface UsePlayerJoinGameProps {
   shortId: string;
@@ -20,15 +20,14 @@ interface HandlePlayerJoinGameProps {
   name: string;
 }
 
-export const usePlayerJoinGame = ({
-  shortId,
-}: UsePlayerJoinGameProps): UsePlayerJoinGameReturn => {
+export const usePlayerJoinGame = ({ shortId }: UsePlayerJoinGameProps): UsePlayerJoinGameReturn => {
   const history = useHistory();
   const [addPlayerToGame, { loading }] = useMutation(ADD_PLAYER_TO_GAME);
   const [errorMessage, setErrorMessage] = React.useState<string | null>(null);
 
   const handlePlayerJoinGame = async ({ name }: HandlePlayerJoinGameProps) => {
     try {
+      resetCookies();
       setErrorMessage(null);
       const playerId = (
         await addPlayerToGame({

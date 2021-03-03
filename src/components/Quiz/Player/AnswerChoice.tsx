@@ -8,7 +8,7 @@ import { SetCurrentAnswerProps } from "hooks/quiz/useCurrentAnswer.hook";
 interface AnswerChoiceProps {
   color: string;
   quizAnswer: string;
-  quizId: string;
+  quizItemSignature: string;
   answerType: AnswerType;
   playerId: string;
   currentAnswer: Answer | null;
@@ -19,7 +19,7 @@ interface AnswerChoiceProps {
 export const AnswerChoice: React.FC<AnswerChoiceProps> = ({
   color,
   quizAnswer,
-  quizId,
+  quizItemSignature,
   answerType,
   playerId,
   currentAnswer,
@@ -27,12 +27,12 @@ export const AnswerChoice: React.FC<AnswerChoiceProps> = ({
   questionIsOver,
 }): JSX.Element => {
   const answerIsSelected =
-    currentAnswer?.answer === quizAnswer && currentAnswer?.quizId === quizId;
+    currentAnswer?.answer === quizAnswer && currentAnswer?.quizItemSignature === quizItemSignature;
 
   const anotherAnswerIsSelected =
     (currentAnswer !== null &&
       currentAnswer?.answer !== quizAnswer &&
-      currentAnswer?.quizId === quizId) ||
+      currentAnswer?.quizItemSignature === quizItemSignature) ||
     (!answerIsSelected && questionIsOver);
 
   return (
@@ -43,7 +43,7 @@ export const AnswerChoice: React.FC<AnswerChoiceProps> = ({
       answerIsSelected={answerIsSelected}
       anotherAnswerIsSelected={anotherAnswerIsSelected}
       onClick={async () => {
-        if (currentAnswer?.quizId !== quizId) {
+        if (currentAnswer?.quizItemSignature !== quizItemSignature) {
           await onClick({ answer: quizAnswer, answerType, playerId });
         }
       }}
@@ -64,11 +64,10 @@ const AnswerButton = styled.button<{
   text-shadow: 2px 2px 0px ${EStyles.darkBlue};
   font-weight: bold;
   background-color: ${(props) => props.color};
-  border-radius: ${EStyles.miniRadius};
+  border-radius: 5px;
   box-sizing: border-box;
   outline: none;
   border: none;
   opacity: ${(props) => (props.anotherAnswerIsSelected ? 0.6 : 1)};
-  box-shadow: ${(props) =>
-    props.answerIsSelected ? `inset 0 0 10px 5px white` : "none"};
+  box-shadow: ${(props) => (props.answerIsSelected ? `inset 0 0 10px 5px white` : "none")};
 `;

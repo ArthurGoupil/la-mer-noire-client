@@ -1,15 +1,17 @@
-import { useWindowHeight } from "hooks/others/useWindowHeight.hook";
 import React from "react";
 import styled from "styled-components";
 
-interface FullHeightContainerProps {
+import { EStyles } from "constants/Styling.constants";
+import { useWindowHeight } from "hooks/others/useWindowHeight.hook";
+
+interface FullHeightLayoutProps {
   children: React.ReactNode;
   padding?: string;
   height?: string;
   className?: string;
 }
 
-export const FullHeightContainer: React.FC<FullHeightContainerProps> = ({
+export const FullHeightLayout: React.FC<FullHeightLayoutProps> = ({
   children,
   padding = "40px",
   height = "100%",
@@ -18,12 +20,7 @@ export const FullHeightContainer: React.FC<FullHeightContainerProps> = ({
   const { height: minHeight } = useWindowHeight();
 
   return (
-    <Container
-      className={className}
-      height={height}
-      minHeight={minHeight}
-      padding={padding}
-    >
+    <Container className={className} height={height} minHeight={minHeight} padding={padding}>
       {children}
     </Container>
   );
@@ -40,4 +37,5 @@ const Container = styled.div<{
   overflow: hidden;
   position: relative;
   padding: ${(props) => props.padding};
+  background: linear-gradient(to bottom, ${EStyles.blue}, ${EStyles.darkBlue});
 `;

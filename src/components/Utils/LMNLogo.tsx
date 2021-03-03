@@ -8,31 +8,14 @@ interface LMNLogoProps {
   margin?: string;
 }
 
-export const LMNLogo: React.FC<LMNLogoProps> = ({
-  width,
-  margin = "0",
-}): JSX.Element => {
+export const LMNLogo: React.FC<LMNLogoProps> = ({ width, margin = "0" }): JSX.Element => {
   return (
     <SVGContainer margin={margin} width={width}>
       <SVG viewBox="0 0 100 20">
-        <text
-          textAnchor="middle"
-          x="50"
-          y="15"
-          fontSize="16"
-          fill="url(#gradient)"
-          fillOpacity="1"
-        >
+        <text textAnchor="middle" x="50" y="15" fontSize="16" fill="url(#gradient)" fillOpacity="1">
           LA MER NOIRE
         </text>
-        <text
-          textAnchor="middle"
-          x="50"
-          y="15"
-          fontSize="16"
-          fill="url(#wave)"
-          fillOpacity="1"
-        >
+        <text textAnchor="middle" x="50" y="15" fontSize="16" fill="url(#wave)" fillOpacity="1">
           LA MER NOIRE
         </text>
 
@@ -41,14 +24,7 @@ export const LMNLogo: React.FC<LMNLogoProps> = ({
             <stop offset="5%" stopColor={EStyles.redOrange} />
             <stop offset="95%" stopColor={EStyles.yellow} />
           </linearGradient>
-          <pattern
-            id="wave"
-            x="0"
-            y="0"
-            width="120"
-            height="20"
-            patternUnits="userSpaceOnUse"
-          >
+          <pattern id="wave" x="0" y="0" width="120" height="20" patternUnits="userSpaceOnUse">
             <path
               id="wavePath"
               d="M-40 9 Q-30 7 -20 9 T0 9 T20 9 T40 9 T60 9 T80 9 T100 9 T120 9 V20 H-40z"

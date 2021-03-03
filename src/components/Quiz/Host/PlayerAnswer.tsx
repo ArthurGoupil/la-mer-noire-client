@@ -24,18 +24,13 @@ export const PlayerAnswer: React.FC<PlayerAnswerProps> = ({
   const answerTypeString = getStringFromAnswerType({ answerType });
 
   return (
-    <PlayerAnswerContainer
-      className="d-flex flex-column "
-      noMarginRight={noMarginRight}
-    >
+    <PlayerAnswerContainer className="d-flex flex-column " noMarginRight={noMarginRight}>
       <InnerShadow />
       <div>{playerName}</div>
       <FullWidthContainer>
         <AnswerTypeContainer
           className="d-flex justify-center align-center"
-          color={
-            answerTypeString || questionIsOver ? EStyles.darkBlue : "white"
-          }
+          color={answerTypeString || questionIsOver ? EStyles.darkBlue : "white"}
           backgroundColor={
             answerTypeString
               ? isGoodAnswer

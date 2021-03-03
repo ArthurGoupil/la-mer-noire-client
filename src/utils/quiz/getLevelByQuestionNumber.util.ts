@@ -1,3 +1,5 @@
+import { QuizLevel } from "models/Quiz.model";
+
 interface GetLevelByQuestionNumberProps {
   questionNumber: QuestionNumber;
 }
@@ -6,7 +8,7 @@ export type QuestionNumber = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
 
 export const getLevelByQuestionNumber = ({
   questionNumber,
-}: GetLevelByQuestionNumberProps) => {
+}: GetLevelByQuestionNumberProps): QuizLevel => {
   return {
     1: "beginner",
     2: "beginner",
@@ -17,5 +19,5 @@ export const getLevelByQuestionNumber = ({
     7: "expert",
     8: "expert",
     9: "expert",
-  }[questionNumber];
+  }[questionNumber] as QuizLevel;
 };

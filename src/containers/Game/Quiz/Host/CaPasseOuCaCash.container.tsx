@@ -1,33 +1,25 @@
 import React from "react";
 
-import { FullWidthContainer } from "components/Utils/FullWidthContainer";
 import { CategoryTheme } from "components/Quiz/Host/CategoryTheme";
-import { QuestionDisplay } from "components/Quiz/Host/Question";
-import { CaPasseOuCaCashState, Game, PlayerData } from "models/Game.model";
+import { QuestionDisplay } from "components/Quiz/Host/QuestionDisplay";
+import { Game, PlayerData } from "models/Game.model";
 import { isValidAnswer } from "utils/quiz/isValidAnswer.util";
 import { TimeBar } from "components/Quiz/Others/TimeBar";
 import { PlayerAnswer } from "components/Quiz/Host/PlayerAnswer";
 import { useQuizLifetime } from "hooks/quiz/useQuizLifetime.hook";
 import { useMutation } from "@apollo/client";
-import {
-  GENERATE_NEW_CURRENT_QUIZ_ITEM,
-  GET_GAME,
-} from "services/games.service";
-import { FullHeightLoader } from "components/Utils/FullHeightLoader";
-import { FullScreenError } from "components/Utils/FullScreenError";
+import { GENERATE_NEW_CURRENT_QUIZ_ITEM, GET_GAME } from "services/games.service";
 import { QuizItemData } from "models/Quiz.model";
-import { getNS } from "utils/networkStatus.util";
 import { usePlayersAnswers } from "hooks/quiz/usePlayersAnswers.hook";
 import { EQuizDuration } from "constants/QuizDuration.constants";
-import { getCookie, setCookie } from "utils/cookies.util";
-import { ECookieName } from "constants/Cookies.constants";
-import {
-  getLevelByQuestionNumber,
-  QuestionNumber,
-} from "utils/quiz/getLevelByQuestionNumber.util";
-import { useCaPasseOuCaCashQuestionSummary } from "hooks/game/useCaPasseOuCaCashQuestionSummary.hook";
-import { LevelAndAnswerTypePoints } from "components/Quiz/Host/LevelAndAnswerTypePoints";
-import { SummaryTransition } from "components/Quiz/Host/SummaryTransition";
+import { useCaPasseOuCaCashState } from "hooks/game/useCaPasseOuCaCashState.hook";
+import { QuizInfosScreen } from "components/Quiz/Host/QuizInfosScreen";
+import { useNonNullQuizItemData } from "hooks/quiz/useNonNullQuizItemData.hook";
+import { QuizLayout } from "components/Quiz/Host/QuizLayout";
+import { getWavesBackgroundGradient } from "utils/quiz/getWavesBackgroundGradient.util";
+import { QuestionSummary } from "components/Quiz/Host/QuestionSummary";
+import { PlayersRanking } from "components/Quiz/Host/PlayersRanking";
+import { ECaPasseOuCaCashStatesTopScreensStatesNames } from "constants/CaPasseOuCaCash.constants";
 
 interface CaPasseOuCaCashContainerProps {
   game: Game;
@@ -38,10 +30,7 @@ export const CaPasseOuCaCashContainer: React.FC<CaPasseOuCaCashContainerProps> =
   game,
   quizItemData,
 }): JSX.Element => {
-  const [
-    generateNewCurrentQuizItem,
-    { loading: isGeneratingNewCurrentQuizItem },
-  ] = useMutation(GENERATE_NEW_CURRENT_QUIZ_ITEM, {
+  const [generateNewCurrentQuizItem] = useMutation(GENERATE_NEW_CURRENT_QUIZ_ITEM, {
     refetchQueries: [
       {
         query: GET_GAME,
@@ -50,128 +39,136 @@ export const CaPasseOuCaCashContainer: React.FC<CaPasseOuCaCashContainerProps> =
     ],
   });
 
-  const caPasseOuCaCashState: CaPasseOuCaCashState = getCookie<CaPasseOuCaCashState>(
-    {
-      prefix: game.shortId,
-      cookieName: ECookieName.caPasseOuCaCashState,
-    },
-  );
+  const { nonNullQuizItemData } = useNonNullQuizItemData({ quizItemData });
 
   const { playersAnswers, allPlayersHaveAnswered } = usePlayersAnswers({
     shortId: game.shortId,
-    quizItemData,
+    quizItemSignature: quizItemData?.quizItemSignature,
     players: game.players,
-    isGeneratingNewCurrentQuizItem,
   });
 
-  const { remainingTime, doneQuestionsRecord, networkStatus } = useQuizLifetime(
-    {
-      shortId: game.shortId,
-      quizId: quizItemData.quizId,
-      allPlayersHaveAnswered,
-      timestampReference: quizItemData.createdAtTimestamp,
-      duration: EQuizDuration.caPasseOuCaCash,
-    },
-  );
+  const { remainingTime, questionsRecord } = useQuizLifetime({
+    shortId: game.shortId,
+    quizItemSignature: nonNullQuizItemData.quizItemSignature,
+    allPlayersHaveAnswered:
+      allPlayersHaveAnswered &&
+      playersAnswers[Object.keys(playersAnswers)[0]].quizItemSignature ===
+        nonNullQuizItemData.quizItemSignature,
+    duration: EQuizDuration.caPasseOuCaCash,
+  });
 
-  const { questionSummary } = useCaPasseOuCaCashQuestionSummary({
-    previousPlayersPoints: caPasseOuCaCashState.playersPoints,
+  const { caPasseOuCaCashState } = useCaPasseOuCaCashState({
+    shortId: game.shortId,
+    quizItemData,
+    allPlayersHaveAnswered,
     playersAnswers,
-    quizAnswer: quizItemData.quiz.answer,
-    quizLevel: quizItemData.level,
-    questionIsOver: doneQuestionsRecord[quizItemData.quizId],
+    quizAnswer: nonNullQuizItemData.quiz.answer,
+    quizLevel: nonNullQuizItemData.level,
+    questionsRecord,
   });
-
-  const [
-    isReadyForNextQuestion,
-    setIsReadyForNextQuestion,
-  ] = React.useState<boolean>(false);
 
   React.useEffect(() => {
-    if (isReadyForNextQuestion && questionSummary) {
-      const newQuestionNumber: QuestionNumber = (caPasseOuCaCashState.questionNumber +
-        1) as QuestionNumber;
-
-      if (newQuestionNumber < 10) {
-        setCookie({
-          prefix: game.shortId,
-          cookieName: ECookieName.caPasseOuCaCashState,
-          cookieValue: {
-            questionNumber: newQuestionNumber,
-            playersPoints: Object.keys(questionSummary).reduce(
-              (acc: Record<string, number>, cur: string) => {
-                return { ...acc, [cur]: questionSummary[cur].totalPoints };
-              },
-              {},
-            ),
+    if (caPasseOuCaCashState.stateName === "quizInfosScreen_fetchQuizItemData") {
+      (async () =>
+        await generateNewCurrentQuizItem({
+          variables: {
+            shortId: game.shortId,
+            level: caPasseOuCaCashState.quizLevel,
           },
-        });
-        setTimeout(() => {
-          (async () =>
-            await generateNewCurrentQuizItem({
-              variables: {
-                shortId: game.shortId,
-                level: getLevelByQuestionNumber({
-                  questionNumber: newQuestionNumber,
-                }),
-              },
-            }))();
-          setIsReadyForNextQuestion(false);
-        }, 3000);
-      }
+        }))();
     }
-  }, [isReadyForNextQuestion, questionSummary]);
+  }, [game.shortId, generateNewCurrentQuizItem, caPasseOuCaCashState]);
 
-  return {
-    ready: (
-      <FullWidthContainer className="d-flex flex-column align-center space-between flex-grow">
-        <div className="d-flex flex-column align-center justify-center flex-grow">
-          <FullWidthContainer className="d-flex flex-start align-end">
-            <LevelAndAnswerTypePoints level={quizItemData.level} />
-          </FullWidthContainer>
-          <QuestionDisplay quizItem={quizItemData.quiz} showAnswers={false} />
-          <div className="d-flex">
-            {game.players.map((playerData: PlayerData, index: number) => {
-              return (
-                <PlayerAnswer
-                  key={index}
-                  playerName={playerData.player.name}
-                  answerType={playersAnswers[playerData.player._id]?.answerType}
-                  isGoodAnswer={isValidAnswer({
-                    answer: quizItemData.quiz.answer,
-                    givenAnswer: playersAnswers[playerData.player._id]?.answer,
-                  })}
-                  noMarginRight={index === game.players.length - 1}
-                  questionIsOver={doneQuestionsRecord[quizItemData.quizId]}
-                />
-              );
-            })}
-          </div>
+  const topScreens = [
+    {
+      component: (
+        <QuestionSummary
+          quizAnswer={nonNullQuizItemData.quiz.answer}
+          players={game.players}
+          playersAnswers={playersAnswers}
+          playersPoints={caPasseOuCaCashState.playersPoints}
+          additionalPointsAreVisible={caPasseOuCaCashState.stateName === "questionSummary_points"}
+        />
+      ),
+      shouldEnter: caPasseOuCaCashState.stateName.includes("questionSummary"),
+      shouldLeave: caPasseOuCaCashState.stateName.includes("playersRanking"),
+    },
+    {
+      component: (
+        <PlayersRanking
+          playersPoints={{ ...caPasseOuCaCashState.playersPoints }}
+          players={game.players}
+          isCurrentRanking={
+            caPasseOuCaCashState.stateName !== "playersRanking_previous" &&
+            caPasseOuCaCashState.stateName !== "questionSummary_points"
+          }
+        />
+      ),
+      shouldEnter:
+        caPasseOuCaCashState.stateName.includes("playersRanking") ||
+        caPasseOuCaCashState.stateName === "roundOver",
+      shouldLeave:
+        caPasseOuCaCashState.questionNumber !== 9
+          ? caPasseOuCaCashState.stateName.includes("quizInfosScreen")
+          : false,
+    },
+    {
+      component: (
+        <QuizInfosScreen
+          questionNumber={caPasseOuCaCashState.questionNumber}
+          quizLevel={caPasseOuCaCashState.quizLevel}
+        />
+      ),
+      shouldEnter:
+        caPasseOuCaCashState.stateName.includes("quizInfosScreen") ||
+        caPasseOuCaCashState.stateName === "question",
+      shouldLeave: false,
+      wavesBackgroundGradient: getWavesBackgroundGradient({
+        quizLevel: caPasseOuCaCashState.quizLevel,
+      }),
+    },
+  ];
+
+  return (
+    <QuizLayout
+      stage={game.stage}
+      gameName={game.name}
+      showTopScreen={caPasseOuCaCashState.stateName in ECaPasseOuCaCashStatesTopScreensStatesNames}
+      topScreens={topScreens}
+    >
+      <div className="d-flex flex-column align-center justify-center flex-grow">
+        <QuestionDisplay
+          quizItem={nonNullQuizItemData.quiz}
+          quizLevel={nonNullQuizItemData.level}
+        />
+        <div className="d-flex flex-wrap">
+          {game.players.map((playerData: PlayerData, index: number) => {
+            return (
+              <PlayerAnswer
+                key={index}
+                playerName={playerData.player.name}
+                answerType={playersAnswers[playerData.player._id]?.answerType}
+                isGoodAnswer={isValidAnswer({
+                  answer: nonNullQuizItemData.quiz.answer,
+                  givenAnswer: playersAnswers[playerData.player._id]?.answer,
+                })}
+                noMarginRight={index === game.players.length - 1}
+                questionIsOver={questionsRecord[nonNullQuizItemData.quizItemSignature]?.isDone}
+              />
+            );
+          })}
         </div>
-        <CategoryTheme
-          categoryName={quizItemData.category.name}
-          theme={quizItemData.theme}
-          subTheme={quizItemData.subTheme}
-        />
-        <TimeBar
-          totalTime={EQuizDuration.caPasseOuCaCash}
-          remainingTime={remainingTime - 1}
-          isOver={game.players.length === Object.keys(playersAnswers).length}
-          isHost
-        />
-        {questionSummary && doneQuestionsRecord[quizItemData.quizId] && (
-          <SummaryTransition
-            quizAnswer={quizItemData.quiz.answer}
-            questionSummary={questionSummary}
-            players={game.players}
-            onReady={() => setIsReadyForNextQuestion(true)}
-          />
-        )}
-      </FullWidthContainer>
-    ),
-    loading: <FullHeightLoader />,
-    error: (
-      <FullScreenError errorLabel="Erreur de communication avec le serveur. Veuillez recharger la page." />
-    ),
-  }[getNS(networkStatus)];
+      </div>
+      <CategoryTheme
+        categoryName={nonNullQuizItemData.category.name}
+        theme={nonNullQuizItemData.theme}
+        subTheme={nonNullQuizItemData.subTheme}
+      />
+      <TimeBar
+        totalTime={EQuizDuration.caPasseOuCaCash}
+        remainingTime={remainingTime - 1}
+        isOver={game.players.length === Object.keys(playersAnswers).length}
+      />
+    </QuizLayout>
+  );
 };

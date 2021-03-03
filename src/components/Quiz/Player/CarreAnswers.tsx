@@ -6,7 +6,7 @@ import { Answer, AnswerType } from "models/Game.model";
 import { SetCurrentAnswerProps } from "hooks/quiz/useCurrentAnswer.hook";
 
 interface CarreAnswersProps {
-  quizId: string;
+  quizItemSignature: string;
   choices: string[];
   playerId: string;
   currentAnswer: Answer | null;
@@ -15,7 +15,7 @@ interface CarreAnswersProps {
 }
 
 export const CarreAnswers: React.FC<CarreAnswersProps> = ({
-  quizId,
+  quizItemSignature,
   choices,
   playerId,
   currentAnswer,
@@ -27,7 +27,7 @@ export const CarreAnswers: React.FC<CarreAnswersProps> = ({
       <AnswerChoice
         color={EStyles.darkBlue}
         quizAnswer={choices[0]}
-        quizId={quizId}
+        quizItemSignature={quizItemSignature}
         answerType={AnswerType.carre}
         playerId={playerId}
         currentAnswer={currentAnswer}
@@ -37,7 +37,7 @@ export const CarreAnswers: React.FC<CarreAnswersProps> = ({
       <AnswerChoice
         color={EStyles.yellow}
         quizAnswer={choices[1]}
-        quizId={quizId}
+        quizItemSignature={quizItemSignature}
         answerType={AnswerType.carre}
         playerId={playerId}
         currentAnswer={currentAnswer}
@@ -47,7 +47,7 @@ export const CarreAnswers: React.FC<CarreAnswersProps> = ({
       <AnswerChoice
         color={EStyles.redOrange}
         quizAnswer={choices[2]}
-        quizId={quizId}
+        quizItemSignature={quizItemSignature}
         answerType={AnswerType.carre}
         playerId={playerId}
         currentAnswer={currentAnswer}
@@ -57,7 +57,7 @@ export const CarreAnswers: React.FC<CarreAnswersProps> = ({
       <AnswerChoice
         color={EStyles.turquoise}
         quizAnswer={choices[3]}
-        quizId={quizId}
+        quizItemSignature={quizItemSignature}
         answerType={AnswerType.carre}
         playerId={playerId}
         currentAnswer={currentAnswer}

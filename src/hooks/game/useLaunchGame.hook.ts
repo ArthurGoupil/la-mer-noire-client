@@ -5,7 +5,7 @@ import { UPDATE_GAME_STAGE } from "services/games.service";
 import { EGameStage } from "constants/GameStage.constants";
 import { setCookie } from "utils/cookies.util";
 import { ECookieName } from "constants/Cookies.constants";
-import { PlayerData } from "models/Game.model";
+import { PlayerData, PlayersPoints } from "models/Game.model";
 
 interface useLaunchGameProps {
   shortId: string;
@@ -17,31 +17,9 @@ interface UseLaunchGameReturn {
   launchGameButtonLabel: string;
 }
 
-export const useLaunchGame = ({
-  shortId,
-  players,
-}: useLaunchGameProps): UseLaunchGameReturn => {
+export const useLaunchGame = ({ shortId, players }: useLaunchGameProps): UseLaunchGameReturn => {
   const [launchCounter, setLaunchCounter] = React.useState<number | null>(null);
   const [updateGameStage] = useMutation(UPDATE_GAME_STAGE);
-
-  const launchGame = async () => {
-    setCookie({
-      prefix: shortId,
-      cookieName: ECookieName.caPasseOuCaCashState,
-      cookieValue: {
-        questionNumber: 1,
-        playersPoints: players.reduce(
-          (acc: Record<string, number>, cur: PlayerData) => {
-            return { ...acc, [cur.player._id]: 0 };
-          },
-          {},
-        ),
-      },
-    });
-    await updateGameStage({
-      variables: { stage: EGameStage.caPasseOuCaCash, shortId },
-    });
-  };
 
   const handleLaunchGameCounter = () => {
     if (!launchCounter) {
@@ -52,6 +30,24 @@ export const useLaunchGame = ({
   };
 
   React.useEffect(() => {
+    const launchGame = async () => {
+      setCookie({
+        prefix: shortId,
+        cookieName: ECookieName.caPasseOuCaCashState,
+        cookieValue: {
+          stateName: "quizInfosScreen",
+          quizLevel: "beginner",
+          questionNumber: 1,
+          playersPoints: players.reduce((acc: PlayersPoints, cur: PlayerData) => {
+            return { ...acc, [cur.player._id]: { previous: 0, current: 0 } };
+          }, {}),
+        },
+      });
+      await updateGameStage({
+        variables: { stage: EGameStage.caPasseOuCaCash, shortId },
+      });
+    };
+
     let timeout: NodeJS.Timeout;
     if (launchCounter && launchCounter > 0) {
       timeout = setTimeout(() => {
@@ -62,7 +58,7 @@ export const useLaunchGame = ({
     }
 
     return () => clearTimeout(timeout);
-  }, [launchCounter]);
+  }, [launchCounter, shortId, players, updateGameStage]);
 
   return {
     handleLaunchGameCounter,

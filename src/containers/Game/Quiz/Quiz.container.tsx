@@ -13,17 +13,13 @@ interface QuizProps {
   userType: EUserType;
 }
 
-export const QuizContainer: React.FC<QuizProps> = ({
-  shortId,
-  userType,
-}): JSX.Element => {
+export const QuizContainer: React.FC<QuizProps> = ({ shortId, userType }): JSX.Element => {
   const { game, networkStatus } = useGame({
     shortId,
     subscribe: {
       stage: true,
       players: true,
-      currentQuizItem:
-        userType === EUserType.play || userType === EUserType.join,
+      currentQuizItem: userType === EUserType.play || userType === EUserType.join,
     },
   });
 
@@ -52,10 +48,6 @@ export const QuizContainer: React.FC<QuizProps> = ({
   }
 
   return (
-    <FullScreenError
-      errorLabel="Erreur inconnue."
-      linkLabel="Revenir au menu principal"
-      link="/"
-    />
+    <FullScreenError errorLabel="Erreur inconnue." linkLabel="Revenir au menu principal" link="/" />
   );
 };

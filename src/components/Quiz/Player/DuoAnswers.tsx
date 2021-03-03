@@ -6,7 +6,7 @@ import { Answer, AnswerType } from "models/Game.model";
 import { SetCurrentAnswerProps } from "hooks/quiz/useCurrentAnswer.hook";
 
 interface CarreAnswersProps {
-  quizId: string;
+  quizItemSignature: string;
   choices: string[];
   playerId: string;
   currentAnswer: Answer | null;
@@ -15,7 +15,7 @@ interface CarreAnswersProps {
 }
 
 export const DuoAnswers: React.FC<CarreAnswersProps> = ({
-  quizId,
+  quizItemSignature,
   choices,
   playerId,
   currentAnswer,
@@ -28,7 +28,7 @@ export const DuoAnswers: React.FC<CarreAnswersProps> = ({
         color={EStyles.darkBlue}
         quizAnswer={choices[0]}
         answerType={AnswerType.duo}
-        quizId={quizId}
+        quizItemSignature={quizItemSignature}
         playerId={playerId}
         currentAnswer={currentAnswer}
         onClick={onClick}
@@ -38,7 +38,7 @@ export const DuoAnswers: React.FC<CarreAnswersProps> = ({
         color={EStyles.yellow}
         quizAnswer={choices[1]}
         answerType={AnswerType.duo}
-        quizId={quizId}
+        quizItemSignature={quizItemSignature}
         playerId={playerId}
         currentAnswer={currentAnswer}
         onClick={onClick}

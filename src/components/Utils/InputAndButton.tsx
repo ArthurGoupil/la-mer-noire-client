@@ -30,7 +30,7 @@ export const InputAndButton: React.FC<InputAndButtonProps> = ({
       onSubmit={async (e) => {
         e.preventDefault();
         if (value.length > 0) {
-          handleSubmit(value);
+          handleSubmit(value.trim());
         }
       }}
       margin={margin}
@@ -48,10 +48,10 @@ export const InputAndButton: React.FC<InputAndButtonProps> = ({
         placeholder={placeholder}
       />
       <Button
-        disabled={value.length === 0}
+        disabled={value.trim().length === 0}
         type="submit"
         className="d-flex justify-center align-center"
-        isDisabled={value.length === 0}
+        isDisabled={value.trim().length === 0}
       >
         <LabelContainer isLoading={isLoading}>{buttonLabel}</LabelContainer>
         {isLoading && <Loader isForButton />}

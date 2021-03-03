@@ -1,6 +1,11 @@
+import {
+  ECaPasseOuCaCashStatesBottomScreensStateNames,
+  ECaPasseOuCaCashStatesTopScreensStatesNames,
+} from "constants/CaPasseOuCaCash.constants";
 import { EGameStage } from "constants/GameStage.constants";
 import { Player } from "models/Player.model";
-import { QuizItemId, QuizItemLevel } from "./Quiz.model";
+import { QuestionNumber } from "utils/quiz/getLevelByQuestionNumber.util";
+import { QuizItemId, QuizLevel } from "./Quiz.model";
 
 export interface Game {
   _id: string;
@@ -21,13 +26,12 @@ export interface PlayerData {
 
 export interface CurrentQuizItem {
   quizId: string;
-  level: QuizItemLevel;
+  level: QuizLevel;
   quizItemId: QuizItemId;
-  createdAtTimestamp: number;
 }
 
 export interface Answer {
-  quizId: string;
+  quizItemSignature: string;
   answer: string;
   answerType: AnswerType;
 }
@@ -39,11 +43,23 @@ export enum AnswerType {
 }
 
 export interface AnswerTypeChoice {
-  quizId: string;
+  quizItemSignature: string;
   answerType: AnswerType;
 }
 
+export type PlayerPoints = { previous: number; current: number };
+export type PlayersPoints = Record<string, PlayerPoints>;
+
 export interface CaPasseOuCaCashState {
-  questionNumber: number;
-  playersPoints: Record<string, number>;
+  stateName:
+    | keyof typeof ECaPasseOuCaCashStatesBottomScreensStateNames
+    | keyof typeof ECaPasseOuCaCashStatesTopScreensStatesNames;
+  quizLevel: QuizLevel;
+  questionNumber: QuestionNumber;
+  playersPoints: PlayersPoints;
+}
+
+export interface QuestionRecord {
+  isDone: boolean;
+  timestamp: number | null;
 }

@@ -2,10 +2,13 @@ import React from "react";
 import styled from "styled-components";
 
 import { EStyles } from "constants/Styling.constants";
+import { useWindowHeight } from "hooks/others/useWindowHeight.hook";
 
 export const AnimatedSubmarine: React.FC<{}> = (): JSX.Element => {
+  const { height } = useWindowHeight();
+
   return (
-    <SubmarineContainer>
+    <SubmarineContainer height={height} className="d-flex align-center">
       <SubmarineLightWrapper className="d-flex align-center">
         <Submarine>
           <Bubble1 />
@@ -23,9 +26,10 @@ export const AnimatedSubmarine: React.FC<{}> = (): JSX.Element => {
   );
 };
 
-const SubmarineContainer = styled.div`
+const SubmarineContainer = styled.div<{ height: number }>`
   position: absolute;
-  width: 100vw;
+  width: 100%;
+  height: ${(props) => props.height}px;
   left: 0;
   pointer-events: none;
 
@@ -76,8 +80,8 @@ const SubmarineContainer = styled.div`
 `;
 
 const SubmarineLightWrapper = styled.div`
+  height: 100%;
   margin-bottom: 200px;
-  animation: upDown 1.5s alternate infinite ease-in-out;
 `;
 
 const Submarine = styled.div`
@@ -88,6 +92,7 @@ const Submarine = styled.div`
   background-repeat: no-repeat;
   background-size: cover;
   z-index: 1;
+  animation: upDown 1.5s alternate infinite ease-in-out;
 
   left: -20vw;
   @media only screen and (max-width: ${EStyles.tabletBreakPoint}) {

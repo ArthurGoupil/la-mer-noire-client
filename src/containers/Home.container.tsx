@@ -3,7 +3,7 @@ import styled from "styled-components";
 import NoSleep from "nosleep.js";
 
 import { Link, useHistory } from "react-router-dom";
-import { FullHeightContainer } from "components/Utils/FullHeightContainer";
+import { FullHeightLayout } from "components/Utils/FullHeightLayout";
 import { LMNLogo } from "components/Utils/LMNLogo";
 import { InputAndButton } from "components/Utils/InputAndButton";
 import { AnimatedSubmarine } from "components/Utils/AnimatedSubmarine";
@@ -13,9 +13,7 @@ import { ErrorMessage } from "components/Utils/ErrorMessage";
 
 export const HomeContainer: React.FC = (): JSX.Element => {
   const history = useHistory();
-  const [triggerGetGame, { data, loading, error, called }] = useLazyQuery(
-    GET_GAME,
-  );
+  const [triggerGetGame, { data, loading, error, called }] = useLazyQuery(GET_GAME);
 
   const noSleep = new NoSleep();
 
@@ -23,10 +21,10 @@ export const HomeContainer: React.FC = (): JSX.Element => {
     if (data && !error) {
       history.push(`/games/${data.game.shortId}/join`);
     }
-  }, [data]);
+  }, [data, error, history]);
 
   return (
-    <FullHeightContainer className="d-flex flex-column align-center justify-center">
+    <FullHeightLayout className="d-flex flex-column align-center justify-center">
       <LMNLogo width="500px" margin={`0 0 20px 0`} />
       <InputAndButton
         handleSubmit={(value) => {
@@ -48,7 +46,7 @@ export const HomeContainer: React.FC = (): JSX.Element => {
         margin="15px 0 0 0"
       />
       <AnimatedSubmarine />
-    </FullHeightContainer>
+    </FullHeightLayout>
   );
 };
 

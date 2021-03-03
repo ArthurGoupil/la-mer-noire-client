@@ -18,10 +18,7 @@ export const useDuoAnswersIndexes = ({
   shortId,
   quizItemData,
 }: UseDuoAnswersIndexesProps): UseDuoAnswersIndexesReturn => {
-  const [
-    duoAnswersIndexes,
-    setDuoAnswersIndexes,
-  ] = React.useState<DuoAnswersIndexes>(
+  const [duoAnswersIndexes, setDuoAnswersIndexes] = React.useState<DuoAnswersIndexes>(
     getCookie({
       prefix: shortId,
       cookieName: ECookieName.duoAnswersIndexes,
@@ -29,9 +26,9 @@ export const useDuoAnswersIndexes = ({
   );
   React.useEffect(() => {
     if (quizItemData) {
-      if (duoAnswersIndexes?.quizId !== quizItemData.quizId) {
+      if (duoAnswersIndexes?.quizItemSignature !== quizItemData.quizItemSignature) {
         const duoAnswersIndexesToStore = {
-          quizId: quizItemData.quizId,
+          quizItemSignature: quizItemData.quizItemSignature,
           indexes: getRandomDuoAnswersIndexes({
             choices: quizItemData.quiz.choices,
             answer: quizItemData.quiz.answer,
@@ -45,7 +42,7 @@ export const useDuoAnswersIndexes = ({
         });
       }
     }
-  }, [quizItemData]);
+  }, [quizItemData, duoAnswersIndexes?.quizItemSignature, shortId]);
 
   return { duoAnswersIndexes };
 };

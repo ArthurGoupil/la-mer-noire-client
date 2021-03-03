@@ -9,11 +9,10 @@ interface PlayersListProps {
   playersList: PlayerData[];
 }
 
-export const PlayersList: React.FC<PlayersListProps> = ({
-  playersList,
-}): JSX.Element => {
+export const PlayersList: React.FC<PlayersListProps> = ({ playersList }): JSX.Element => {
   return (
-    <PlayersListContainer className="d-flex justify-center flex-wrap">
+    <PlayersListContainer className="d-flex flex-column align-center flex-wrap">
+      <PlayersTitle>DANS LES STARTING BLOCKS</PlayersTitle>
       {playersList.map((playerData: PlayerData, index: number) => (
         <Player key={index}>{playerData.player.name.toUpperCase()}</Player>
       ))}
@@ -22,8 +21,16 @@ export const PlayersList: React.FC<PlayersListProps> = ({
 };
 
 const PlayersListContainer = styled.ul`
-  margin-bottom: 40px;
+  margin-bottom: 10px;
   max-width: 600px;
+`;
+
+const PlayersTitle = styled.div`
+  font-family: "Boogaloo", cursive;
+  font-size: 30px;
+  color: ${EStyles.redOrange};
+  text-align: center;
+  margin-bottom: 10px;
 `;
 
 const Player = styled.li`

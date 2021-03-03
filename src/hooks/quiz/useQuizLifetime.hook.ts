@@ -1,82 +1,93 @@
 import React from "react";
-import { NetworkStatus, useQuery } from "@apollo/client";
+import { useQuery } from "@apollo/client";
 
 import { GET_TIMESTAMP } from "services/others.service";
 import { getCookie, setCookie } from "utils/cookies.util";
 import { ECookieName } from "constants/Cookies.constants";
-
+import { QuestionRecord } from "models/Game.model";
 interface UseQuizRemainingTimeProps {
   shortId: string;
-  quizId: string;
+  quizItemSignature: string;
   allPlayersHaveAnswered: boolean;
-  timestampReference: number;
   duration: number;
 }
 
 interface UseQuizRemainingTimeReturn {
   remainingTime: number;
-  doneQuestionsRecord: Record<string, boolean>;
-  networkStatus: NetworkStatus;
+  questionsRecord: Record<string, QuestionRecord>;
 }
 
 export const useQuizLifetime = ({
   shortId,
-  quizId,
+  quizItemSignature,
   allPlayersHaveAnswered,
-  timestampReference,
   duration,
 }: UseQuizRemainingTimeProps): UseQuizRemainingTimeReturn => {
-  const { data, refetch, networkStatus } = useQuery(GET_TIMESTAMP, {
+  const { data, refetch } = useQuery(GET_TIMESTAMP, {
     fetchPolicy: "no-cache",
   });
-  const remainingTime = timestampReference + duration - data?.timestamp;
-
-  React.useEffect(() => {
-    if (timestampReference) {
-      (async () => await refetch())();
-    }
-  }, [timestampReference]);
-
-  const [doneQuestionsRecord, setDoneQuestionsRecord] = React.useState<
-    Record<string, boolean>
-  >(
+  const [questionsRecord, setQuestionsRecord] = React.useState<Record<string, QuestionRecord>>(
     getCookie({
       prefix: shortId,
-      cookieName: ECookieName.doneQuestionsRecord,
+      cookieName: ECookieName.questionsRecord,
     }) || {},
   );
 
-  React.useEffect(() => {
-    let timeout: NodeJS.Timeout;
-    if (remainingTime && !doneQuestionsRecord[quizId]) {
-      timeout = setTimeout(() => {
-        doneQuestionsRecord[quizId] = true;
-        setCookie({
-          prefix: shortId,
-          cookieName: ECookieName.doneQuestionsRecord,
-          cookieValue: doneQuestionsRecord,
-        });
-        setDoneQuestionsRecord({ ...doneQuestionsRecord });
-      }, remainingTime * 1000);
-    }
-    return () => clearTimeout(timeout);
-  }, [remainingTime]);
+  const remainingTime =
+    (questionsRecord[quizItemSignature]?.timestamp || NaN) + duration - data?.timestamp;
 
   React.useEffect(() => {
-    if (allPlayersHaveAnswered && !doneQuestionsRecord[quizId]) {
-      doneQuestionsRecord[quizId] = true;
+    let timeout: NodeJS.Timeout;
+    if (questionsRecord[quizItemSignature]) {
+      if (!questionsRecord[quizItemSignature]?.timestamp && quizItemSignature) {
+        (async () => {
+          const { timestamp } = (await refetch()).data;
+          questionsRecord[quizItemSignature] = { isDone: false, timestamp };
+          setCookie({
+            prefix: shortId,
+            cookieName: ECookieName.questionsRecord,
+            cookieValue: questionsRecord,
+          });
+          setQuestionsRecord({ ...questionsRecord });
+        })();
+      }
+
+      if (allPlayersHaveAnswered && !questionsRecord[quizItemSignature].isDone) {
+        questionsRecord[quizItemSignature].isDone = true;
+        setCookie({
+          prefix: shortId,
+          cookieName: ECookieName.questionsRecord,
+          cookieValue: questionsRecord,
+        });
+        setQuestionsRecord({ ...questionsRecord });
+      }
+
+      if (remainingTime && !questionsRecord[quizItemSignature]?.isDone) {
+        timeout = setTimeout(() => {
+          questionsRecord[quizItemSignature].isDone = true;
+          setCookie({
+            prefix: shortId,
+            cookieName: ECookieName.questionsRecord,
+            cookieValue: questionsRecord,
+          });
+          setQuestionsRecord({ ...questionsRecord });
+        }, remainingTime * 1000);
+      }
+    } else {
+      questionsRecord[quizItemSignature] = { isDone: false, timestamp: null };
       setCookie({
         prefix: shortId,
-        cookieName: ECookieName.doneQuestionsRecord,
-        cookieValue: doneQuestionsRecord,
+        cookieName: ECookieName.questionsRecord,
+        cookieValue: questionsRecord,
       });
-      setDoneQuestionsRecord({ ...doneQuestionsRecord });
+      setQuestionsRecord({ ...questionsRecord });
     }
-  }, [allPlayersHaveAnswered]);
+
+    return () => clearTimeout(timeout);
+  }, [refetch, questionsRecord, quizItemSignature, allPlayersHaveAnswered, remainingTime, shortId]);
 
   return {
     remainingTime,
-    doneQuestionsRecord,
-    networkStatus,
+    questionsRecord,
   };
 };

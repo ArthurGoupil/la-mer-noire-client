@@ -13,7 +13,7 @@ interface UseCurrentAnswerReturn {
 
 interface UseCurrentAnswerProps {
   shortId: string;
-  quizId: string;
+  quizItemSignature: string;
 }
 
 export interface SetCurrentAnswerProps {
@@ -24,7 +24,7 @@ export interface SetCurrentAnswerProps {
 
 export const useCurrentAnswer = ({
   shortId,
-  quizId,
+  quizItemSignature,
 }: UseCurrentAnswerProps): UseCurrentAnswerReturn => {
   const [giveAnswer] = useMutation(GIVE_ANSWER);
 
@@ -40,16 +40,17 @@ export const useCurrentAnswer = ({
     answerType,
     playerId,
   }: SetCurrentAnswerProps): Promise<void> => {
-    setCurrentAnswerState({ quizId, answer, answerType });
+    setCurrentAnswerState({ quizItemSignature, answer, answerType });
     setCookie({
       prefix: shortId,
       cookieName: ECookieName.currentAnswer,
-      cookieValue: { quizId, answer, answerType },
+      cookieValue: { quizItemSignature, answer, answerType },
     });
     await giveAnswer({
       variables: {
         shortId,
         playerId,
+        quizItemSignature,
         answer,
         answerType,
       },

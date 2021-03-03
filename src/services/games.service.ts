@@ -20,7 +20,6 @@ const gameData = `
     quizId
     level
     quizItemId
-    createdAtTimestamp
   }
   createdAt
 `;
@@ -62,12 +61,14 @@ export const GIVE_ANSWER: DocumentNode = gql`
   mutation GiveAnswer(
     $shortId: String!
     $playerId: ID!
+    $quizItemSignature: String!
     $answer: String!
     $answerType: String!
   ) {
     giveAnswer(
       shortId: $shortId
       playerId: $playerId
+      quizItemSignature: $quizItemSignature
       answer: $answer
       answerType: $answerType
     )
@@ -111,6 +112,7 @@ export const PLAYER_ANSWERED: DocumentNode = gql`
   subscription OnPlayerAnswered($shortId: String!) {
     playerAnswered(shortId: $shortId) {
       playerId
+      quizItemSignature
       answer
       answerType
     }

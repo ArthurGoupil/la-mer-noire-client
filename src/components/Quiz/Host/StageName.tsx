@@ -9,9 +9,7 @@ interface StageNameProps {
   gameStage: EGameStage;
 }
 
-export const StageName: React.FC<StageNameProps> = ({
-  gameStage,
-}): JSX.Element => {
+export const StageName: React.FC<StageNameProps> = ({ gameStage }): JSX.Element => {
   const stageName = getStageName({ gameStage });
 
   return <Name>{stageName}</Name>;

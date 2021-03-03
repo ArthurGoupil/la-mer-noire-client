@@ -5,13 +5,11 @@ import { PLAYER_ANSWERED } from "services/games.service";
 import { getCookie, setCookie } from "utils/cookies.util";
 import { Answer, PlayerData } from "models/Game.model";
 import { ECookieName } from "constants/Cookies.constants";
-import { QuizItemData } from "models/Quiz.model";
 
 interface UsePlayersAnswersProps {
   shortId: string;
-  quizItemData: QuizItemData;
+  quizItemSignature: string;
   players: PlayerData[];
-  isGeneratingNewCurrentQuizItem?: boolean;
 }
 
 interface UsePlayersAnswersReturn {
@@ -21,67 +19,61 @@ interface UsePlayersAnswersReturn {
 
 export const usePlayersAnswers = ({
   shortId,
-  quizItemData,
+  quizItemSignature,
   players,
-  isGeneratingNewCurrentQuizItem,
 }: UsePlayersAnswersProps): UsePlayersAnswersReturn => {
   const { data: { playerAnswered } = {} } = useSubscription(PLAYER_ANSWERED, {
     variables: { shortId },
   });
 
-  const [playersAnswers, setPlayersAnswers] = React.useState<
-    Record<string, Answer>
-  >(
+  const [playersAnswers, setPlayersAnswers] = React.useState<Record<string, Answer>>(
     getCookie({
       prefix: shortId,
       cookieName: ECookieName.playersAnswers,
     }) || {},
   );
 
-  const [
-    allPlayersHaveAnswered,
-    setAllPlayersHaveAnswered,
-  ] = React.useState<boolean>(false);
+  const [allPlayersHaveAnswered, setAllPlayersHaveAnswered] = React.useState<boolean>(false);
 
   React.useEffect(() => {
-    if (isGeneratingNewCurrentQuizItem) {
-      setAllPlayersHaveAnswered(false);
-    }
-  }, [isGeneratingNewCurrentQuizItem]);
-
-  React.useEffect(() => {
-    if (quizItemData) {
-      if (Object.values(playersAnswers)[0]?.quizId !== quizItemData.quizId) {
+    if (quizItemSignature && Object.keys(playersAnswers).length > 0) {
+      if (Object.values(playersAnswers)[0]?.quizItemSignature !== quizItemSignature) {
         setPlayersAnswers({});
         setCookie({
           prefix: shortId,
           cookieName: ECookieName.playersAnswers,
           cookieValue: {},
         });
-        if (!isGeneratingNewCurrentQuizItem) {
-          setAllPlayersHaveAnswered(false);
-        }
+        setAllPlayersHaveAnswered(false);
       }
     }
-  }, [quizItemData]);
+  }, [quizItemSignature, playersAnswers, shortId]);
 
   React.useEffect(() => {
     if (
-      playerAnswered &&
-      quizItemData &&
+      quizItemSignature &&
+      playerAnswered?.quizItemSignature === quizItemSignature &&
       Object.keys(playersAnswers).length !== players.length
     ) {
       const playerId = playerAnswered.playerId;
-      if (playersAnswers[playerId]?.quizId !== quizItemData.quizId) {
+      if (
+        playersAnswers[playerId]?.quizItemSignature !== quizItemSignature &&
+        playerAnswered?.quizItemSignature === quizItemSignature
+      ) {
         playersAnswers[playerId] = {
-          quizId: quizItemData.quizId,
+          quizItemSignature,
           answer: playerAnswered.answer,
           answerType: playerAnswered.answerType,
         };
       }
-      if (Object.keys(playersAnswers).length === players.length) {
+
+      if (
+        Object.keys(playersAnswers).length === players.length &&
+        playerAnswered?.quizItemSignature === quizItemSignature
+      ) {
         setAllPlayersHaveAnswered(true);
       }
+
       setPlayersAnswers({ ...playersAnswers });
       setCookie({
         prefix: shortId,
@@ -89,7 +81,7 @@ export const usePlayersAnswers = ({
         cookieValue: playersAnswers,
       });
     }
-  }, [playerAnswered]);
+  }, [playerAnswered, playersAnswers, quizItemSignature, players, shortId]);
 
   return { playersAnswers, allPlayersHaveAnswered };
 };

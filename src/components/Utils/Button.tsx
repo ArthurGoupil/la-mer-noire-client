@@ -63,7 +63,6 @@ const StyledButton = styled.button<{
   font-weight: 500;
 
   &:hover {
-    background-color: ${(props) =>
-      props.disabled ? props.backgroundColor : props.hoverColor};
+    background-color: ${(props) => (props.disabled ? props.backgroundColor : props.hoverColor)};
   }
 `;

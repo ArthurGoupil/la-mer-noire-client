@@ -5,9 +5,7 @@ interface LoaderProps {
   isForButton?: boolean;
 }
 
-export const Loader: React.FC<LoaderProps> = ({
-  isForButton = false,
-}): JSX.Element => {
+export const Loader: React.FC<LoaderProps> = ({ isForButton = false }): JSX.Element => {
   return <LoaderContainer isForButton={isForButton} />;
 };
 

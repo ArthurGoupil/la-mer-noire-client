@@ -3,87 +3,74 @@ import styled from "styled-components";
 import { Flipper, Flipped } from "react-flip-toolkit";
 
 import { EStyles } from "constants/Styling.constants";
-import { PlayerSummary } from "hooks/game/useCaPasseOuCaCashQuestionSummary.hook";
-import { PlayerData } from "models/Game.model";
+import { PlayerData, PlayerPoints, PlayersPoints } from "models/Game.model";
 
 interface PlayersRankingProps {
-  rankingRef: React.RefObject<HTMLDivElement>;
-  questionSummary: Record<string, PlayerSummary>;
+  playersPoints: PlayersPoints;
   players: PlayerData[];
-  opacity: number;
+  isCurrentRanking: boolean;
+}
+
+interface PlayerRanking extends PlayerPoints {
+  playerId: string;
 }
 
 export const PlayersRanking: React.FC<PlayersRankingProps> = ({
-  rankingRef,
-  questionSummary,
+  playersPoints,
   players,
-  opacity,
+  isCurrentRanking,
 }): JSX.Element => {
-  const [isNewRanking, setIsNewRanking] = React.useState<boolean>(false);
-
-  const [playersRanking, setPlayersRanking] = React.useState(
-    Object.keys(questionSummary || {})
+  const [playersRanking, setPlayersRanking] = React.useState<PlayerRanking[]>(
+    Object.keys(playersPoints)
       .map((playerId) => ({
-        ...questionSummary[playerId],
-        formerTotalPoints:
-          questionSummary[playerId].totalPoints -
-          questionSummary[playerId].additionalPoints,
+        ...playersPoints[playerId],
         playerId,
       }))
-      .sort((a, b) => b.formerTotalPoints - a.formerTotalPoints),
+      .sort((a, b) => b.previous - a.previous),
   );
 
   React.useEffect(() => {
-    const timeout = setTimeout(() => {
-      setPlayersRanking([
-        ...playersRanking.sort((a, b) => b.totalPoints - a.totalPoints),
-      ]);
-      setIsNewRanking(true);
-    }, 9000);
+    setPlayersRanking(
+      Object.keys(playersPoints)
+        .map((playerId) => ({
+          ...playersPoints[playerId],
+          playerId,
+        }))
+        .sort((a, b) => b.previous - a.previous),
+    );
+  }, [playersPoints]);
 
-    return () => clearTimeout(timeout);
-  }, []);
+  React.useEffect(() => {
+    setPlayersRanking((playersRanking) => [
+      ...playersRanking.sort((a, b) => b.current - a.current),
+    ]);
+  }, [isCurrentRanking]);
 
   return (
-    <RankingContainer ref={rankingRef} opacity={opacity}>
+    <RankingContainer>
       <RankingTitle>CLASSEMENT</RankingTitle>
       <Flipper flipKey={JSON.stringify(playersRanking)}>
         <ul className="list">
           {playersRanking.map((playerRanking, index) => {
             const playerRank =
-              playersRanking[index - 1]?.totalPoints ===
-              playerRanking.totalPoints
-                ? "-"
-                : index + 1;
+              playersRanking[index - 1]?.current === playerRanking.current ? "-" : index + 1;
             return (
-              <Flipped
-                key={playerRanking.playerId}
-                flipId={playerRanking.playerId}
-              >
+              <Flipped key={playerRanking.playerId} flipId={playerRanking.playerId}>
                 <PlayerRankingContainer className="d-flex space-between align-center">
-                  <PlayerRank className="d-flex justify-end align-center">
-                    {playerRank}
-                  </PlayerRank>
+                  <PlayerRank className="d-flex justify-end align-center">{playerRank}</PlayerRank>
                   <PlayerName className="d-flex justify-center align-center flex-grow">
                     {players
-                      .find(
-                        (playerData) =>
-                          playerData.player._id === playerRanking.playerId,
-                      )
+                      .find((playerData) => playerData.player._id === playerRanking.playerId)
                       ?.player.name.toUpperCase()}
                   </PlayerName>
                   <PlayerPointsContainer className="d-flex justify-center align-center">
-                    <PlayerPoints
+                    <Points
                       shouldRotate={
-                        isNewRanking &&
-                        playerRanking.totalPoints !==
-                          playerRanking.formerTotalPoints
+                        isCurrentRanking && playerRanking.current !== playerRanking.previous
                       }
                     >
-                      {isNewRanking
-                        ? playerRanking.totalPoints
-                        : playerRanking.formerTotalPoints}
-                    </PlayerPoints>
+                      {isCurrentRanking ? playerRanking.current : playerRanking.previous}
+                    </Points>
                   </PlayerPointsContainer>
                 </PlayerRankingContainer>
               </Flipped>
@@ -95,8 +82,7 @@ export const PlayersRanking: React.FC<PlayersRankingProps> = ({
   );
 };
 
-const RankingContainer = styled.div<{ opacity: number }>`
-  opacity: ${(props) => props.opacity};
+const RankingContainer = styled.div`
   transition: opacity 0.5s;
   z-index: 1;
 `;
@@ -131,11 +117,7 @@ const PlayerName = styled.span`
   min-width: 200px;
   height: 100%;
   font-size: 30px;
-  background: linear-gradient(
-    to bottom,
-    ${EStyles.blue} 0%,
-    ${EStyles.lightBlue} 150%
-  );
+  background: linear-gradient(to bottom, ${EStyles.darkBlue} 0%, ${EStyles.blue} 150%);
   border-radius: 5px;
   text-shadow: 2px 2px 0 ${EStyles.darkBlue};
   padding: 0 15px;
@@ -144,21 +126,16 @@ const PlayerName = styled.span`
 const PlayerPointsContainer = styled.span`
   width: 45px;
   height: 100%;
-  background: linear-gradient(
-    to bottom,
-    ${EStyles.orange} 0%,
-    ${EStyles.redOrange} 170%
-  );
+  background: linear-gradient(to bottom, ${EStyles.orange} 0%, ${EStyles.redOrange} 170%);
   margin-left: 10px;
   border-radius: 5px;
   padding-right: 3px;
 `;
 
-const PlayerPoints = styled.span<{ shouldRotate: boolean }>`
+const Points = styled.span<{ shouldRotate: boolean }>`
   font-size: 30px;
   color: white;
   text-shadow: 2px 2px 0 ${EStyles.red};
-  transform: ${(props) =>
-    props.shouldRotate ? "rotate(720deg)" : "rotate(0deg)"};
+  transform: ${(props) => (props.shouldRotate ? "rotate(720deg)" : "rotate(0deg)")};
   transition: transform 1s;
 `;

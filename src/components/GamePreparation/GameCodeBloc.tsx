@@ -7,50 +7,47 @@ interface GameCodeBlocProps {
   gameCode: string;
 }
 
-export const GameCodeBloc: React.FC<GameCodeBlocProps> = ({
-  gameCode,
-}): JSX.Element => {
+export const GameCodeBloc: React.FC<GameCodeBlocProps> = ({ gameCode }): JSX.Element => {
   return (
-    <GameCodeBlocContainer className="d-flex align-center">
-      <SmartphoneIcon src="/icons/phone-quiz.svg" />
-      <CodeText className="d-flex align-end">
-        Donnez le code de la partie à vos amis :<GameCode>{gameCode}</GameCode>
+    <GameCodeBlocContainer className="d-flex flex-column align-center justify-center">
+      <GameCodeContainer className="d-flex align-center">
+        <SmartphoneIcon src="/icons/phone-quiz.svg" />
+        <GameCode>{gameCode}</GameCode>
+      </GameCodeContainer>
+      <CodeText>
+        Rendez-vous sur <LMNUrl>lamernoire.fun</LMNUrl> pour rejoindre la partie.
       </CodeText>
     </GameCodeBlocContainer>
   );
 };
 
 const GameCodeBlocContainer = styled.div`
-  border-radius: ${EStyles.radius};
+  border-radius: 10px;
   padding: 20px;
   border: 5px solid ${EStyles.blue};
 `;
 
+const GameCodeContainer = styled.span`
+  margin-bottom: 20px;
+`;
+
 const SmartphoneIcon = styled.img`
-  width: 70px;
+  height: 50px;
 `;
 
 const CodeText = styled.div`
-  font-size: 20px;
-  line-height: 20px;
-  margin-left: 20px;
+  font-size: 16px;
+`;
 
-  @media only screen and (max-width: ${EStyles.mobileBreakPoint}) {
-    flex-direction: column;
-    align-items: flex-start;
-  }
+const LMNUrl = styled.span`
+  font-weight: bold;
 `;
 
 const GameCode = styled.div`
   font-family: "Boogaloo", cursive;
   color: ${EStyles.redOrange};
-  font-size: 30px;
-  line-height: 30px;
-  margin-left: 10px;
+  font-size: 50px;
+  line-height: 50px;
+  margin-left: 20px;
   font-weight: bold;
-
-  @media only screen and (max-width: ${EStyles.mobileBreakPoint}) {
-    margin-left: 0;
-    margin-top: 10px;
-  }
 `;

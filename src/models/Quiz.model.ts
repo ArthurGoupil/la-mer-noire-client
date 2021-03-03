@@ -1,7 +1,7 @@
 import { Category } from "models/Category.model";
 
 export type QuizItemId = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10;
-export type QuizItemLevel = "beginner" | "intermediate" | "expert";
+export type QuizLevel = "beginner" | "intermediate" | "expert";
 
 export interface QuizItem {
   quizItemId: number;
@@ -12,12 +12,11 @@ export interface QuizItem {
 }
 
 export interface QuizItemData {
-  quizId: string;
+  quizItemSignature: string;
   category: Category;
   theme: string;
   subTheme: string;
-  level: QuizItemLevel;
-  createdAtTimestamp: number;
+  level: QuizLevel;
   quiz: QuizItem;
 }
 
@@ -35,6 +34,6 @@ export interface Quiz {
 }
 
 export interface DuoAnswersIndexes {
-  quizId: string;
+  quizItemSignature: string;
   indexes: number[];
 }

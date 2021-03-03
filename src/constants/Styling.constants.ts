@@ -24,10 +24,6 @@ export const EStyles = {
   headerHeight: "80px",
   inputHeight: "60px",
 
-  // OTHERS
-  miniRadius: "5px",
-  radius: "10px",
-
   // RESPONSIVE BREAKPOINTS
   homeFormBreakPoint: "950px",
   mobileBreakPoint: "420px",

@@ -23,15 +23,11 @@ export const GameContainer: React.FC = (): JSX.Element => {
     },
   });
 
-  const CurrentContainer = {
-    playersRegistration: (
-      <GamePreparationContainer shortId={shortId} userType={userType} />
-    ),
-    caPasseOuCaCash: <QuizContainer shortId={shortId} userType={userType} />,
-  }[game?.stage];
-
   return {
-    ready: CurrentContainer,
+    ready: {
+      playersRegistration: <GamePreparationContainer shortId={shortId} userType={userType} />,
+      caPasseOuCaCash: <QuizContainer shortId={shortId} userType={userType} />,
+    }[game?.stage],
     loading: <FullHeightLoader />,
     error: (
       <FullScreenError

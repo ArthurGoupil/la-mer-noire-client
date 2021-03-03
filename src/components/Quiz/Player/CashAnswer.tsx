@@ -1,5 +1,5 @@
 import { Button } from "components/Utils/Button";
-import { FullHeightContainer } from "components/Utils/FullHeightContainer";
+import { FullHeightLayout } from "components/Utils/FullHeightLayout";
 import { FullWidthContainer } from "components/Utils/FullWidthContainer";
 import { EStyles } from "constants/Styling.constants";
 import { SetCurrentAnswerProps } from "hooks/quiz/useCurrentAnswer.hook";
@@ -9,7 +9,7 @@ import styled from "styled-components";
 import { isDesktop } from "utils/isDesktop.util";
 
 interface CashAnswerProps {
-  quizId: string;
+  quizItemSignature: string;
   playerId: string;
   answer: string;
   currentAnswer: Answer | null;
@@ -18,7 +18,7 @@ interface CashAnswerProps {
 }
 
 export const CashAnswer: React.FC<CashAnswerProps> = ({
-  quizId,
+  quizItemSignature,
   playerId,
   answer,
   currentAnswer,
@@ -26,14 +26,8 @@ export const CashAnswer: React.FC<CashAnswerProps> = ({
   questionIsOver,
 }): JSX.Element => {
   const answerWords = answer.split(/ /);
-  const answerWordsRefs = answerWords.map(() =>
-    React.createRef<HTMLInputElement>(),
-  );
-  const [givenAnswer, setGivenAnswer] = React.useState<string[]>(
-    answerWords.map(() => ""),
-  );
-
-  console.log(answer);
+  const answerWordsRefs = answerWords.map(() => React.createRef<HTMLInputElement>());
+  const [givenAnswer, setGivenAnswer] = React.useState<string[]>(answerWords.map(() => ""));
 
   const longestWord = answerWords.reduce((acc: string, cur: string) => {
     if (cur.length > acc.length) {
@@ -43,7 +37,7 @@ export const CashAnswer: React.FC<CashAnswerProps> = ({
   }, "");
 
   const isPossibleToAnswer =
-    quizId !== currentAnswer?.quizId && !questionIsOver;
+    quizItemSignature !== currentAnswer?.quizItemSignature && !questionIsOver;
   const isPossibleToSubmit =
     isPossibleToAnswer &&
     givenAnswer.reduce((acc, cur, index) => {
@@ -58,7 +52,7 @@ export const CashAnswer: React.FC<CashAnswerProps> = ({
       : (window.innerWidth - 60) / (9 * 12.95);
 
   return (
-    <FullHeightContainer
+    <FullHeightLayout
       height="100%"
       padding="0"
       className="d-flex flex-column align-center flex-grow"
@@ -66,8 +60,7 @@ export const CashAnswer: React.FC<CashAnswerProps> = ({
       <FullWidthContainer className="d-flex flex-column align-start">
         <InputsContainer className="d-flex flex-column align-start">
           {givenAnswer.map((word: string, wordIndex: number) => {
-            const inputWidth =
-              answerWords[wordIndex].length * 12.95 * fullWidthFactor + 20;
+            const inputWidth = answerWords[wordIndex].length * 12.95 * fullWidthFactor + 20;
             const fontSize = 18 * fullWidthFactor;
             const lineHeight = 25 * fullWidthFactor;
             const letterSpacing = 2 * fullWidthFactor;
@@ -84,22 +77,19 @@ export const CashAnswer: React.FC<CashAnswerProps> = ({
                   width={placeholdersContainerWidth}
                   className="d-flex  align-end"
                 >
-                  {answerWords[wordIndex]
-                    .split("")
-                    .map((letter, letterIndex) => {
-                      // 12.95px of letter width - 2px of letterSpacing
-                      const placeholderWidth = (12.95 - 2) * fullWidthFactor;
-                      // 1.85px is a little bit less than letterSpacing
-                      const marginLeft =
-                        letterIndex === 0 ? 0 : 1.85 * fullWidthFactor;
-                      return (
-                        <InputPlaceholder
-                          key={letterIndex}
-                          width={placeholderWidth}
-                          marginLeft={marginLeft}
-                        />
-                      );
-                    })}
+                  {answerWords[wordIndex].split("").map((letter, letterIndex) => {
+                    // 12.95px of letter width - 2px of letterSpacing
+                    const placeholderWidth = (12.95 - 2) * fullWidthFactor;
+                    // 1.85px is a little bit less than letterSpacing
+                    const marginLeft = letterIndex === 0 ? 0 : 1.85 * fullWidthFactor;
+                    return (
+                      <InputPlaceholder
+                        key={letterIndex}
+                        width={placeholderWidth}
+                        marginLeft={marginLeft}
+                      />
+                    );
+                  })}
                 </InputPlaceholdersContainer>
                 <Input
                   ref={answerWordsRefs[wordIndex]}
@@ -125,9 +115,7 @@ export const CashAnswer: React.FC<CashAnswerProps> = ({
                       givenAnswer[wordIndex] = e.target.value.toUpperCase();
                       setGivenAnswer([...givenAnswer]);
                       answerWordsRefs[wordIndex + 1].current?.focus();
-                    } else if (
-                      e.target.value.length === answerWords[wordIndex].length
-                    ) {
+                    } else if (e.target.value.length === answerWords[wordIndex].length) {
                       givenAnswer[wordIndex] = e.target.value.toUpperCase();
                       setGivenAnswer([...givenAnswer]);
                     }
@@ -145,7 +133,7 @@ export const CashAnswer: React.FC<CashAnswerProps> = ({
           label={
             isPossibleToAnswer
               ? "Répondre"
-              : questionIsOver && currentAnswer?.quizId !== quizId
+              : questionIsOver && currentAnswer?.quizItemSignature !== quizItemSignature
               ? "Too late !"
               : "Réponse envoyée !"
           }
@@ -175,7 +163,7 @@ export const CashAnswer: React.FC<CashAnswerProps> = ({
           />
         </div>
       )}
-    </FullHeightContainer>
+    </FullHeightLayout>
   );
 };
 
