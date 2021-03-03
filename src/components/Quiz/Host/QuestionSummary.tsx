@@ -32,36 +32,38 @@ export const QuestionSummary: React.FC<QuestionSummary> = ({
       {players.map((playerData, index) => {
         return (
           <PlayerAnswerContainer key={index} className="d-flex">
-            <PlayerName>{playerData.player.name}</PlayerName>
-            {playersAnswers[playerData.player._id]?.answer ? (
-              <>
-                a répondu{" "}
-                <PlayerAnswer
-                  color={
-                    isValidAnswer({
-                      answer: quizAnswer,
-                      givenAnswer: playersAnswers[playerData.player._id].answer,
-                    })
-                      ? "SpringGreen"
-                      : "Tomato"
-                  }
-                >
-                  {playersAnswers[playerData.player._id].answer.toUpperCase()}
-                </PlayerAnswer>
-                en
-                <PlayerAnswerType
-                  color={getAnswerTypeColor({
-                    answerType: playersAnswers[playerData.player._id].answerType,
-                  })}
-                >
-                  {getStringFromAnswerType({
-                    answerType: playersAnswers[playerData.player._id].answerType,
-                  })}
-                </PlayerAnswerType>
-              </>
-            ) : (
-              <EmptyAnswer> n'a pas répondu.</EmptyAnswer>
-            )}
+            <div>
+              <PlayerName>{playerData.player.name}</PlayerName>
+              {playersAnswers[playerData.player._id]?.answer ? (
+                <>
+                  a répondu{" "}
+                  <PlayerAnswer
+                    color={
+                      isValidAnswer({
+                        answer: quizAnswer,
+                        givenAnswer: playersAnswers[playerData.player._id].answer,
+                      })
+                        ? "SpringGreen"
+                        : "Tomato"
+                    }
+                  >
+                    {playersAnswers[playerData.player._id].answer.toUpperCase()}
+                  </PlayerAnswer>
+                  en
+                  <PlayerAnswerType
+                    backgroundColor={getAnswerTypeColor({
+                      answerType: playersAnswers[playerData.player._id].answerType,
+                    })}
+                  >
+                    {getStringFromAnswerType({
+                      answerType: playersAnswers[playerData.player._id].answerType,
+                    })}
+                  </PlayerAnswerType>
+                </>
+              ) : (
+                <EmptyAnswer> n'a pas répondu.</EmptyAnswer>
+              )}
+            </div>
             <AdditionalPointsContainer
               width={
                 additionalPointsAreVisible
@@ -116,12 +118,15 @@ const PlayerAnswer = styled.span<{ color: string }>`
   color: ${(props) => props.color};
 `;
 
-const PlayerAnswerType = styled.span<{ color: string }>`
+const PlayerAnswerType = styled.span<{ backgroundColor: string }>`
   font-family: "Boogaloo", cursive;
   font-size: 30px;
   line-height: 32px;
   margin-left: 10px;
-  color: ${(props) => props.color};
+  background-color: ${(props) => props.backgroundColor};
+  padding: 5px 10px;
+  border-radius: 5px;
+  text-shadow: 3px 2px 0px ${EStyles.darkBlue};
 `;
 
 const EmptyAnswer = styled.span`
