@@ -36,7 +36,7 @@ export const QuestionSummary: React.FC<QuestionSummary> = ({
               <PlayerName>{playerData.player.name}</PlayerName>
               {playersAnswers[playerData.player._id]?.answer ? (
                 <>
-                  a répondu{" "}
+                  a répondu
                   <PlayerAnswer
                     color={
                       isValidAnswer({
@@ -105,7 +105,7 @@ const QuizAnswer = styled.span`
 `;
 
 const PlayerAnswerContainer = styled.div`
-  margin-bottom: 10px;
+  margin-bottom: 25px;
   font-size: 25px;
   line-height: 30px;
 `;
@@ -121,10 +121,10 @@ const PlayerAnswer = styled.span<{ color: string }>`
 const PlayerAnswerType = styled.span<{ backgroundColor: string }>`
   font-family: "Boogaloo", cursive;
   font-size: 30px;
-  line-height: 32px;
+  line-height: 30px;
   margin-left: 10px;
   background-color: ${(props) => props.backgroundColor};
-  padding: 5px 10px;
+  padding: 4px 9px;
   border-radius: 5px;
   text-shadow: 3px 2px 0px ${EStyles.darkBlue};
 `;

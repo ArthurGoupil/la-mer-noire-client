@@ -50,10 +50,7 @@ export const CaPasseOuCaCashContainer: React.FC<CaPasseOuCaCashContainerProps> =
   const { remainingTime, questionsRecord } = useQuizLifetime({
     shortId: game.shortId,
     quizItemSignature: nonNullQuizItemData.quizItemSignature,
-    allPlayersHaveAnswered:
-      allPlayersHaveAnswered &&
-      playersAnswers[Object.keys(playersAnswers)[0]].quizItemSignature ===
-        nonNullQuizItemData.quizItemSignature,
+    allPlayersHaveAnswered,
     duration: EQuizDuration.caPasseOuCaCash,
   });
 

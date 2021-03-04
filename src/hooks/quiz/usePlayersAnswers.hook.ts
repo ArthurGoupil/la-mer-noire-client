@@ -53,6 +53,7 @@ export const usePlayersAnswers = ({
     if (
       quizItemSignature &&
       playerAnswered?.quizItemSignature === quizItemSignature &&
+      !playersAnswers[playerAnswered?.playerId] &&
       Object.keys(playersAnswers).length !== players.length
     ) {
       const playerId = playerAnswered.playerId;
@@ -81,7 +82,7 @@ export const usePlayersAnswers = ({
         cookieValue: playersAnswers,
       });
     }
-  }, [playerAnswered, playersAnswers, quizItemSignature, players, shortId]);
+  }, [playerAnswered, quizItemSignature, players, shortId, playersAnswers]);
 
   return { playersAnswers, allPlayersHaveAnswered };
 };
