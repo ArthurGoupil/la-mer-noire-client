@@ -158,7 +158,7 @@ export const useCaPasseOuCaCashState = ({
               questionNumber,
               stateName: "quizInfosScreen",
             });
-          }, 6000);
+          }, 5000);
         } else {
           playersRanking_currentTimeout = setTimeout(() => {
             updateCaPasseOuCaCashState({
