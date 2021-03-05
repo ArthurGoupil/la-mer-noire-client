@@ -5,7 +5,7 @@ interface GetAnswerTypeColorProps {
   answerType: AnswerType;
 }
 
-export const getAnswerTypeColor = ({ answerType }: GetAnswerTypeColorProps) => {
+export const getAnswerTypeColor = ({ answerType }: GetAnswerTypeColorProps): string => {
   return {
     duo: EStyles.turquoise,
     carre: EStyles.yellow,

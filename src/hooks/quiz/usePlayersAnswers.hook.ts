@@ -39,7 +39,7 @@ export const usePlayersAnswers = ({
     if (quizItemSignature && Object.keys(playersAnswers).length > 0) {
       if (Object.values(playersAnswers)[0]?.quizItemSignature !== quizItemSignature) {
         setPlayersAnswers({});
-        setCookie({
+        setCookie<Record<string, Answer>>({
           prefix: shortId,
           cookieName: ECookieName.playersAnswers,
           cookieValue: {},
@@ -76,7 +76,7 @@ export const usePlayersAnswers = ({
       }
 
       setPlayersAnswers({ ...playersAnswers });
-      setCookie({
+      setCookie<Record<string, Answer>>({
         prefix: shortId,
         cookieName: ECookieName.playersAnswers,
         cookieValue: playersAnswers,

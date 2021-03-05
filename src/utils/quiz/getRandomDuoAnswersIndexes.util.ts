@@ -3,8 +3,8 @@ interface GetRandomDuoAnswers {
   answer: string;
 }
 
-export const getRandomDuoAnswersIndexes = ({ choices, answer }: GetRandomDuoAnswers) => {
-  const duoAnswers = [];
+export const getRandomDuoAnswersIndexes = ({ choices, answer }: GetRandomDuoAnswers): number[] => {
+  const duoAnswersIndexes = [];
 
   const indexes = [0, 1, 2, 3];
   const answerIndex = choices.indexOf(answer);
@@ -14,12 +14,12 @@ export const getRandomDuoAnswersIndexes = ({ choices, answer }: GetRandomDuoAnsw
   const zeroOrOne = Math.floor(Math.random() * 2);
 
   if (zeroOrOne === 0) {
-    duoAnswers.push(answerIndex);
-    duoAnswers.push(wrongAnswerIndex);
+    duoAnswersIndexes.push(answerIndex);
+    duoAnswersIndexes.push(wrongAnswerIndex);
   } else {
-    duoAnswers.push(wrongAnswerIndex);
-    duoAnswers.push(answerIndex);
+    duoAnswersIndexes.push(wrongAnswerIndex);
+    duoAnswersIndexes.push(answerIndex);
   }
 
-  return duoAnswers;
+  return duoAnswersIndexes;
 };

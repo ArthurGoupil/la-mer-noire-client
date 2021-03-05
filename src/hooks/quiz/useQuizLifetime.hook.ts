@@ -37,50 +37,42 @@ export const useQuizLifetime = ({
     (questionsRecord[quizItemSignature]?.timestamp || NaN) + duration - data?.timestamp;
 
   React.useEffect(() => {
-    let timeout: NodeJS.Timeout;
-    if (questionsRecord[quizItemSignature]) {
-      if (!questionsRecord[quizItemSignature]?.timestamp && quizItemSignature) {
-        (async () => {
-          const { timestamp } = (await refetch()).data;
-          questionsRecord[quizItemSignature] = { isDone: false, timestamp };
-          setCookie({
-            prefix: shortId,
-            cookieName: ECookieName.questionsRecord,
-            cookieValue: questionsRecord,
-          });
-          setQuestionsRecord({ ...questionsRecord });
-        })();
-      }
-
-      if (allPlayersHaveAnswered && !questionsRecord[quizItemSignature].isDone) {
-        questionsRecord[quizItemSignature].isDone = true;
-        setCookie({
-          prefix: shortId,
-          cookieName: ECookieName.questionsRecord,
-          cookieValue: questionsRecord,
-        });
-        setQuestionsRecord({ ...questionsRecord });
-      }
-
-      if (remainingTime && !questionsRecord[quizItemSignature]?.isDone) {
-        timeout = setTimeout(() => {
-          questionsRecord[quizItemSignature].isDone = true;
-          setCookie({
-            prefix: shortId,
-            cookieName: ECookieName.questionsRecord,
-            cookieValue: questionsRecord,
-          });
-          setQuestionsRecord({ ...questionsRecord });
-        }, remainingTime * 1000);
-      }
-    } else {
-      questionsRecord[quizItemSignature] = { isDone: false, timestamp: null };
-      setCookie({
+    const updateQuestionsRecord = () => {
+      setCookie<Record<string, QuestionRecord>>({
         prefix: shortId,
         cookieName: ECookieName.questionsRecord,
         cookieValue: questionsRecord,
       });
       setQuestionsRecord({ ...questionsRecord });
+    };
+
+    let timeout: NodeJS.Timeout;
+    if (quizItemSignature) {
+      if (questionsRecord[quizItemSignature]) {
+        if (!questionsRecord[quizItemSignature].isDone) {
+          if (!questionsRecord[quizItemSignature]?.timestamp) {
+            (async () => {
+              const { timestamp } = (await refetch()).data;
+              questionsRecord[quizItemSignature] = { isDone: false, timestamp };
+              updateQuestionsRecord();
+            })();
+          }
+          if (allPlayersHaveAnswered) {
+            questionsRecord[quizItemSignature].isDone = true;
+            updateQuestionsRecord();
+          }
+
+          if (remainingTime) {
+            timeout = setTimeout(() => {
+              questionsRecord[quizItemSignature].isDone = true;
+              updateQuestionsRecord();
+            }, remainingTime * 1000);
+          }
+        }
+      } else {
+        questionsRecord[quizItemSignature] = { isDone: false, timestamp: null };
+        updateQuestionsRecord();
+      }
     }
 
     return () => clearTimeout(timeout);

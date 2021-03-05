@@ -41,7 +41,7 @@ export const QuizLayout: React.FC<QuizLayoutProps> = ({
   const height = quizLayoutRef.current?.clientHeight || 0;
 
   const getWavesBackgroundGradient = ({ topScreens }: GetWavesBackgroundGradientProps) => {
-    for (let topScreen of topScreens) {
+    for (const topScreen of topScreens) {
       if (topScreen.shouldEnter) {
         return topScreen.wavesBackgroundGradient;
       }

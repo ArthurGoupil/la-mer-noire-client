@@ -41,7 +41,7 @@ export const useCurrentAnswer = ({
     playerId,
   }: SetCurrentAnswerProps): Promise<void> => {
     setCurrentAnswerState({ quizItemSignature, answer, answerType });
-    setCookie({
+    setCookie<Answer | null>({
       prefix: shortId,
       cookieName: ECookieName.currentAnswer,
       cookieValue: { quizItemSignature, answer, answerType },

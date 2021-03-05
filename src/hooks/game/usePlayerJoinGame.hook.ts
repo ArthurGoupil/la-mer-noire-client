@@ -29,12 +29,12 @@ export const usePlayerJoinGame = ({ shortId }: UsePlayerJoinGameProps): UsePlaye
     try {
       resetCookies();
       setErrorMessage(null);
-      const playerId = (
+      const playerId: string = (
         await addPlayerToGame({
           variables: { shortId, name },
         })
       ).data.addPlayerToGame;
-      setCookie({
+      setCookie<string>({
         prefix: shortId,
         cookieName: ECookieName.playerId,
         cookieValue: playerId,

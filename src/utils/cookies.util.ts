@@ -1,10 +1,10 @@
 import Cookies from "js-cookie";
 import { ECookieName } from "constants/Cookies.constants";
 
-interface SetGameCookieProps {
+interface SetGameCookieProps<T> {
   prefix: string;
   cookieName: ECookieName;
-  cookieValue: string | object;
+  cookieValue: T;
 }
 
 interface GetCookieProps {
@@ -16,14 +16,18 @@ export const getCookie = <T>({ prefix, cookieName }: GetCookieProps): T => {
   return Cookies.getJSON(`${prefix}-${cookieName}`);
 };
 
-export const setCookie = ({ prefix, cookieName, cookieValue }: SetGameCookieProps): void => {
-  Cookies.set(`${prefix.toUpperCase()}-${cookieName}`, cookieValue, {
-    expires: 1,
-  });
+export const setCookie = <T>({ prefix, cookieName, cookieValue }: SetGameCookieProps<T>): void => {
+  Cookies.set(
+    `${prefix.toUpperCase()}-${cookieName}`,
+    cookieValue as string | Record<string, unknown>,
+    {
+      expires: 1,
+    },
+  );
 };
 
 export const resetCookies = (): void => {
-  for (let cookieName of Object.keys(Cookies.get())) {
+  for (const cookieName of Object.keys(Cookies.get())) {
     Cookies.remove(cookieName);
   }
 };

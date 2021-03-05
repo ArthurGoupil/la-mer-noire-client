@@ -27,7 +27,7 @@ export const useDuoAnswersIndexes = ({
   React.useEffect(() => {
     if (quizItemData) {
       if (duoAnswersIndexes?.quizItemSignature !== quizItemData.quizItemSignature) {
-        const duoAnswersIndexesToStore = {
+        const duoAnswersIndexesToStore: DuoAnswersIndexes = {
           quizItemSignature: quizItemData.quizItemSignature,
           indexes: getRandomDuoAnswersIndexes({
             choices: quizItemData.quiz.choices,
@@ -35,7 +35,7 @@ export const useDuoAnswersIndexes = ({
           }),
         };
         setDuoAnswersIndexes(duoAnswersIndexesToStore);
-        setCookie({
+        setCookie<DuoAnswersIndexes>({
           prefix: shortId,
           cookieName: ECookieName.duoAnswersIndexes,
           cookieValue: duoAnswersIndexesToStore,

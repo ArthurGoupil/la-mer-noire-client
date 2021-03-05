@@ -5,7 +5,7 @@ import { UPDATE_GAME_STAGE } from "services/games.service";
 import { EGameStage } from "constants/GameStage.constants";
 import { setCookie } from "utils/cookies.util";
 import { ECookieName } from "constants/Cookies.constants";
-import { PlayerData, PlayersPoints } from "models/Game.model";
+import { CaPasseOuCaCashState, PlayerData, PlayersPoints } from "models/Game.model";
 
 interface useLaunchGameProps {
   shortId: string;
@@ -31,7 +31,7 @@ export const useLaunchGame = ({ shortId, players }: useLaunchGameProps): UseLaun
 
   React.useEffect(() => {
     const launchGame = async () => {
-      setCookie({
+      setCookie<CaPasseOuCaCashState>({
         prefix: shortId,
         cookieName: ECookieName.caPasseOuCaCashState,
         cookieValue: {

@@ -51,7 +51,7 @@ export const useCaPasseOuCaCashState = ({
         questionNumber: questionNumber || caPasseOuCaCashState.questionNumber,
         playersPoints: playersPoints || caPasseOuCaCashState.playersPoints,
       };
-      setCookie({
+      setCookie<CaPasseOuCaCashState>({
         prefix: shortId,
         cookieName: ECookieName.caPasseOuCaCashState,
         cookieValue: newCaPasseOuCaCashState,
@@ -61,7 +61,7 @@ export const useCaPasseOuCaCashState = ({
 
     const getPlayersPoints = (): PlayersPoints => {
       const playersPoints: PlayersPoints = caPasseOuCaCashState.playersPoints;
-      for (let playerId of Object.keys(caPasseOuCaCashState.playersPoints)) {
+      for (const playerId of Object.keys(caPasseOuCaCashState.playersPoints)) {
         playersPoints[playerId].previous = caPasseOuCaCashState.playersPoints[playerId].current;
         const additionalPoints = isValidAnswer({
           answer: quizAnswer,

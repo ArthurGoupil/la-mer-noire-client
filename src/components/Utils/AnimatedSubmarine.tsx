@@ -4,7 +4,7 @@ import styled from "styled-components";
 import { EStyles } from "constants/Styling.constants";
 import { useWindowHeight } from "hooks/others/useWindowHeight.hook";
 
-export const AnimatedSubmarine: React.FC<{}> = (): JSX.Element => {
+export const AnimatedSubmarine: React.FC = (): JSX.Element => {
   const { height } = useWindowHeight();
 
   return (

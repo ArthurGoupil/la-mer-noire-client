@@ -20,7 +20,7 @@ export const useAnswerTypeChoice = ({
   );
 
   React.useEffect(() => {
-    setCookie({
+    setCookie<AnswerTypeChoice>({
       prefix: shortId,
       cookieName: ECookieName.answerTypeChoice,
       cookieValue: answerTypeChoice,
