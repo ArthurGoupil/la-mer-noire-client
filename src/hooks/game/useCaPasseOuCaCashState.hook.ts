@@ -6,10 +6,9 @@ import { CaPasseOuCaCashState, Answer, PlayersPoints, QuestionRecord } from "mod
 import { QuizItemData, QuizLevel } from "models/Quiz.model";
 import { getCookie, setCookie } from "utils/cookies.util";
 import {
-  getLevelByQuestionNumber,
+  getQuizLevelByQuestionNumber,
   QuestionNumber,
 } from "utils/quiz/getQuizLevelByQuestionNumber.util";
-import { isValidAnswer } from "utils/quiz/isValidAnswer.util";
 
 interface UseCaPasseOuCaCashStateProps {
   shortId: string;
@@ -66,12 +65,9 @@ export const useCaPasseOuCaCashState = ({
       const playersPoints: PlayersPoints = caPasseOuCaCashState.playersPoints;
       for (const playerId of Object.keys(caPasseOuCaCashState.playersPoints)) {
         playersPoints[playerId].previous = caPasseOuCaCashState.playersPoints[playerId].current;
-        const additionalPoints = isValidAnswer({
-          answer: quizAnswer,
-          givenAnswer: playersAnswers[playerId]?.answer,
-          givenAnswerType: playersAnswers[playerId]?.answerType,
-        })
-          ? ECaPasseOuCaCashPoints[quizLevel][playersAnswers[playerId].answerType]
+        const additionalPoints = playersAnswers[playerId]?.isGoodAnswer
+          ? ECaPasseOuCaCashPoints[quizLevel][playersAnswers[playerId].answerType] +
+            (playersAnswers[playerId].isFirstGoodCash ? 1 : 0)
           : 0;
 
         playersPoints[playerId].current += additionalPoints;
@@ -158,7 +154,7 @@ export const useCaPasseOuCaCashState = ({
           playersRanking_currentTimeout = setTimeout(() => {
             const questionNumber = (caPasseOuCaCashState.questionNumber + 1) as QuestionNumber;
             updateCaPasseOuCaCashState({
-              quizLevel: getLevelByQuestionNumber({ questionNumber }),
+              quizLevel: getQuizLevelByQuestionNumber({ questionNumber }),
               questionNumber,
               stateName: "quizInfosScreen",
             });

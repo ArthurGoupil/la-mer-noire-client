@@ -30,23 +30,21 @@ export const PlayersRanking: React.FC<PlayersRankingProps> = ({
   );
 
   React.useEffect(() => {
-    setPlayersRanking(
-      Object.keys(playersPoints)
-        .map((playerId) => ({
-          ...playersPoints[playerId],
-          playerId,
-        }))
-        .sort((a, b) => b.previous - a.previous),
-    );
-  }, [playersPoints]);
-
-  React.useEffect(() => {
-    if (!isPreviousRanking) {
+    if (isPreviousRanking) {
+      setPlayersRanking(
+        Object.keys(playersPoints)
+          .map((playerId) => ({
+            ...playersPoints[playerId],
+            playerId,
+          }))
+          .sort((a, b) => b.previous - a.previous),
+      );
+    } else {
       setPlayersRanking((playersRanking) => [
         ...playersRanking.sort((a, b) => b.current - a.current),
       ]);
     }
-  }, [isPreviousRanking]);
+  }, [playersPoints, isPreviousRanking]);
 
   return (
     <RankingContainer>

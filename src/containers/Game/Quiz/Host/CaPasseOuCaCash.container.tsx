@@ -3,7 +3,6 @@ import React from "react";
 import { CategoryTheme } from "components/Quiz/Host/CategoryTheme";
 import { QuestionDisplay } from "components/Quiz/Host/QuestionDisplay";
 import { Game, PlayerData } from "models/Game.model";
-import { isValidAnswer } from "utils/quiz/isValidAnswer.util";
 import { TimeBar } from "components/Quiz/Others/TimeBar";
 import { PlayerAnswer } from "components/Quiz/Host/PlayerAnswer";
 import { useQuizLifetime } from "hooks/quiz/useQuizLifetime.hook";
@@ -16,7 +15,7 @@ import { useCaPasseOuCaCashState } from "hooks/game/useCaPasseOuCaCashState.hook
 import { QuizInfosScreen } from "components/Quiz/Host/QuizInfosScreen";
 import { useNonNullQuizItemData } from "hooks/quiz/useNonNullQuizItemData.hook";
 import { QuizLayout } from "components/Quiz/Host/QuizLayout";
-import { getLevelGradient } from "utils/quiz/getQuizLevelGradient.util";
+import { getQuizLevelGradient } from "utils/quiz/getQuizLevelGradient.util";
 import { QuestionSummary } from "components/Quiz/Host/QuestionSummary";
 import { PlayersRanking } from "components/Quiz/Host/PlayersRanking";
 import { ECaPasseOuCaCashStatesTopScreensStatesNames } from "constants/CaPasseOuCaCash.constants";
@@ -46,6 +45,7 @@ export const CaPasseOuCaCashContainer: React.FC<CaPasseOuCaCashContainerProps> =
     shortId: game.shortId,
     quizItemSignature: quizItemData?.quizItemSignature,
     players: game.players,
+    quizAnswer: nonNullQuizItemData.quiz.answer,
   });
 
   const { remainingTime, questionsRecord } = useQuizLifetime({
@@ -96,7 +96,10 @@ export const CaPasseOuCaCashContainer: React.FC<CaPasseOuCaCashContainerProps> =
         <PlayersRanking
           playersPoints={{ ...caPasseOuCaCashState.playersPoints }}
           players={game.players}
-          isPreviousRanking={caPasseOuCaCashState.stateName === "playersRanking_previous"}
+          isPreviousRanking={
+            caPasseOuCaCashState.stateName === "playersRanking_previous" ||
+            caPasseOuCaCashState.stateName === "questionSummary_points"
+          }
         />
       ),
       shouldEnter: caPasseOuCaCashState.stateName.includes("playersRanking"),
@@ -116,7 +119,7 @@ export const CaPasseOuCaCashContainer: React.FC<CaPasseOuCaCashContainerProps> =
         caPasseOuCaCashState.stateName.includes("quizInfosScreen") ||
         caPasseOuCaCashState.stateName === "question",
       shouldLeave: false,
-      wavesBackgroundGradient: getLevelGradient({
+      wavesBackgroundGradient: getQuizLevelGradient({
         quizLevel: caPasseOuCaCashState.quizLevel,
       }),
     },
@@ -138,11 +141,8 @@ export const CaPasseOuCaCashContainer: React.FC<CaPasseOuCaCashContainerProps> =
                 key={index}
                 playerName={playerData.player.name}
                 answerType={playersAnswers[playerData.player._id]?.answerType}
-                isGoodAnswer={isValidAnswer({
-                  answer: nonNullQuizItemData.quiz.answer,
-                  givenAnswer: playersAnswers[playerData.player._id]?.answer,
-                  givenAnswerType: playersAnswers[playerData.player._id]?.answerType,
-                })}
+                isGoodAnswer={playersAnswers[playerData.player._id]?.isGoodAnswer}
+                isFirstCash={playersAnswers[playerData.player._id]?.isFirstGoodCash}
                 noMarginRight={index === game.players.length - 1}
                 questionIsOver={questionsRecord[nonNullQuizItemData.quizItemSignature]?.isDone}
               />
@@ -160,7 +160,7 @@ export const CaPasseOuCaCashContainer: React.FC<CaPasseOuCaCashContainerProps> =
         totalTime={EQuizDuration.caPasseOuCaCash}
         remainingTime={remainingTime - 1}
         isOver={game.players.length === Object.keys(playersAnswers).length}
-        backgroundGradient={getLevelGradient({
+        backgroundGradient={getQuizLevelGradient({
           quizLevel: caPasseOuCaCashState.quizLevel,
         })}
       />

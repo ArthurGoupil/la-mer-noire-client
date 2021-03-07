@@ -3,7 +3,7 @@ import { FullHeightLayout } from "components/Utils/FullHeightLayout";
 import { FullWidthContainer } from "components/Utils/FullWidthContainer";
 import { EStyles } from "constants/Styling.constants";
 import { SetCurrentAnswerProps } from "hooks/quiz/useCurrentAnswer.hook";
-import { Answer, AnswerType } from "models/Game.model";
+import { AnswerType, CurrentAnswer } from "models/Game.model";
 import React from "react";
 import styled from "styled-components";
 import { isDesktop } from "utils/isDesktop.util";
@@ -12,7 +12,7 @@ interface CashAnswerProps {
   quizItemSignature: string;
   playerId: string;
   answer: string;
-  currentAnswer: Answer | null;
+  currentAnswer: CurrentAnswer | null;
   onSubmit: (value: SetCurrentAnswerProps) => Promise<void>;
   questionIsOver: boolean;
 }

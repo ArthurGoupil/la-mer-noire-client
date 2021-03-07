@@ -2,12 +2,12 @@ import React from "react";
 import { useMutation } from "@apollo/client";
 
 import { ECookieName } from "constants/Cookies.constants";
-import { Answer, AnswerType } from "models/Game.model";
+import { AnswerType, CurrentAnswer } from "models/Game.model";
 import { GIVE_ANSWER } from "services/games.service";
 import { getCookie, setCookie } from "utils/cookies.util";
 
 interface UseCurrentAnswerReturn {
-  currentAnswer: Answer | null;
+  currentAnswer: CurrentAnswer | null;
   setCurrentAnswer: (props: SetCurrentAnswerProps) => Promise<void>;
 }
 
@@ -28,8 +28,8 @@ export const useCurrentAnswer = ({
 }: UseCurrentAnswerProps): UseCurrentAnswerReturn => {
   const [giveAnswer] = useMutation(GIVE_ANSWER);
 
-  const [currentAnswer, setCurrentAnswerState] = React.useState<Answer | null>(
-    getCookie<Answer>({
+  const [currentAnswer, setCurrentAnswerState] = React.useState<CurrentAnswer | null>(
+    getCookie<CurrentAnswer>({
       prefix: shortId,
       cookieName: ECookieName.currentAnswer,
     }),
@@ -41,7 +41,7 @@ export const useCurrentAnswer = ({
     playerId,
   }: SetCurrentAnswerProps): Promise<void> => {
     setCurrentAnswerState({ quizItemSignature, answer, answerType });
-    setCookie<Answer | null>({
+    setCookie<CurrentAnswer | null>({
       prefix: shortId,
       cookieName: ECookieName.currentAnswer,
       cookieValue: { quizItemSignature, answer, answerType },

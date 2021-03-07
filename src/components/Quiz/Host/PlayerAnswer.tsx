@@ -10,6 +10,7 @@ interface PlayerAnswerProps {
   playerName: string;
   answerType: AnswerType;
   isGoodAnswer: boolean;
+  isFirstCash: boolean;
   noMarginRight: boolean;
   questionIsOver: boolean;
 }
@@ -18,10 +19,19 @@ export const PlayerAnswer: React.FC<PlayerAnswerProps> = ({
   playerName,
   answerType,
   isGoodAnswer,
+  isFirstCash,
   noMarginRight,
   questionIsOver,
 }): JSX.Element => {
   const answerTypeString = getStringFromAnswerType({ answerType });
+
+  const answerBackgroundColor = answerTypeString
+    ? isGoodAnswer
+      ? EStyles.good
+      : EStyles.wrong
+    : !questionIsOver
+    ? EStyles.darkBlue
+    : EStyles.wrong;
 
   return (
     <PlayerAnswerContainer className="d-flex flex-column " noMarginRight={noMarginRight}>
@@ -31,18 +41,11 @@ export const PlayerAnswer: React.FC<PlayerAnswerProps> = ({
         <AnswerTypeContainer
           className="d-flex justify-center align-center"
           color={answerTypeString || questionIsOver ? EStyles.darkBlue : "white"}
-          backgroundColor={
-            answerTypeString
-              ? isGoodAnswer
-                ? "SpringGreen"
-                : "Tomato"
-              : !questionIsOver
-              ? EStyles.darkBlue
-              : "Tomato"
-          }
+          backgroundColor={answerBackgroundColor}
           fontSize={answerTypeString ? "18px" : "12px"}
         >
           {answerTypeString || (questionIsOver ? "TOO LATE !" : "EN ATTENTE")}
+          {isGoodAnswer && isFirstCash && <FirstCash src="/icons/cash-first.svg" />}
         </AnswerTypeContainer>
       </FullWidthContainer>
     </PlayerAnswerContainer>
@@ -89,4 +92,9 @@ const AnswerTypeContainer = styled.div<{
   border-radius: 50px;
   font-weight: 400;
   z-index: 2;
+`;
+
+const FirstCash = styled.img`
+  height: 22px;
+  margin-left: 4px;
 `;

@@ -2,14 +2,14 @@ import React from "react";
 
 import { EStyles } from "constants/Styling.constants";
 import { AnswerChoice } from "./AnswerChoice";
-import { Answer, AnswerType } from "models/Game.model";
+import { AnswerType, CurrentAnswer } from "models/Game.model";
 import { SetCurrentAnswerProps } from "hooks/quiz/useCurrentAnswer.hook";
 
 interface CarreAnswersProps {
   quizItemSignature: string;
   choices: string[];
   playerId: string;
-  currentAnswer: Answer | null;
+  currentAnswer: CurrentAnswer | null;
   onClick: (value: SetCurrentAnswerProps) => Promise<void>;
   questionIsOver: boolean;
 }

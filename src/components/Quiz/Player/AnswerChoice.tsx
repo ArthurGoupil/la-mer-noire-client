@@ -2,7 +2,7 @@ import React from "react";
 import styled from "styled-components";
 
 import { EStyles } from "constants/Styling.constants";
-import { Answer, AnswerType } from "models/Game.model";
+import { AnswerType, CurrentAnswer } from "models/Game.model";
 import { SetCurrentAnswerProps } from "hooks/quiz/useCurrentAnswer.hook";
 
 interface AnswerChoiceProps {
@@ -11,7 +11,7 @@ interface AnswerChoiceProps {
   quizItemSignature: string;
   answerType: AnswerType;
   playerId: string;
-  currentAnswer: Answer | null;
+  currentAnswer: CurrentAnswer | null;
   onClick: (value: SetCurrentAnswerProps) => Promise<void>;
   questionIsOver: boolean;
 }

@@ -5,11 +5,13 @@ import { PLAYER_ANSWERED } from "services/games.service";
 import { getCookie, setCookie } from "utils/cookies.util";
 import { Answer, PlayerData } from "models/Game.model";
 import { ECookieName } from "constants/Cookies.constants";
+import { isValidAnswer } from "utils/quiz/isValidAnswer.util";
 
 interface UsePlayersAnswersProps {
   shortId: string;
   quizItemSignature: string;
   players: PlayerData[];
+  quizAnswer: string;
 }
 
 interface UsePlayersAnswersReturn {
@@ -21,6 +23,7 @@ export const usePlayersAnswers = ({
   shortId,
   quizItemSignature,
   players,
+  quizAnswer,
 }: UsePlayersAnswersProps): UsePlayersAnswersReturn => {
   const { data: { playerAnswered } = {} } = useSubscription(PLAYER_ANSWERED, {
     variables: { shortId },
@@ -61,10 +64,37 @@ export const usePlayersAnswers = ({
         playersAnswers[playerId]?.quizItemSignature !== quizItemSignature &&
         playerAnswered?.quizItemSignature === quizItemSignature
       ) {
+        const isGoodAnswer = isValidAnswer({
+          answer: quizAnswer,
+          givenAnswer: playerAnswered.answer,
+          givenAnswerType: playerAnswered.answerType,
+        });
+
+        let isFirstGoodCash;
+        if (playerAnswered.answerType === "cash" && isGoodAnswer) {
+          isFirstGoodCash = Object.keys(playersAnswers).reduce((isFirstGoodCashAcc, playerId) => {
+            return (
+              isFirstGoodCashAcc &&
+              !(
+                playersAnswers[playerId].answerType === "cash" &&
+                playersAnswers[playerId].isGoodAnswer
+              )
+            );
+          }, true);
+        } else {
+          isFirstGoodCash = false;
+        }
+
         playersAnswers[playerId] = {
           quizItemSignature,
           answer: playerAnswered.answer,
           answerType: playerAnswered.answerType,
+          isGoodAnswer: isValidAnswer({
+            answer: quizAnswer,
+            givenAnswer: playerAnswered.answer,
+            givenAnswerType: playerAnswered.answerType,
+          }),
+          isFirstGoodCash,
         };
       }
 
@@ -82,7 +112,7 @@ export const usePlayersAnswers = ({
         cookieValue: playersAnswers,
       });
     }
-  }, [playerAnswered, quizItemSignature, players, shortId, playersAnswers]);
+  }, [playerAnswered, quizItemSignature, players, shortId, playersAnswers, quizAnswer]);
 
   return { playersAnswers, allPlayersHaveAnswered };
 };

@@ -3,11 +3,12 @@ import styled from "styled-components";
 
 import { EStyles } from "constants/Styling.constants";
 import { QuizLevel } from "models/Quiz.model";
-import { getLevelString } from "utils/quiz/getQuizLevelString.util";
+import { getQuizLevelString } from "utils/quiz/getQuizLevelString.util";
 import { AnswerTypePoints } from "./AnswerTypePoints";
 import { QuestionNumber } from "utils/quiz/getQuizLevelByQuestionNumber.util";
 import { getQuestionNumberColor } from "utils/quiz/getQuestionNumberColor.util";
 import { getQuizLevelColor } from "utils/quiz/getQuizLevelColor.util";
+import { WaveSeparator } from "./WaveSeparator";
 
 interface QuizInfosScreenProps {
   questionNumber: QuestionNumber;
@@ -24,35 +25,24 @@ export const QuizInfosScreen: React.FC<QuizInfosScreenProps> = ({
         QUESTION{" "}
         <Number color={getQuestionNumberColor({ questionNumber })}>{questionNumber}</Number> SUR 9
       </QuestionNumberContainer>
-      <Separator />
+      <WaveSeparator />
       <QuestionLevelContainer>
         NIVEAU{" "}
         <QuestionLevel color={getQuizLevelColor({ quizLevel })}>
-          {getLevelString({ quizLevel }).toUpperCase()}
+          {getQuizLevelString({ quizLevel }).toUpperCase()}
         </QuestionLevel>
       </QuestionLevelContainer>
-      <Separator />
-      <PointsContainer className="d-flex">
-        <AnswerTypePoints quizLevel={quizLevel} />
-      </PointsContainer>
+      <WaveSeparator />
+      <AnswerTypePoints quizLevel={quizLevel} />
     </div>
   );
 };
-
-const Separator = styled.div`
-  width: 200px;
-  height: 5px;
-  background-color: ${EStyles.redOrange};
-  border-radius: 5px;
-  margin: 30px 0;
-`;
 
 const QuestionNumberContainer = styled.div`
   font-family: "Boogaloo", cursive;
   font-size: 70px;
   line-height: 70px;
   color: ${EStyles.darkBlue};
-  font-style: italic;
 `;
 
 const Number = styled.span<{ color: string }>`
@@ -65,16 +55,9 @@ const QuestionLevelContainer = styled.div`
   font-size: 70px;
   line-height: 70px;
   color: ${EStyles.darkBlue};
-  font-style: italic;
 `;
 
 const QuestionLevel = styled.span<{ color: string }>`
   color: ${(props) => props.color};
   text-shadow: 5px 5px 0 ${EStyles.darkBlue};
-`;
-
-const PointsContainer = styled.div`
-  background-color: ${EStyles.darkBlue};
-  border-radius: 10px;
-  padding: 10px 15px;
 `;

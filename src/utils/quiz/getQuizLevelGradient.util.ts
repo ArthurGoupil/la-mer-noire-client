@@ -5,7 +5,7 @@ interface GetLevelGradientProps {
   quizLevel: QuizLevel;
 }
 
-export const getLevelGradient = ({ quizLevel }: GetLevelGradientProps): string[] => {
+export const getQuizLevelGradient = ({ quizLevel }: GetLevelGradientProps): string[] => {
   return {
     beginner: [EStyles.turquoise, EStyles.lightBlue],
     intermediate: [EStyles.yellow, EStyles.orange],

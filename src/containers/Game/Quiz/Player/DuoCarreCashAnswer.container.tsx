@@ -42,6 +42,7 @@ export const DuoCarreCashAnswerContainer: React.FC<DuoCarreCashAnswerContainerPr
     shortId: game.shortId,
     quizItemSignature: nonNullQuizItemData.quizItemSignature,
     players: game.players,
+    quizAnswer: nonNullQuizItemData.quiz.answer,
   });
 
   const { questionsRecord } = useQuizLifetime({

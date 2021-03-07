@@ -4,7 +4,7 @@ interface GetLevelStringProps {
   quizLevel: QuizLevel;
 }
 
-export const getLevelString = ({ quizLevel }: GetLevelStringProps): string => {
+export const getQuizLevelString = ({ quizLevel }: GetLevelStringProps): string => {
   return {
     beginner: "débutant",
     intermediate: "intermédiaire",

@@ -3,7 +3,6 @@ import styled from "styled-components";
 
 import { EStyles } from "constants/Styling.constants";
 import { Answer, PlayerData, PlayersPoints } from "models/Game.model";
-import { isValidAnswer } from "utils/quiz/isValidAnswer.util";
 import { getStringFromAnswerType } from "utils/quiz/getStringFromAnswerType";
 import { getAnswerTypeColor } from "utils/quiz/getAnswerTypeColor.util";
 
@@ -39,13 +38,9 @@ export const QuestionSummary: React.FC<QuestionSummary> = ({
                   a répondu
                   <PlayerAnswer
                     color={
-                      isValidAnswer({
-                        answer: quizAnswer,
-                        givenAnswer: playersAnswers[playerData.player._id].answer,
-                        givenAnswerType: playersAnswers[playerData.player._id].answerType,
-                      })
-                        ? "SpringGreen"
-                        : "Tomato"
+                      playersAnswers[playerData.player._id].isGoodAnswer
+                        ? EStyles.good
+                        : EStyles.wrong
                     }
                   >
                     {playersAnswers[playerData.player._id].answer.toUpperCase()}
@@ -55,10 +50,16 @@ export const QuestionSummary: React.FC<QuestionSummary> = ({
                     backgroundColor={getAnswerTypeColor({
                       answerType: playersAnswers[playerData.player._id].answerType,
                     })}
+                    paddingLeft={
+                      playersAnswers[playerData.player._id].isFirstGoodCash ? "35px" : "9px"
+                    }
                   >
                     {getStringFromAnswerType({
                       answerType: playersAnswers[playerData.player._id].answerType,
                     })}
+                    {playersAnswers[playerData.player._id].isFirstGoodCash && (
+                      <FirstCash src="/icons/cash-first-white.svg" />
+                    )}
                   </PlayerAnswerType>
                 </>
               ) : (
@@ -72,7 +73,10 @@ export const QuestionSummary: React.FC<QuestionSummary> = ({
                   : 0
               }
             >
-              <AdditionalPoints ref={playersAnswersRefs.current[index]}>
+              <AdditionalPoints
+                ref={playersAnswersRefs.current[index]}
+                className="d-flex align-center"
+              >
                 +
                 {playersPoints[playerData.player._id].current -
                   playersPoints[playerData.player._id].previous}
@@ -101,7 +105,7 @@ const QuizAnswer = styled.span`
   font-family: "Boogaloo", cursive;
   font-size: 40px;
   line-height: 35px;
-  color: SpringGreen;
+  color: ${EStyles.good};
   margin-left: 10px;
 `;
 
@@ -119,15 +123,25 @@ const PlayerAnswer = styled.span<{ color: string }>`
   color: ${(props) => props.color};
 `;
 
-const PlayerAnswerType = styled.span<{ backgroundColor: string }>`
+const PlayerAnswerType = styled.span<{ backgroundColor: string; paddingLeft: string }>`
   font-family: "Boogaloo", cursive;
   font-size: 30px;
   line-height: 30px;
   margin-left: 10px;
   background-color: ${(props) => props.backgroundColor};
-  padding: 4px 9px;
+  padding: 4px ${(props) => props.paddingLeft} 4px 9px;
   border-radius: 5px;
   text-shadow: 3px 2px 0px ${EStyles.darkBlue};
+  position: relative;
+`;
+
+const FirstCash = styled.img`
+  height: 25px;
+  width: 25px;
+  margin-left: 4px;
+  position: absolute;
+  top: 8px;
+  right: 5px;
 `;
 
 const EmptyAnswer = styled.span`

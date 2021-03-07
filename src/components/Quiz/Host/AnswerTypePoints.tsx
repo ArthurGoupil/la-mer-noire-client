@@ -5,7 +5,8 @@ import { ECaPasseOuCaCashPoints } from "constants/CaPasseOuCaCash.constants";
 import { EStyles } from "constants/Styling.constants";
 import { QuizLevel } from "models/Quiz.model";
 import { getQuizLevelColor } from "utils/quiz/getQuizLevelColor.util";
-import { FullWidthContainer } from "components/Utils/FullWidthContainer";
+import { getAnswerTypeColor } from "utils/quiz/getAnswerTypeColor.util";
+import { AnswerType } from "models/Game.model";
 
 interface AnswerTypePointsProps {
   quizLevel: QuizLevel;
@@ -14,32 +15,57 @@ interface AnswerTypePointsProps {
 export const AnswerTypePoints: React.FC<AnswerTypePointsProps> = ({ quizLevel }): JSX.Element => {
   const levelColor = getQuizLevelColor({ quizLevel });
   return (
-    <FullWidthContainer className="d-flex  align-end">
-      <AnswerTypePointsContainer className="d-flex">
+    <div className="d-flex">
+      <AnswerTypePointsContainer
+        backgroundColor={getAnswerTypeColor({ answerType: AnswerType.duo })}
+        className="d-flex align-center"
+      >
         DUO
-        <PointsNumber color={levelColor}>{ECaPasseOuCaCashPoints[quizLevel].duo}</PointsNumber>
+        <PointsNumber color={levelColor} className="d-flex justify-center align-center">
+          {ECaPasseOuCaCashPoints[quizLevel].duo}
+        </PointsNumber>
       </AnswerTypePointsContainer>
-      <AnswerTypePointsContainer className="d-flex">
+      <AnswerTypePointsContainer
+        backgroundColor={getAnswerTypeColor({ answerType: AnswerType.carre })}
+        className="d-flex align-center"
+      >
         CARRÉ
-        <PointsNumber color={levelColor}>{ECaPasseOuCaCashPoints[quizLevel].carre}</PointsNumber>
+        <PointsNumber color={levelColor} className="d-flex justify-center align-center">
+          {ECaPasseOuCaCashPoints[quizLevel].carre}
+        </PointsNumber>
       </AnswerTypePointsContainer>
-      <AnswerTypePointsContainer className="d-flex">
+      <AnswerTypePointsContainer
+        backgroundColor={getAnswerTypeColor({ answerType: AnswerType.cash })}
+        noMarginRight
+        className="d-flex align-center"
+      >
         CASH
-        <PointsNumber color={levelColor}>{ECaPasseOuCaCashPoints[quizLevel].cash}</PointsNumber>
+        <PointsNumber color={levelColor} className="d-flex justify-center align-center">
+          {ECaPasseOuCaCashPoints[quizLevel].cash}
+        </PointsNumber>
       </AnswerTypePointsContainer>
-    </FullWidthContainer>
+    </div>
   );
 };
 
-const AnswerTypePointsContainer = styled.div`
+const AnswerTypePointsContainer = styled.span<{ backgroundColor: string; noMarginRight?: boolean }>`
   font-family: "Boogaloo", cursive;
-  font-size: 30px;
-  line-height: 30px;
-  color: ${EStyles.lightBlue};
-  margin-left: 10px;
+  font-size: 32px;
+  line-height: 32px;
+  margin-right: ${(props) => (props.noMarginRight ? 0 : "15px")};
+  background-color: ${(props) => props.backgroundColor};
+  padding: 5px 10px;
+  border-radius: 5px;
+  text-shadow: 3px 2px 0px ${EStyles.darkBlue};
 `;
 
 const PointsNumber = styled.div<{ color: string }>`
+  min-width: 40px;
+  height: 40px;
+  border-radius: 20px;
+  background-color: ${EStyles.darkBlue};
   color: ${(props) => props.color};
-  margin-left: 3px;
+  margin-left: 10px;
+  padding: 0 12px 2px 10px;
+  text-shadow: 2px 2px 0px ${EStyles.lightBlue};
 `;

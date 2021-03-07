@@ -30,10 +30,15 @@ export interface CurrentQuizItem {
   quizItemId: QuizItemId;
 }
 
-export interface Answer {
+export interface CurrentAnswer {
   quizItemSignature: string;
   answer: string;
   answerType: AnswerType;
+}
+
+export interface Answer extends CurrentAnswer {
+  isGoodAnswer: boolean;
+  isFirstGoodCash: boolean;
 }
 
 export enum AnswerType {

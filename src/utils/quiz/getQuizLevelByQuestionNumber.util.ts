@@ -6,7 +6,7 @@ interface GetLevelByQuestionNumberProps {
 
 export type QuestionNumber = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
 
-export const getLevelByQuestionNumber = ({
+export const getQuizLevelByQuestionNumber = ({
   questionNumber,
 }: GetLevelByQuestionNumberProps): QuizLevel => {
   return {

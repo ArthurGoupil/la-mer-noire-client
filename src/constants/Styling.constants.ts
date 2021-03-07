@@ -8,6 +8,8 @@ export const EStyles = {
   red: "#D03C29",
   redOrange: "#F9564F",
   orange: "#FE7F2D",
+  good: "#00FF7F",
+  wrong: "#FF6347",
   // DARKEN COLORS
   darken_darkBlue: "#0c345a",
   darken_blue: "#0462dc",
