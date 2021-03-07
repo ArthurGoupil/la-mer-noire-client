@@ -159,12 +159,6 @@ export const useCaPasseOuCaCashState = ({
               stateName: "quizInfosScreen",
             });
           }, 5000);
-        } else {
-          playersRanking_currentTimeout = setTimeout(() => {
-            updateCaPasseOuCaCashState({
-              stateName: "roundOver",
-            });
-          }, 6000);
         }
         return () => clearTimeout(playersRanking_currentTimeout);
     }

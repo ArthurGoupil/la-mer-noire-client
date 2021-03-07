@@ -3,6 +3,7 @@ import styled from "styled-components";
 
 import { EStyles } from "constants/Styling.constants";
 import { useWindowHeight } from "hooks/others/useWindowHeight.hook";
+import { isDesktop } from "utils/isDesktop.util";
 
 interface FullHeightLayoutProps {
   children: React.ReactNode;
@@ -13,7 +14,7 @@ interface FullHeightLayoutProps {
 
 export const FullHeightLayout: React.FC<FullHeightLayoutProps> = ({
   children,
-  padding = "40px",
+  padding = isDesktop() ? "40px" : "20px",
   height = "100%",
   className = "d-flex justify-center align-center",
 }): JSX.Element => {

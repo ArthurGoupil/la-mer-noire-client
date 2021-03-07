@@ -101,9 +101,7 @@ export const CaPasseOuCaCashContainer: React.FC<CaPasseOuCaCashContainerProps> =
           }
         />
       ),
-      shouldEnter:
-        caPasseOuCaCashState.stateName.includes("playersRanking") ||
-        caPasseOuCaCashState.stateName === "roundOver",
+      shouldEnter: caPasseOuCaCashState.stateName.includes("playersRanking"),
       shouldLeave:
         caPasseOuCaCashState.questionNumber !== 9
           ? caPasseOuCaCashState.stateName.includes("quizInfosScreen")
@@ -135,7 +133,7 @@ export const CaPasseOuCaCashContainer: React.FC<CaPasseOuCaCashContainerProps> =
     >
       <div className="d-flex flex-column align-center justify-center flex-grow">
         <QuestionDisplay quizItem={nonNullQuizItemData.quiz} />
-        <div className="d-flex flex-wrap">
+        <div className="d-flex justify-center flex-wrap">
           {game.players.map((playerData: PlayerData, index: number) => {
             return (
               <PlayerAnswer

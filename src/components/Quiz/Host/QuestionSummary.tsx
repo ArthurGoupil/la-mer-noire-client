@@ -61,7 +61,7 @@ export const QuestionSummary: React.FC<QuestionSummary> = ({
                   </PlayerAnswerType>
                 </>
               ) : (
-                <EmptyAnswer> n'a pas répondu.</EmptyAnswer>
+                <EmptyAnswer> n&apos;a pas répondu.</EmptyAnswer>
               )}
             </div>
             <AdditionalPointsContainer

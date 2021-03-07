@@ -37,6 +37,7 @@ const SmartphoneIcon = styled.img`
 
 const CodeText = styled.div`
   font-size: 16px;
+  text-align: center;
 `;
 
 const LMNUrl = styled.span`

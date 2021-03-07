@@ -13,7 +13,7 @@ export const PlayersList: React.FC<PlayersListProps> = ({ playersList }): JSX.El
   return (
     <PlayersListContainer className="d-flex flex-column align-center flex-wrap">
       <PlayersTitle>DANS LES STARTING BLOCKS</PlayersTitle>
-      <div className="d-flex flex-wrap">
+      <div className="d-flex justify-center flex-wrap">
         {playersList.map((playerData: PlayerData, index: number) => (
           <Player key={index}>{playerData.player.name.toUpperCase()}</Player>
         ))}

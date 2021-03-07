@@ -19,5 +19,4 @@ export enum ECaPasseOuCaCashStatesTopScreensStatesNames {
   questionSummary_points = "questionSummary_points",
   playersRanking_previous = "playersRanking_previous",
   playersRanking_current = "playersRanking_current",
-  roundOver = "roundOver",
 }
