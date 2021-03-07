@@ -92,9 +92,10 @@ export const CashAnswer: React.FC<CashAnswerProps> = ({
                   })}
                 </InputPlaceholdersContainer>
                 <Input
+                  type="text"
                   autoFocus={wordIndex === 0}
                   ref={answerWordsRefs[wordIndex]}
-                  spellCheck={false}
+                  spellCheck="false"
                   value={givenAnswer[wordIndex]}
                   onKeyDown={(e) => {
                     if (
