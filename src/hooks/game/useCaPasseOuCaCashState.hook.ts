@@ -5,7 +5,10 @@ import { ECookieName } from "constants/Cookies.constants";
 import { CaPasseOuCaCashState, Answer, PlayersPoints, QuestionRecord } from "models/Game.model";
 import { QuizItemData, QuizLevel } from "models/Quiz.model";
 import { getCookie, setCookie } from "utils/cookies.util";
-import { getLevelByQuestionNumber, QuestionNumber } from "utils/quiz/getLevelByQuestionNumber.util";
+import {
+  getLevelByQuestionNumber,
+  QuestionNumber,
+} from "utils/quiz/getQuizLevelByQuestionNumber.util";
 import { isValidAnswer } from "utils/quiz/isValidAnswer.util";
 
 interface UseCaPasseOuCaCashStateProps {

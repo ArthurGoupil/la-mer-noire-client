@@ -125,11 +125,10 @@ const ScreensContainer = styled.div<{ translateY: string }>`
 
 const QuizLayoutContainer = styled.div<{ minHeight: number }>`
   width: 100%;
-  height: calc(100% + 1px);
+  height: 100%;
   min-height: ${(props) => props.minHeight}px;
   padding: 40px;
   background: linear-gradient(to bottom, ${EStyles.blue}, ${EStyles.darkBlue});
-  margin-top: -1px;
   position: relative;
 `;
 
@@ -137,16 +136,15 @@ const TopScreenAndWaveContainer = styled.div<{ display: string }>`
   width: 100%;
   height: 100%;
   position: absolute;
-  top: calc(-100% + 2px);
+  top: -100%;
   display: ${(props) => props.display};
+  background: linear-gradient(to bottom, ${EStyles.lightBlue} 15%, ${EStyles.blue} 100%);
 `;
 
 const TopScreenContainer = styled.div<{ minHeight: number }>`
   width: 100%;
   height: 85%;
   padding: 40px;
-  background: linear-gradient(to bottom, ${EStyles.lightBlue}, ${EStyles.blue});
-  margin-top: -1px;
 `;
 
 const TopScreen = styled.div<{ opacity: number; translateX: string }>`

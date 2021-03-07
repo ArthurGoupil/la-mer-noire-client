@@ -4,7 +4,7 @@ import {
 } from "constants/CaPasseOuCaCash.constants";
 import { EGameStage } from "constants/GameStage.constants";
 import { Player } from "models/Player.model";
-import { QuestionNumber } from "utils/quiz/getLevelByQuestionNumber.util";
+import { QuestionNumber } from "utils/quiz/getQuizLevelByQuestionNumber.util";
 import { QuizItemId, QuizLevel } from "./Quiz.model";
 
 export interface Game {

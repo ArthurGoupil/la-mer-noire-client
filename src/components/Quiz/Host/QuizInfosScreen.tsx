@@ -3,9 +3,9 @@ import styled from "styled-components";
 
 import { EStyles } from "constants/Styling.constants";
 import { QuizLevel } from "models/Quiz.model";
-import { getLevelString } from "utils/quiz/getLevelString.util";
+import { getLevelString } from "utils/quiz/getQuizLevelString.util";
 import { AnswerTypePoints } from "./AnswerTypePoints";
-import { QuestionNumber } from "utils/quiz/getLevelByQuestionNumber.util";
+import { QuestionNumber } from "utils/quiz/getQuizLevelByQuestionNumber.util";
 import { getQuestionNumberColor } from "utils/quiz/getQuestionNumberColor.util";
 import { getQuizLevelColor } from "utils/quiz/getQuizLevelColor.util";
 

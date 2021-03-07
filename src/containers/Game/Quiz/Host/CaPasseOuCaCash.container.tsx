@@ -16,10 +16,11 @@ import { useCaPasseOuCaCashState } from "hooks/game/useCaPasseOuCaCashState.hook
 import { QuizInfosScreen } from "components/Quiz/Host/QuizInfosScreen";
 import { useNonNullQuizItemData } from "hooks/quiz/useNonNullQuizItemData.hook";
 import { QuizLayout } from "components/Quiz/Host/QuizLayout";
-import { getLevelGradient } from "utils/quiz/getLevelGradient.util";
+import { getLevelGradient } from "utils/quiz/getQuizLevelGradient.util";
 import { QuestionSummary } from "components/Quiz/Host/QuestionSummary";
 import { PlayersRanking } from "components/Quiz/Host/PlayersRanking";
 import { ECaPasseOuCaCashStatesTopScreensStatesNames } from "constants/CaPasseOuCaCash.constants";
+import { getQuizLevelColor } from "utils/quiz/getQuizLevelColor.util";
 
 interface CaPasseOuCaCashContainerProps {
   game: Game;
@@ -153,6 +154,7 @@ export const CaPasseOuCaCashContainer: React.FC<CaPasseOuCaCashContainerProps> =
       </div>
       <CategoryTheme
         categoryName={nonNullQuizItemData.category.name}
+        categoryColor={getQuizLevelColor({ quizLevel: caPasseOuCaCashState.quizLevel })}
         theme={nonNullQuizItemData.theme}
         subTheme={nonNullQuizItemData.subTheme}
       />

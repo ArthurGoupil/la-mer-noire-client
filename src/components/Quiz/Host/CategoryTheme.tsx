@@ -1,20 +1,21 @@
-import { EStyles } from "constants/Styling.constants";
 import React from "react";
 import styled from "styled-components";
 
 interface CategoryThemeProps {
   categoryName: string;
+  categoryColor: string;
   theme: string;
   subTheme: string;
 }
 
 export const CategoryTheme: React.FC<CategoryThemeProps> = ({
   categoryName,
+  categoryColor,
   theme,
   subTheme,
 }): JSX.Element => {
   return (
-    <CategoryThemeContainer className="d-flex justify-center align-center">
+    <CategoryThemeContainer color={categoryColor} className="d-flex justify-center align-center">
       {categoryName}
       <ThemeContainer className="d-flex">
         {theme}
@@ -24,8 +25,8 @@ export const CategoryTheme: React.FC<CategoryThemeProps> = ({
   );
 };
 
-const CategoryThemeContainer = styled.div`
-  color: ${EStyles.turquoise};
+const CategoryThemeContainer = styled.div<{ color: string }>`
+  color: ${(props) => props.color};
   font-weight: 600;
   margin-bottom: 15px;
 `;

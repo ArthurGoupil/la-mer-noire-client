@@ -26,7 +26,7 @@ export const PlayerAnswer: React.FC<PlayerAnswerProps> = ({
   return (
     <PlayerAnswerContainer className="d-flex flex-column " noMarginRight={noMarginRight}>
       <InnerShadow />
-      <div>{playerName}</div>
+      <div>{playerName.toUpperCase()}</div>
       <FullWidthContainer>
         <AnswerTypeContainer
           className="d-flex justify-center align-center"
@@ -50,6 +50,7 @@ export const PlayerAnswer: React.FC<PlayerAnswerProps> = ({
 };
 
 const PlayerAnswerContainer = styled.div<{ noMarginRight: boolean }>`
+  font-family: "Boogaloo", cursive;
   background-color: ${EStyles.darken_blue};
   padding: 15px;
   margin-bottom: 10px;
@@ -81,7 +82,6 @@ const AnswerTypeContainer = styled.div<{
 }>`
   color: ${(props) => props.color};
   font-size: ${(props) => props.fontSize};
-  font-family: "Boogaloo", cursive;
   width: 80px;
   height: 40px;
   background-color: ${(props) => props.backgroundColor};

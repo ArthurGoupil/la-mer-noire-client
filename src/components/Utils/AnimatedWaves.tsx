@@ -57,6 +57,8 @@ const SvgContainer = styled.div<{
       props.height / 2}px ${(props) => props.backgroundGradientTop} inset;
   background-color: ${(props) => props.backgroundGradientBottom};
   transition: box-shadow 1s, background-color 1s;
+  border: none;
+  overflow: hidden;
 `;
 
 const SvgWave = styled.svg`

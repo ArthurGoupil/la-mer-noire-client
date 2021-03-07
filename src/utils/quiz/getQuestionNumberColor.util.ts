@@ -1,5 +1,5 @@
 import { EStyles } from "constants/Styling.constants";
-import { QuestionNumber } from "./getLevelByQuestionNumber.util";
+import { QuestionNumber } from "./getQuizLevelByQuestionNumber.util";
 
 interface GetQuestionNumberColorProps {
   questionNumber: QuestionNumber;
