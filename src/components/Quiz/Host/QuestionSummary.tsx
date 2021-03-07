@@ -42,6 +42,7 @@ export const QuestionSummary: React.FC<QuestionSummary> = ({
                       isValidAnswer({
                         answer: quizAnswer,
                         givenAnswer: playersAnswers[playerData.player._id].answer,
+                        givenAnswerType: playersAnswers[playerData.player._id].answerType,
                       })
                         ? "SpringGreen"
                         : "Tomato"

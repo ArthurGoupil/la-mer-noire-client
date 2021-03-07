@@ -30,6 +30,7 @@ const PlayersListContainer = styled.ul`
 const PlayersTitle = styled.div`
   font-family: "Boogaloo", cursive;
   font-size: 30px;
+  line-height: 33px;
   color: ${EStyles.redOrange};
   text-align: center;
   margin-bottom: 10px;

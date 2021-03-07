@@ -144,6 +144,7 @@ export const CaPasseOuCaCashContainer: React.FC<CaPasseOuCaCashContainerProps> =
                 isGoodAnswer={isValidAnswer({
                   answer: nonNullQuizItemData.quiz.answer,
                   givenAnswer: playersAnswers[playerData.player._id]?.answer,
+                  givenAnswerType: playersAnswers[playerData.player._id]?.answerType,
                 })}
                 noMarginRight={index === game.players.length - 1}
                 questionIsOver={questionsRecord[nonNullQuizItemData.quizItemSignature]?.isDone}

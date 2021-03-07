@@ -69,6 +69,7 @@ export const useCaPasseOuCaCashState = ({
         const additionalPoints = isValidAnswer({
           answer: quizAnswer,
           givenAnswer: playersAnswers[playerId]?.answer,
+          givenAnswerType: playersAnswers[playerId]?.answerType,
         })
           ? ECaPasseOuCaCashPoints[quizLevel][playersAnswers[playerId].answerType]
           : 0;
