@@ -8,7 +8,7 @@ import { PlayerData, PlayerPoints, PlayersPoints } from "models/Game.model";
 interface PlayersRankingProps {
   playersPoints: PlayersPoints;
   players: PlayerData[];
-  isCurrentRanking: boolean;
+  isPreviousRanking: boolean;
 }
 
 interface PlayerRanking extends PlayerPoints {
@@ -18,7 +18,7 @@ interface PlayerRanking extends PlayerPoints {
 export const PlayersRanking: React.FC<PlayersRankingProps> = ({
   playersPoints,
   players,
-  isCurrentRanking,
+  isPreviousRanking,
 }): JSX.Element => {
   const [playersRanking, setPlayersRanking] = React.useState<PlayerRanking[]>(
     Object.keys(playersPoints)
@@ -41,10 +41,12 @@ export const PlayersRanking: React.FC<PlayersRankingProps> = ({
   }, [playersPoints]);
 
   React.useEffect(() => {
-    setPlayersRanking((playersRanking) => [
-      ...playersRanking.sort((a, b) => b.current - a.current),
-    ]);
-  }, [isCurrentRanking]);
+    if (!isPreviousRanking) {
+      setPlayersRanking((playersRanking) => [
+        ...playersRanking.sort((a, b) => b.current - a.current),
+      ]);
+    }
+  }, [isPreviousRanking]);
 
   return (
     <RankingContainer>
@@ -66,10 +68,10 @@ export const PlayersRanking: React.FC<PlayersRankingProps> = ({
                   <PlayerPointsContainer className="d-flex justify-center align-center">
                     <Points
                       shouldRotate={
-                        isCurrentRanking && playerRanking.current !== playerRanking.previous
+                        !isPreviousRanking && playerRanking.current !== playerRanking.previous
                       }
                     >
-                      {isCurrentRanking ? playerRanking.current : playerRanking.previous}
+                      {!isPreviousRanking ? playerRanking.current : playerRanking.previous}
                     </Points>
                   </PlayerPointsContainer>
                 </PlayerRankingContainer>

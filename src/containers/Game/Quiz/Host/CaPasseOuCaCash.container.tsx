@@ -96,10 +96,7 @@ export const CaPasseOuCaCashContainer: React.FC<CaPasseOuCaCashContainerProps> =
         <PlayersRanking
           playersPoints={{ ...caPasseOuCaCashState.playersPoints }}
           players={game.players}
-          isCurrentRanking={
-            caPasseOuCaCashState.stateName !== "playersRanking_previous" &&
-            caPasseOuCaCashState.stateName !== "questionSummary_points"
-          }
+          isPreviousRanking={caPasseOuCaCashState.stateName === "playersRanking_previous"}
         />
       ),
       shouldEnter: caPasseOuCaCashState.stateName.includes("playersRanking"),
