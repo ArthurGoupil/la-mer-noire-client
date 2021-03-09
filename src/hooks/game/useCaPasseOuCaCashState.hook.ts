@@ -77,29 +77,43 @@ export const useCaPasseOuCaCashState = ({
     };
 
     switch (caPasseOuCaCashState.stateName) {
-      case "quizInfosScreen":
-        const quizInfosScreenTimeout = setTimeout(() => {
+      case "stageName":
+        const stageNameTimeout = setTimeout(() => {
           updateCaPasseOuCaCashState({
-            stateName: "quizInfosScreen_fetchQuizItemData",
+            stateName: "quizItemInfos",
           });
-        }, 4000);
-        return () => clearTimeout(quizInfosScreenTimeout);
-      case "quizInfosScreen_fetchQuizItemData":
+        }, 5000);
+        return () => clearTimeout(stageNameTimeout);
+      case "quizItemInfos":
+        const quizItemInfosTimeout = setTimeout(() => {
+          updateCaPasseOuCaCashState({
+            stateName: "quizItemInfos_fetchQuizItemData",
+          });
+        }, 1500);
+        return () => clearTimeout(quizItemInfosTimeout);
+      case "quizItemInfos_fetchQuizItemData":
         updateCaPasseOuCaCashState({
-          stateName: "quizInfosScreen_checkQuizIsReady",
+          stateName: "quizItemInfos_checkQuizIsReady",
         });
         break;
-      case "quizInfosScreen_checkQuizIsReady":
+      case "quizItemInfos_checkQuizIsReady":
         if (
           quizItemData &&
           questionsRecord[quizItemData?.quizItemSignature]?.timestamp &&
           !questionsRecord[quizItemData?.quizItemSignature]?.isDone
         ) {
           updateCaPasseOuCaCashState({
-            stateName: "question",
+            stateName: "quizItemInfos_showThemeSubTheme",
           });
         }
         break;
+      case "quizItemInfos_showThemeSubTheme":
+        const showThemeSubThemeTimeout = setTimeout(() => {
+          updateCaPasseOuCaCashState({
+            stateName: "question",
+          });
+        }, 4000);
+        return () => clearTimeout(showThemeSubThemeTimeout);
       case "question":
         if (allPlayersHaveAnswered) {
           updateCaPasseOuCaCashState({
@@ -156,7 +170,7 @@ export const useCaPasseOuCaCashState = ({
             updateCaPasseOuCaCashState({
               quizLevel: getQuizLevelByQuestionNumber({ questionNumber }),
               questionNumber,
-              stateName: "quizInfosScreen",
+              stateName: "quizItemInfos",
             });
           }, 5000);
         }

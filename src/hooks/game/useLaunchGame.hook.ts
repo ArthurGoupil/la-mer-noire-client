@@ -35,7 +35,7 @@ export const useLaunchGame = ({ shortId, players }: useLaunchGameProps): UseLaun
         prefix: shortId,
         cookieName: ECookieName.caPasseOuCaCashState,
         cookieValue: {
-          stateName: "quizInfosScreen",
+          stateName: "stageName",
           quizLevel: "beginner",
           questionNumber: 1,
           playersPoints: players.reduce((acc: PlayersPoints, cur: PlayerData) => {

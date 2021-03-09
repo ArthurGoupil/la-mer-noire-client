@@ -1,6 +1,5 @@
 import React from "react";
 
-import { CategoryTheme } from "components/Quiz/Host/CategoryTheme";
 import { QuestionDisplay } from "components/Quiz/Host/QuestionDisplay";
 import { Game, PlayerData } from "models/Game.model";
 import { TimeBar } from "components/Quiz/Others/TimeBar";
@@ -12,14 +11,14 @@ import { QuizItemData } from "models/Quiz.model";
 import { usePlayersAnswers } from "hooks/quiz/usePlayersAnswers.hook";
 import { EQuizDuration } from "constants/QuizDuration.constants";
 import { useCaPasseOuCaCashState } from "hooks/game/useCaPasseOuCaCashState.hook";
-import { QuizInfosScreen } from "components/Quiz/Host/QuizInfosScreen";
+import { QuizItemInfos } from "components/Quiz/Host/QuizItemInfos";
 import { useNonNullQuizItemData } from "hooks/quiz/useNonNullQuizItemData.hook";
 import { QuizLayout } from "components/Quiz/Host/QuizLayout";
 import { getQuizLevelGradient } from "utils/quiz/getQuizLevelGradient.util";
 import { QuestionSummary } from "components/Quiz/Host/QuestionSummary";
 import { PlayersRanking } from "components/Quiz/Host/PlayersRanking";
 import { ECaPasseOuCaCashStatesTopScreensStatesNames } from "constants/CaPasseOuCaCash.constants";
-import { getQuizLevelColor } from "utils/quiz/getQuizLevelColor.util";
+import { getCaPasseOuCaCashStateInterpretation } from "utils/quiz/getCaPasseOuCaCashInterpretation.util";
 
 interface CaPasseOuCaCashContainerProps {
   game: Game;
@@ -65,8 +64,22 @@ export const CaPasseOuCaCashContainer: React.FC<CaPasseOuCaCashContainerProps> =
     questionsRecord,
   });
 
+  const {
+    fetchQuizItemData,
+    showAdditionalPoints,
+    questionSummaryEnter,
+    questionSummaryLeave,
+    showPreviousRanking,
+    playersRankingEnter,
+    playersRankingLeave,
+    showThemeSubTheme,
+    quizItemInfosEnter,
+  } = getCaPasseOuCaCashStateInterpretation({
+    caPasseOuCaCashState,
+  });
+
   React.useEffect(() => {
-    if (caPasseOuCaCashState.stateName === "quizInfosScreen_fetchQuizItemData") {
+    if (fetchQuizItemData) {
       (async () =>
         await generateNewCurrentQuizItem({
           variables: {
@@ -75,7 +88,7 @@ export const CaPasseOuCaCashContainer: React.FC<CaPasseOuCaCashContainerProps> =
           },
         }))();
     }
-  }, [game.shortId, generateNewCurrentQuizItem, caPasseOuCaCashState]);
+  }, [game.shortId, generateNewCurrentQuizItem, caPasseOuCaCashState, fetchQuizItemData]);
 
   const topScreens = [
     {
@@ -85,39 +98,34 @@ export const CaPasseOuCaCashContainer: React.FC<CaPasseOuCaCashContainerProps> =
           players={game.players}
           playersAnswers={playersAnswers}
           playersPoints={caPasseOuCaCashState.playersPoints}
-          additionalPointsAreVisible={caPasseOuCaCashState.stateName === "questionSummary_points"}
+          showAdditionalPoints={showAdditionalPoints}
         />
       ),
-      shouldEnter: caPasseOuCaCashState.stateName.includes("questionSummary"),
-      shouldLeave: caPasseOuCaCashState.stateName.includes("playersRanking"),
+      shouldEnter: questionSummaryEnter,
+      shouldLeave: questionSummaryLeave,
     },
     {
       component: (
         <PlayersRanking
           playersPoints={{ ...caPasseOuCaCashState.playersPoints }}
           players={game.players}
-          isPreviousRanking={
-            caPasseOuCaCashState.stateName === "playersRanking_previous" ||
-            caPasseOuCaCashState.stateName === "questionSummary_points"
-          }
+          showPreviousRanking={showPreviousRanking}
         />
       ),
-      shouldEnter: caPasseOuCaCashState.stateName.includes("playersRanking"),
-      shouldLeave:
-        caPasseOuCaCashState.questionNumber !== 9
-          ? caPasseOuCaCashState.stateName.includes("quizInfosScreen")
-          : false,
+      shouldEnter: playersRankingEnter,
+      shouldLeave: playersRankingLeave,
     },
     {
       component: (
-        <QuizInfosScreen
+        <QuizItemInfos
           questionNumber={caPasseOuCaCashState.questionNumber}
           quizLevel={caPasseOuCaCashState.quizLevel}
+          theme={nonNullQuizItemData.theme}
+          subTheme={nonNullQuizItemData.subTheme}
+          showThemeSubTheme={showThemeSubTheme}
         />
       ),
-      shouldEnter:
-        caPasseOuCaCashState.stateName.includes("quizInfosScreen") ||
-        caPasseOuCaCashState.stateName === "question",
+      shouldEnter: quizItemInfosEnter,
       shouldLeave: false,
       wavesBackgroundGradient: getQuizLevelGradient({
         quizLevel: caPasseOuCaCashState.quizLevel,
@@ -150,12 +158,6 @@ export const CaPasseOuCaCashContainer: React.FC<CaPasseOuCaCashContainerProps> =
           })}
         </div>
       </div>
-      <CategoryTheme
-        categoryName={nonNullQuizItemData.category.name}
-        categoryColor={getQuizLevelColor({ quizLevel: caPasseOuCaCashState.quizLevel })}
-        theme={nonNullQuizItemData.theme}
-        subTheme={nonNullQuizItemData.subTheme}
-      />
       <TimeBar
         totalTime={EQuizDuration.caPasseOuCaCash}
         remainingTime={remainingTime - 0.5}

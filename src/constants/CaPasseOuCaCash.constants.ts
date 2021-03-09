@@ -12,9 +12,11 @@ export enum ECaPasseOuCaCashStatesBottomScreensStateNames {
 }
 
 export enum ECaPasseOuCaCashStatesTopScreensStatesNames {
-  quizInfosScreen = "quizInfosScreen",
-  quizInfosScreen_fetchQuizItemData = "quizInfosScreen_fetchQuizItemData",
-  quizInfosScreen_checkQuizIsReady = "quizInfosScreen_checkQuizIsReady",
+  stageName = "stageName",
+  quizItemInfos = "quizItemInfos",
+  quizItemInfos_fetchQuizItemData = "quizItemInfos_fetchQuizItemData",
+  quizItemInfos_checkQuizIsReady = "quizItemInfos_checkQuizIsReady",
+  quizItemInfos_showThemeSubTheme = "quizItemInfos_showThemeSubTheme",
   questionSummary = "questionSummary",
   questionSummary_points = "questionSummary_points",
   playersRanking_previous = "playersRanking_previous",

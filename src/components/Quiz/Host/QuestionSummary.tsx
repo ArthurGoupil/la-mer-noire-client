@@ -11,7 +11,7 @@ interface QuestionSummary {
   players: PlayerData[];
   playersAnswers: Record<string, Answer>;
   playersPoints: PlayersPoints;
-  additionalPointsAreVisible: boolean;
+  showAdditionalPoints: boolean;
 }
 
 export const QuestionSummary: React.FC<QuestionSummary> = ({
@@ -19,7 +19,7 @@ export const QuestionSummary: React.FC<QuestionSummary> = ({
   players,
   playersAnswers,
   playersPoints,
-  additionalPointsAreVisible,
+  showAdditionalPoints,
 }): JSX.Element => {
   const playersAnswersRefs = React.useRef(players.map(() => React.createRef<HTMLDivElement>()));
 
@@ -68,9 +68,7 @@ export const QuestionSummary: React.FC<QuestionSummary> = ({
             </div>
             <AdditionalPointsContainer
               width={
-                additionalPointsAreVisible
-                  ? playersAnswersRefs.current[index].current?.clientWidth
-                  : 0
+                showAdditionalPoints ? playersAnswersRefs.current[index].current?.clientWidth : 0
               }
             >
               <AdditionalPoints
