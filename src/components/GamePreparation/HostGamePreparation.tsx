@@ -12,7 +12,7 @@ import { Game } from "models/Game.model";
 import { AnimatedSubmarine } from "components/Utils/AnimatedSubmarine";
 import { useSound } from "hooks/others/useSound.hook";
 import { ESounds } from "constants/Sounds.constants";
-import { isDesktop } from "utils/isDesktop.util";
+import { FullHeightLoader } from "components/Utils/FullHeightLoader";
 
 interface HostGamePreparationProps {
   game: Game;
@@ -23,30 +23,33 @@ export const HostGamePreparation: React.FC<HostGamePreparationProps> = ({ game }
     shortId: game.shortId,
     players: game.players,
   });
-  useSound({
+  const { status } = useSound({
     sound: ESounds.GamePrep,
-    condition: isDesktop(),
+    autoplay: true,
     loop: true,
     fadeOut: true,
     volume: 0.5,
   });
 
-  return (
-    <FullHeightLayout className="d-flex flex-column align-center">
-      <LMNLogo width="400px" margin={`20px 0 20px 0`} />
-      <div className="d-flex flex-column align-center space-around flex-grow">
-        <GameName>{game.name.toUpperCase()}</GameName>
-        <GameCodeBloc gameCode={game.shortId} />
-        {game.players.length > 0 && <PlayersList playersList={game.players} />}
-        <Button
-          disabled={game.players.length < 1}
-          onClick={handleLaunchGameCounter}
-          label={launchGameButtonLabel}
-        />
-      </div>
-      <AnimatedSubmarine />
-    </FullHeightLayout>
-  );
+  return {
+    ready: (
+      <FullHeightLayout className="d-flex flex-column align-center">
+        <LMNLogo width="400px" margin={`20px 0 20px 0`} />
+        <div className="d-flex flex-column align-center space-around flex-grow">
+          <GameName>{game.name.toUpperCase()}</GameName>
+          <GameCodeBloc gameCode={game.shortId} />
+          {game.players.length > 0 && <PlayersList playersList={game.players} />}
+          <Button
+            disabled={game.players.length < 1}
+            onClick={handleLaunchGameCounter}
+            label={launchGameButtonLabel}
+          />
+        </div>
+        <AnimatedSubmarine />
+      </FullHeightLayout>
+    ),
+    loading: <FullHeightLoader />,
+  }[status];
 };
 
 const GameName = styled.h1`

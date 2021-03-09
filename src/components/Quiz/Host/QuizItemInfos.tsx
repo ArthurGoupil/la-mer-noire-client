@@ -49,8 +49,8 @@ export const QuizItemInfos: React.FC<QuizItemInfosProps> = ({
           className="d-flex flex-column align-center justify-center"
         >
           <div>
-            {theme}
-            <SubThemeContainer>{subTheme}</SubThemeContainer>
+            {theme.toUpperCase()}
+            <SubThemeContainer>{subTheme.toUpperCase()}</SubThemeContainer>
           </div>
           <WaveSeparator />
         </ThemeSubThemeContainer>

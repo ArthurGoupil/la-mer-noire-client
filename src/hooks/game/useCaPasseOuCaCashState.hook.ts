@@ -82,7 +82,7 @@ export const useCaPasseOuCaCashState = ({
           updateCaPasseOuCaCashState({
             stateName: "quizItemInfos",
           });
-        }, 5000);
+        }, 8000);
         return () => clearTimeout(stageNameTimeout);
       case "quizItemInfos":
         const quizItemInfosTimeout = setTimeout(() => {

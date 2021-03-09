@@ -21,7 +21,13 @@ export const CreateGameContainer: React.FC = (): JSX.Element => {
   const history = useHistory();
   const noSleep = new NoSleep();
   const [createGame, { loading }] = useMutation(CREATE_GAME);
-  useSound({ sound: ESounds.HomeWater, condition: isDesktop(), loop: true, fadeOut: true });
+  useSound({
+    sound: ESounds.HomeWater,
+    autoplay: true,
+    loop: true,
+    condition: isDesktop(),
+    fadeOut: true,
+  });
 
   const handleSubmit = async ({ name }: HandleSubmitProps) => {
     resetCookies();

@@ -19,6 +19,7 @@ import { QuestionSummary } from "components/Quiz/Host/QuestionSummary";
 import { PlayersRanking } from "components/Quiz/Host/PlayersRanking";
 import { ECaPasseOuCaCashStatesTopScreensStatesNames } from "constants/CaPasseOuCaCash.constants";
 import { getCaPasseOuCaCashStateInterpretation } from "utils/quiz/getCaPasseOuCaCashInterpretation.util";
+import { StageName } from "components/Quiz/Host/StageName";
 
 interface CaPasseOuCaCashContainerProps {
   game: Game;
@@ -74,6 +75,8 @@ export const CaPasseOuCaCashContainer: React.FC<CaPasseOuCaCashContainerProps> =
     playersRankingLeave,
     showThemeSubTheme,
     quizItemInfosEnter,
+    stageNameEnter,
+    stageNameLeave,
   } = getCaPasseOuCaCashStateInterpretation({
     caPasseOuCaCashState,
   });
@@ -91,6 +94,11 @@ export const CaPasseOuCaCashContainer: React.FC<CaPasseOuCaCashContainerProps> =
   }, [game.shortId, generateNewCurrentQuizItem, caPasseOuCaCashState, fetchQuizItemData]);
 
   const topScreens = [
+    {
+      component: <StageName gameStage={game.stage} canPlaySound={stageNameEnter} />,
+      shouldEnter: stageNameEnter,
+      shouldLeave: stageNameLeave,
+    },
     {
       component: (
         <QuestionSummary

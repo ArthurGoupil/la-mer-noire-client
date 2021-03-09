@@ -3,44 +3,65 @@ import { Howl } from "howler";
 
 interface UseSoundProps {
   sound: string;
-  condition: boolean;
+  autoplay: boolean;
   loop: boolean;
   fadeOut: boolean;
+  condition?: boolean;
   volume?: number;
+}
+
+interface UseSoundReturn {
+  play: () => void;
+  status: "loading" | "ready";
 }
 
 export const useSound = ({
   sound,
-  condition,
+  autoplay,
   loop,
   fadeOut,
+  condition = true,
   volume = 0.7,
-}: UseSoundProps): void => {
-  const mainSound = React.useMemo(
+}: UseSoundProps): UseSoundReturn => {
+  const howlSound = React.useMemo(
     () =>
       new Howl({
         src: [sound],
         loop,
-        volume: 0,
+        volume: fadeOut ? 0 : 0.7,
       }),
-    [sound, loop],
+    [sound, loop, fadeOut],
   );
+
+  const [status, setStatus] = React.useState<"loading" | "ready">("loading");
+
+  howlSound.once("load", () => setStatus("ready"));
+  howlSound.once("play", () => {
+    if (status !== "ready") setStatus("ready");
+  });
+  console.log(howlSound);
 
   React.useEffect(() => {
     if (condition) {
-      mainSound.play();
-      mainSound.fade(0, volume, 1000);
+      if (autoplay) {
+        howlSound.play();
+        howlSound.fade(0, volume, 1000);
+      } else {
+        howlSound.load();
+      }
 
       return () => {
         if (fadeOut) {
-          mainSound.fade(volume, 0, 1000);
+          howlSound.fade(volume, 0, 1000);
           setTimeout(() => {
-            mainSound.unload();
+            howlSound.unload();
           }, 1000);
         } else {
-          mainSound.unload();
+          howlSound.unload();
         }
       };
     }
-  }, [mainSound, condition, fadeOut, volume]);
+  }, [howlSound, condition, fadeOut, volume, autoplay]);
+
+  return { play: () => howlSound.play(), status };
 };

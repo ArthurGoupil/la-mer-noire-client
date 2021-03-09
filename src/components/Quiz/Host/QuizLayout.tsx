@@ -4,7 +4,7 @@ import styled from "styled-components";
 import { FullWidthContainer } from "components/Utils/FullWidthContainer";
 import { LMNLogo } from "components/Utils/LMNLogo";
 import { GameName } from "./GameName";
-import { StageName } from "./StageName";
+import { StageNameMini } from "./StageNameMini";
 import { EGameStage } from "constants/GameStage.constants";
 import { useWindowHeight } from "hooks/others/useWindowHeight.hook";
 import { EStyles } from "constants/Styling.constants";
@@ -70,7 +70,7 @@ export const QuizLayout: React.FC<QuizLayoutProps> = ({
               className="d-flex flex-column align-center justify-center"
             >
               {topScreens.map((topScreen, index) => {
-                const { shouldEnter, shouldLeave } = topScreen;
+                const { shouldEnter, shouldLeave, component } = topScreen;
                 const translateX =
                   !shouldEnter && !shouldLeave
                     ? "translateX(-100%)"
@@ -85,7 +85,7 @@ export const QuizLayout: React.FC<QuizLayoutProps> = ({
                     translateX={translateX}
                     className="d-flex justify-center align-center"
                   >
-                    {topScreen.component}
+                    {component}
                   </TopScreen>
                 );
               })}
@@ -100,7 +100,7 @@ export const QuizLayout: React.FC<QuizLayoutProps> = ({
               <GameName gameName={gameName} />
               <EmptyDivForFullScreenIcon />
             </FullWidthContainer>
-            <StageName gameStage={stage} />
+            <StageNameMini gameStage={stage} />
             {children}
           </ChildrenContainer>
         </QuizLayoutContainer>

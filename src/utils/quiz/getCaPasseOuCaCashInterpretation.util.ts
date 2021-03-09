@@ -14,6 +14,8 @@ interface GetCaPasseOuCaCashStateInterpretationReturn {
   playersRankingLeave: boolean;
   showThemeSubTheme: boolean;
   quizItemInfosEnter: boolean;
+  stageNameEnter: boolean;
+  stageNameLeave: boolean;
 }
 
 export const getCaPasseOuCaCashStateInterpretation = ({
@@ -28,12 +30,18 @@ export const getCaPasseOuCaCashStateInterpretation = ({
       caPasseOuCaCashState.stateName === "playersRanking_previous" ||
       caPasseOuCaCashState.stateName === "questionSummary_points",
     playersRankingEnter: caPasseOuCaCashState.stateName.includes("playersRanking"),
-    playersRankingLeave: caPasseOuCaCashState.stateName.includes("quizItemInfos"),
+    playersRankingLeave:
+      caPasseOuCaCashState.stateName.includes("quizItemInfos") &&
+      caPasseOuCaCashState.questionNumber !== 1,
     showThemeSubTheme:
       caPasseOuCaCashState.stateName === "quizItemInfos_showThemeSubTheme" ||
       caPasseOuCaCashState.stateName === "question",
     quizItemInfosEnter:
       caPasseOuCaCashState.stateName.includes("quizItemInfos") ||
       caPasseOuCaCashState.stateName === "question",
+    stageNameEnter: caPasseOuCaCashState.stateName === "stageName",
+    stageNameLeave:
+      caPasseOuCaCashState.stateName.includes("quizItemInfos") &&
+      caPasseOuCaCashState.questionNumber === 1,
   };
 };

@@ -1,24 +1,57 @@
+import { EGameStage } from "constants/GameStage.constants";
+import { ESounds } from "constants/Sounds.constants";
+import { EStyles } from "constants/Styling.constants";
+import { useSound } from "hooks/others/useSound.hook";
 import React from "react";
 import styled from "styled-components";
-
-import { EStyles } from "constants/Styling.constants";
-import { EGameStage } from "constants/GameStage.constants";
 import { getStageName } from "utils/game/getStageName.util";
 
 interface StageNameProps {
   gameStage: EGameStage;
+  canPlaySound: boolean;
 }
 
-export const StageName: React.FC<StageNameProps> = ({ gameStage }): JSX.Element => {
+export const StageName: React.FC<StageNameProps> = ({ gameStage, canPlaySound }): JSX.Element => {
   const stageName = getStageName({ gameStage });
+  const [showStageName, setShowStageName] = React.useState<boolean>(false);
+  const { play, status } = useSound({
+    sound: ESounds.CPOCCJingle,
+    condition: canPlaySound,
+    autoplay: false,
+    loop: false,
+    fadeOut: false,
+  });
 
-  return <Name>{stageName}</Name>;
+  React.useEffect(() => {
+    // let timeout: NodeJS.Timeout;
+    console.log(status);
+    console.log(canPlaySound);
+
+    if (status === "ready" && canPlaySound && !showStageName) {
+      setTimeout(() => {
+        play();
+        setShowStageName(true);
+      }, 2000);
+    }
+    // return () => clearTimeout(timeout);
+  }, [status, play, showStageName, canPlaySound]);
+
+  return (
+    <StageNameContainer
+      transform={showStageName ? "rotate(-7deg) scale(1)" : "rotate(-1080deg) scale(0)"}
+    >
+      {stageName}
+    </StageNameContainer>
+  );
 };
 
-const Name = styled.h2`
-  font-size: 50px;
+const StageNameContainer = styled.h2<{ transform: string }>`
+  font-size: 90px;
+  transform: rotate(-7deg);
   color: ${EStyles.redOrange};
   text-shadow: 2px 2px 0 ${EStyles.yellow};
   text-align: center;
   font-style: italic;
+  transform: ${(props) => props.transform};
+  transition: transform 1.5s;
 `;
