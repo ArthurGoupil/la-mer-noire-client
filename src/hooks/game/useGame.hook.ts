@@ -8,6 +8,8 @@ import {
   CURRENT_QUIZ_ITEM_UPDATED,
 } from "services/games.service";
 import { Game } from "models/Game.model";
+import { useSound } from "hooks/others/useSound.hook";
+import { ESounds } from "constants/Sounds.constants";
 
 interface UseGameProps {
   shortId: string;
@@ -32,6 +34,12 @@ export const useGame = ({
   const { subscribeToMore, data: { game } = {}, networkStatus } = useQuery(GET_GAME, {
     variables: { shortId },
   });
+  const { play } = useSound({
+    sound: ESounds.PlayerAdded,
+    autoplay: false,
+    loop: false,
+    fadeOut: false,
+  });
 
   React.useEffect(() => {
     let unsubscribeStage: () => void;
@@ -54,6 +62,7 @@ export const useGame = ({
         variables: { shortId },
         updateQuery: (prev, { subscriptionData }) => {
           if (!subscriptionData.data) return prev;
+          play();
           const newFeedItem = subscriptionData.data.gamePlayersUpdated;
           return newFeedItem;
         },
@@ -76,7 +85,14 @@ export const useGame = ({
       if (unsubscribePlayers) unsubscribePlayers();
       if (unsubscribeCurrentQuizItem) unsubscribeCurrentQuizItem();
     };
-  }, [subscribeToMore, shortId, subscribe.stage, subscribe.players, subscribe.currentQuizItem]);
+  }, [
+    subscribeToMore,
+    shortId,
+    subscribe.stage,
+    subscribe.players,
+    subscribe.currentQuizItem,
+    play,
+  ]);
 
   return { game, networkStatus };
 };
