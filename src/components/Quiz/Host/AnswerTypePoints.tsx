@@ -67,5 +67,4 @@ const PointsNumber = styled.div<{ color: string }>`
   color: ${(props) => props.color};
   margin-left: 10px;
   padding: 0 12px 2px 10px;
-  text-shadow: 2px 2px 0px ${EStyles.lightBlue};
 `;

@@ -8,7 +8,7 @@ export const WaveSeparator: React.FC = (): JSX.Element => {
 const WaveSeparatorContainer = styled.div`
   width: 202px;
   height: 10px;
-  background-image: url("/icons/wave-pattern.svg");
+  background-image: url("/patterns/wave.svg");
   border-radius: 5px;
   margin: 30px 0;
 `;

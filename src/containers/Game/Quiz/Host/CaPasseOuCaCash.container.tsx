@@ -158,7 +158,7 @@ export const CaPasseOuCaCashContainer: React.FC<CaPasseOuCaCashContainerProps> =
       />
       <TimeBar
         totalTime={EQuizDuration.caPasseOuCaCash}
-        remainingTime={remainingTime - 1}
+        remainingTime={remainingTime - 0.5}
         isOver={game.players.length === Object.keys(playersAnswers).length}
         backgroundGradient={getQuizLevelGradient({
           quizLevel: caPasseOuCaCashState.quizLevel,

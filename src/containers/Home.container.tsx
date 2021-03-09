@@ -10,12 +10,13 @@ import { AnimatedSubmarine } from "components/Utils/AnimatedSubmarine";
 import { useLazyQuery } from "@apollo/client";
 import { GET_GAME } from "services/games.service";
 import { ErrorMessage } from "components/Utils/ErrorMessage";
+import { useWaterSound } from "hooks/sounds/useWaterSound.hook";
 
 export const HomeContainer: React.FC = (): JSX.Element => {
   const history = useHistory();
   const [triggerGetGame, { data, loading, error, called }] = useLazyQuery(GET_GAME);
-
   const noSleep = new NoSleep();
+  useWaterSound();
 
   React.useEffect(() => {
     if (data && !error) {
