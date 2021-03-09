@@ -23,6 +23,7 @@ export const GamePreparationContainer: React.FC<GamePreparationProps> = ({
       stage: true,
       players: true,
     },
+    isHost: userType === "host",
   });
 
   if (userType in EUserType) {

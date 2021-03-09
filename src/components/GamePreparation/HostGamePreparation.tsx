@@ -24,7 +24,7 @@ export const HostGamePreparation: React.FC<HostGamePreparationProps> = ({ game }
     players: game.players,
   });
   const { status } = useSound({
-    sound: ESounds.GamePrep,
+    sound: ESounds.gamePrep,
     autoplay: true,
     loop: true,
     fadeOut: true,

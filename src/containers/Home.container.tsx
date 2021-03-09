@@ -19,7 +19,7 @@ export const HomeContainer: React.FC = (): JSX.Element => {
   const [triggerGetGame, { data, loading, error, called }] = useLazyQuery(GET_GAME);
   const noSleep = new NoSleep();
   useSound({
-    sound: ESounds.HomeWater,
+    sound: ESounds.homeWater,
     autoplay: true,
     loop: true,
     condition: isDesktop(),

@@ -6,12 +6,15 @@ import { getCookie, setCookie } from "utils/cookies.util";
 import { Answer, PlayerData } from "models/Game.model";
 import { ECookieName } from "constants/Cookies.constants";
 import { isValidAnswer } from "utils/quiz/isValidAnswer.util";
+import { useSound } from "hooks/others/useSound.hook";
+import { ESounds } from "constants/Sounds.constants";
 
 interface UsePlayersAnswersProps {
   shortId: string;
   quizItemSignature: string;
   players: PlayerData[];
   quizAnswer: string;
+  playerId?: string;
 }
 
 interface UsePlayersAnswersReturn {
@@ -24,9 +27,23 @@ export const usePlayersAnswers = ({
   quizItemSignature,
   players,
   quizAnswer,
+  playerId,
 }: UsePlayersAnswersProps): UsePlayersAnswersReturn => {
   const { data: { playerAnswered } = {} } = useSubscription(PLAYER_ANSWERED, {
     variables: { shortId },
+  });
+
+  const { play: playFirstCash } = useSound({
+    sound: ESounds.firstCash,
+    autoplay: false,
+    loop: false,
+    fadeOut: false,
+  });
+  const { play: playCash } = useSound({
+    sound: ESounds.cash,
+    autoplay: false,
+    loop: false,
+    fadeOut: false,
   });
 
   const [playersAnswers, setPlayersAnswers] = React.useState<Record<string, Answer>>(
@@ -59,9 +76,8 @@ export const usePlayersAnswers = ({
       !playersAnswers[playerAnswered?.playerId] &&
       Object.keys(playersAnswers).length !== players.length
     ) {
-      const playerId = playerAnswered.playerId;
       if (
-        playersAnswers[playerId]?.quizItemSignature !== quizItemSignature &&
+        playersAnswers[playerAnswered.playerId]?.quizItemSignature !== quizItemSignature &&
         playerAnswered?.quizItemSignature === quizItemSignature
       ) {
         const isGoodAnswer = isValidAnswer({
@@ -85,7 +101,7 @@ export const usePlayersAnswers = ({
           isFirstGoodCash = false;
         }
 
-        playersAnswers[playerId] = {
+        playersAnswers[playerAnswered.playerId] = {
           quizItemSignature,
           answer: playerAnswered.answer,
           answerType: playerAnswered.answerType,
@@ -96,6 +112,18 @@ export const usePlayersAnswers = ({
           }),
           isFirstGoodCash,
         };
+
+        if (
+          playerId &&
+          playerId === playerAnswered.playerId &&
+          playersAnswers[playerId].isGoodAnswer
+        ) {
+          if (isFirstGoodCash) {
+            playFirstCash();
+          } else if (playersAnswers[playerId].answerType === "cash") {
+            playCash();
+          }
+        }
       }
 
       if (

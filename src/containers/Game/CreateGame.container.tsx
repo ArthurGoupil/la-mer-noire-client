@@ -22,7 +22,7 @@ export const CreateGameContainer: React.FC = (): JSX.Element => {
   const noSleep = new NoSleep();
   const [createGame, { loading }] = useMutation(CREATE_GAME);
   useSound({
-    sound: ESounds.HomeWater,
+    sound: ESounds.homeWater,
     autoplay: true,
     loop: true,
     condition: isDesktop(),

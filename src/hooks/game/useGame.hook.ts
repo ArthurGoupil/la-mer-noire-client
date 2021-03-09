@@ -14,6 +14,7 @@ import { ESounds } from "constants/Sounds.constants";
 interface UseGameProps {
   shortId: string;
   subscribe?: Subscription;
+  isHost?: boolean;
 }
 
 interface Subscription {
@@ -30,12 +31,13 @@ interface UseGameReturn {
 export const useGame = ({
   shortId,
   subscribe = { stage: false, players: false, currentQuizItem: false },
+  isHost = false,
 }: UseGameProps): UseGameReturn => {
   const { subscribeToMore, data: { game } = {}, networkStatus } = useQuery(GET_GAME, {
     variables: { shortId },
   });
-  const { play } = useSound({
-    sound: ESounds.PlayerAdded,
+  const { play: playerAddedPlay } = useSound({
+    sound: ESounds.playerAdded,
     autoplay: false,
     loop: false,
     fadeOut: false,
@@ -62,7 +64,9 @@ export const useGame = ({
         variables: { shortId },
         updateQuery: (prev, { subscriptionData }) => {
           if (!subscriptionData.data) return prev;
-          play();
+          if (isHost) {
+            playerAddedPlay();
+          }
           const newFeedItem = subscriptionData.data.gamePlayersUpdated;
           return newFeedItem;
         },
@@ -91,7 +95,8 @@ export const useGame = ({
     subscribe.stage,
     subscribe.players,
     subscribe.currentQuizItem,
-    play,
+    playerAddedPlay,
+    isHost,
   ]);
 
   return { game, networkStatus };

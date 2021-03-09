@@ -1,6 +1,8 @@
 export enum ESounds {
-  HomeWater = "/sounds/Home-water.mp3",
-  GamePrep = "/sounds/GamePrep.mp3",
+  homeWater = "/sounds/Home-water.mp3",
+  gamePrep = "/sounds/GamePrep.mp3",
   CPOCCJingle = "/sounds/CaPasseOuCaCash.mp3",
-  PlayerAdded = "/sounds/PlayerAdded.mp3",
+  playerAdded = "/sounds/PlayerAdded.mp3",
+  firstCash = "/sounds/FirstCash.mp3",
+  cash = "/sounds/Cash.mp3",
 }
