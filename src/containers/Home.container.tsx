@@ -10,13 +10,15 @@ import { AnimatedSubmarine } from "components/Utils/AnimatedSubmarine";
 import { useLazyQuery } from "@apollo/client";
 import { GET_GAME } from "services/games.service";
 import { ErrorMessage } from "components/Utils/ErrorMessage";
-import { useWaterSound } from "hooks/sounds/useWaterSound.hook";
+import { useSound } from "hooks/others/useSound.hook";
+import { ESounds } from "constants/Sounds.constants";
+import { isDesktop } from "utils/isDesktop.util";
 
 export const HomeContainer: React.FC = (): JSX.Element => {
   const history = useHistory();
   const [triggerGetGame, { data, loading, error, called }] = useLazyQuery(GET_GAME);
   const noSleep = new NoSleep();
-  useWaterSound();
+  useSound({ sound: ESounds.HomeWater, condition: isDesktop(), loop: true, fadeOut: true });
 
   React.useEffect(() => {
     if (data && !error) {

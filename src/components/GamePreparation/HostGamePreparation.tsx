@@ -10,6 +10,9 @@ import { useLaunchGame } from "hooks/game/useLaunchGame.hook";
 import { Button } from "components/Utils/Button";
 import { Game } from "models/Game.model";
 import { AnimatedSubmarine } from "components/Utils/AnimatedSubmarine";
+import { useSound } from "hooks/others/useSound.hook";
+import { ESounds } from "constants/Sounds.constants";
+import { isDesktop } from "utils/isDesktop.util";
 
 interface HostGamePreparationProps {
   game: Game;
@@ -19,6 +22,13 @@ export const HostGamePreparation: React.FC<HostGamePreparationProps> = ({ game }
   const { handleLaunchGameCounter, launchGameButtonLabel } = useLaunchGame({
     shortId: game.shortId,
     players: game.players,
+  });
+  useSound({
+    sound: ESounds.GamePrep,
+    condition: isDesktop(),
+    loop: true,
+    fadeOut: true,
+    volume: 0.5,
   });
 
   return (

@@ -9,7 +9,9 @@ import { LMNLogo } from "components/Utils/LMNLogo";
 import { CREATE_GAME } from "services/games.service";
 import { AnimatedSubmarine } from "components/Utils/AnimatedSubmarine";
 import { resetCookies } from "utils/cookies.util";
-import { useWaterSound } from "hooks/sounds/useWaterSound.hook";
+import { useSound } from "hooks/others/useSound.hook";
+import { isDesktop } from "utils/isDesktop.util";
+import { ESounds } from "constants/Sounds.constants";
 
 interface HandleSubmitProps {
   name: string;
@@ -19,7 +21,7 @@ export const CreateGameContainer: React.FC = (): JSX.Element => {
   const history = useHistory();
   const noSleep = new NoSleep();
   const [createGame, { loading }] = useMutation(CREATE_GAME);
-  useWaterSound();
+  useSound({ sound: ESounds.HomeWater, condition: isDesktop(), loop: true, fadeOut: true });
 
   const handleSubmit = async ({ name }: HandleSubmitProps) => {
     resetCookies();
