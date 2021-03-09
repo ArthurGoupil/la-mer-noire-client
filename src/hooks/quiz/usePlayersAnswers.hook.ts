@@ -140,7 +140,17 @@ export const usePlayersAnswers = ({
         cookieValue: playersAnswers,
       });
     }
-  }, [playerAnswered, quizItemSignature, players, shortId, playersAnswers, quizAnswer]);
+  }, [
+    playerAnswered,
+    quizItemSignature,
+    players,
+    shortId,
+    playersAnswers,
+    quizAnswer,
+    playerId,
+    playFirstCash,
+    playCash,
+  ]);
 
   return { playersAnswers, allPlayersHaveAnswered };
 };
