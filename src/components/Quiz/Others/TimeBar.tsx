@@ -46,7 +46,10 @@ export const TimeBar: React.FC<TimeBarProps> = ({
     }
 
     return () => {
-      clearTimeout(timeout);
+      if (isOver) {
+        setSoundTimeoutHasBeenLaunched(false);
+        clearTimeout(timeout);
+      }
     };
   }, [play, remainingTime, soundTimeoutHasBeenLaunched, isOver]);
 

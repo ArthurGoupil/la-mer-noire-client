@@ -40,10 +40,10 @@ export const DuoCarreCashAnswerContainer: React.FC<DuoCarreCashAnswerContainerPr
 
   const { allPlayersHaveAnswered } = usePlayersAnswers({
     shortId: game.shortId,
-    quizItemSignature: nonNullQuizItemData.quizItemSignature,
+    quizItemSignature: quizItemData?.quizItemSignature,
     players: game.players,
     quizAnswer: nonNullQuizItemData.quiz.answer,
-    playerId
+    playerId,
   });
 
   const { questionsRecord } = useQuizLifetime({
