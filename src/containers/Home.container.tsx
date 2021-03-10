@@ -24,6 +24,7 @@ export const HomeContainer: React.FC = (): JSX.Element => {
     loop: true,
     condition: isDesktop(),
     fadeOut: true,
+    volume: 0.7,
   });
 
   React.useEffect(() => {
@@ -42,9 +43,11 @@ export const HomeContainer: React.FC = (): JSX.Element => {
         }}
         buttonLabel="Rejoindre la partie"
         inputWidth={130}
+        fontSize={25}
         margin={`0 0 15px 0`}
         placeholder="52E5E"
         isLoading={loading}
+        valueMaxLength={5}
       />
       <CreateGameWrapper>
         <Link to="/create">Créer une partie</Link>

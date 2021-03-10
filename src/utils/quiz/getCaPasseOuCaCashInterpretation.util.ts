@@ -15,6 +15,7 @@ interface GetCaPasseOuCaCashStateInterpretationReturn {
   showThemeSubTheme: boolean;
   quizItemInfosEnter: boolean;
   stageNameEnter: boolean;
+  stageNameCanPlay: boolean;
   stageNameLeave: boolean;
 }
 
@@ -39,7 +40,8 @@ export const getCaPasseOuCaCashStateInterpretation = ({
     quizItemInfosEnter:
       caPasseOuCaCashState.stateName.includes("quizItemInfos") ||
       caPasseOuCaCashState.stateName === "question",
-    stageNameEnter: caPasseOuCaCashState.stateName === "stageName",
+    stageNameEnter: caPasseOuCaCashState.stateName.includes("stageName"),
+    stageNameCanPlay: caPasseOuCaCashState.stateName === "stageName",
     stageNameLeave:
       caPasseOuCaCashState.stateName.includes("quizItemInfos") &&
       caPasseOuCaCashState.questionNumber === 1,

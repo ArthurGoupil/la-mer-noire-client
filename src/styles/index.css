@@ -16,6 +16,8 @@ button {
 
 input,
 textarea {
+  font-family: "Boogaloo", cursive;
+  text-transform: uppercase;
   color: #0d3b66;
 }
 

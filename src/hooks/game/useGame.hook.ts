@@ -36,12 +36,7 @@ export const useGame = ({
   const { subscribeToMore, data: { game } = {}, networkStatus } = useQuery(GET_GAME, {
     variables: { shortId },
   });
-  const { play: playerAddedPlay } = useSound({
-    sound: ESounds.playerAdded,
-    autoplay: false,
-    loop: false,
-    fadeOut: false,
-  });
+  const { play: playerAddedPlay } = useSound({ sound: ESounds.playerAdded });
 
   React.useEffect(() => {
     let unsubscribeStage: () => void;

@@ -14,26 +14,13 @@ interface StageNameProps {
 export const StageName: React.FC<StageNameProps> = ({ gameStage, canPlaySound }): JSX.Element => {
   const stageName = getStageName({ gameStage });
   const [showStageName, setShowStageName] = React.useState<boolean>(false);
-  const { play, status } = useSound({
-    sound: ESounds.CPOCCJingle,
-    condition: canPlaySound,
-    autoplay: false,
-    loop: false,
-    fadeOut: false,
-  });
+  const { play, status } = useSound({ sound: ESounds.CPOCCJingle, condition: canPlaySound });
 
   React.useEffect(() => {
-    // let timeout: NodeJS.Timeout;
-    console.log(status);
-    console.log(canPlaySound);
-
     if (status === "ready" && canPlaySound && !showStageName) {
-      setTimeout(() => {
-        play();
-        setShowStageName(true);
-      }, 2000);
+      play();
+      setShowStageName(true);
     }
-    // return () => clearTimeout(timeout);
   }, [status, play, showStageName, canPlaySound]);
 
   return (

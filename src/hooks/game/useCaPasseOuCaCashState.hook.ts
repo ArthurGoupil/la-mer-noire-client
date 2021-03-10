@@ -77,12 +77,19 @@ export const useCaPasseOuCaCashState = ({
     };
 
     switch (caPasseOuCaCashState.stateName) {
+      case "stageName_wait":
+        const stageNameWaitTimeout = setTimeout(() => {
+          updateCaPasseOuCaCashState({
+            stateName: "stageName",
+          });
+        }, 2000);
+        return () => clearTimeout(stageNameWaitTimeout);
       case "stageName":
         const stageNameTimeout = setTimeout(() => {
           updateCaPasseOuCaCashState({
             stateName: "quizItemInfos",
           });
-        }, 8000);
+        }, 6000);
         return () => clearTimeout(stageNameTimeout);
       case "quizItemInfos":
         const quizItemInfosTimeout = setTimeout(() => {

@@ -76,6 +76,7 @@ export const CaPasseOuCaCashContainer: React.FC<CaPasseOuCaCashContainerProps> =
     showThemeSubTheme,
     quizItemInfosEnter,
     stageNameEnter,
+    stageNameCanPlay,
     stageNameLeave,
   } = getCaPasseOuCaCashStateInterpretation({
     caPasseOuCaCashState,
@@ -95,7 +96,7 @@ export const CaPasseOuCaCashContainer: React.FC<CaPasseOuCaCashContainerProps> =
 
   const topScreens = [
     {
-      component: <StageName gameStage={game.stage} canPlaySound={stageNameEnter} />,
+      component: <StageName gameStage={game.stage} canPlaySound={stageNameCanPlay} />,
       shouldEnter: stageNameEnter,
       shouldLeave: stageNameLeave,
     },

@@ -33,18 +33,11 @@ export const usePlayersAnswers = ({
     variables: { shortId },
   });
 
-  const { play: playFirstCash } = useSound({
-    sound: ESounds.firstCash,
-    autoplay: false,
-    loop: false,
-    fadeOut: false,
-  });
-  const { play: playCash } = useSound({
-    sound: ESounds.cash,
-    autoplay: false,
-    loop: false,
-    fadeOut: false,
-  });
+  const { play: playFirstCash } = useSound({ sound: ESounds.firstCash });
+  const { play: playCash } = useSound({ sound: ESounds.cash });
+  const { play: playCarre } = useSound({ sound: ESounds.carre });
+  const { play: playDuo } = useSound({ sound: ESounds.duo });
+  const { play: playWrong } = useSound({ sound: ESounds.wrong });
 
   const [playersAnswers, setPlayersAnswers] = React.useState<Record<string, Answer>>(
     getCookie({
@@ -113,15 +106,19 @@ export const usePlayersAnswers = ({
           isFirstGoodCash,
         };
 
-        if (
-          playerId &&
-          playerId === playerAnswered.playerId &&
-          playersAnswers[playerId].isGoodAnswer
-        ) {
-          if (isFirstGoodCash) {
-            playFirstCash();
-          } else if (playersAnswers[playerId].answerType === "cash") {
-            playCash();
+        if (playerId && playerId === playerAnswered.playerId) {
+          if (playersAnswers[playerId].isGoodAnswer) {
+            if (isFirstGoodCash) {
+              playFirstCash();
+            } else if (playersAnswers[playerId].answerType === "cash") {
+              playCash();
+            } else if (playersAnswers[playerId].answerType === "carre") {
+              playCarre();
+            } else if (playersAnswers[playerId].answerType === "duo") {
+              playDuo();
+            }
+          } else {
+            playWrong();
           }
         }
       }
@@ -150,6 +147,9 @@ export const usePlayersAnswers = ({
     playerId,
     playFirstCash,
     playCash,
+    playCarre,
+    playDuo,
+    playWrong,
   ]);
 
   return { playersAnswers, allPlayersHaveAnswered };

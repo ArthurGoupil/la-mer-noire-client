@@ -27,6 +27,7 @@ export const CreateGameContainer: React.FC = (): JSX.Element => {
     loop: true,
     condition: isDesktop(),
     fadeOut: true,
+    volume: 0.7,
   });
 
   const handleSubmit = async ({ name }: HandleSubmitProps) => {

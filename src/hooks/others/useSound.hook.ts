@@ -3,9 +3,9 @@ import { Howl } from "howler";
 
 interface UseSoundProps {
   sound: string;
-  autoplay: boolean;
-  loop: boolean;
-  fadeOut: boolean;
+  autoplay?: boolean;
+  loop?: boolean;
+  fadeOut?: boolean;
   condition?: boolean;
   volume?: number;
 }
@@ -17,20 +17,20 @@ interface UseSoundReturn {
 
 export const useSound = ({
   sound,
-  autoplay,
-  loop,
-  fadeOut,
+  autoplay = false,
+  loop = false,
+  fadeOut = false,
   condition = true,
-  volume = 0.7,
+  volume = 1,
 }: UseSoundProps): UseSoundReturn => {
   const howlSound = React.useMemo(
     () =>
       new Howl({
         src: [sound],
         loop,
-        volume: fadeOut ? 0 : 0.7,
+        volume: fadeOut ? 0 : volume,
       }),
-    [sound, loop, fadeOut],
+    [sound, loop, fadeOut, volume],
   );
 
   const [status, setStatus] = React.useState<"loading" | "ready">("loading");
@@ -39,7 +39,6 @@ export const useSound = ({
   howlSound.once("play", () => {
     if (status !== "ready") setStatus("ready");
   });
-  console.log(howlSound);
 
   React.useEffect(() => {
     if (condition) {
@@ -53,9 +52,6 @@ export const useSound = ({
       return () => {
         if (fadeOut) {
           howlSound.fade(volume, 0, 1000);
-          setTimeout(() => {
-            howlSound.unload();
-          }, 1000);
         } else {
           howlSound.unload();
         }

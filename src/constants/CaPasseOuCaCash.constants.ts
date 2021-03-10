@@ -12,6 +12,7 @@ export enum ECaPasseOuCaCashStatesBottomScreensStateNames {
 }
 
 export enum ECaPasseOuCaCashStatesTopScreensStatesNames {
+  stageName_wait = "stageName_wait",
   stageName = "stageName",
   quizItemInfos = "quizItemInfos",
   quizItemInfos_fetchQuizItemData = "quizItemInfos_fetchQuizItemData",

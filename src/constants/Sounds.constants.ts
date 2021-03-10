@@ -5,4 +5,7 @@ export enum ESounds {
   playerAdded = "/sounds/PlayerAdded.mp3",
   firstCash = "/sounds/FirstCash.mp3",
   cash = "/sounds/Cash.mp3",
+  carre = "/sounds/Carre.mp3",
+  duo = "/sounds/Duo.mp3",
+  wrong = "/sounds/Wrong.mp3",
 }

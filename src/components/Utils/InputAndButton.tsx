@@ -8,6 +8,7 @@ interface InputAndButtonProps {
   handleSubmit: (value: string) => void;
   buttonLabel: string;
   inputWidth?: number;
+  fontSize?: number;
   margin?: string;
   placeholder?: string;
   valueMaxLength?: number;
@@ -18,6 +19,7 @@ export const InputAndButton: React.FC<InputAndButtonProps> = ({
   handleSubmit,
   buttonLabel,
   inputWidth = 250,
+  fontSize = 18,
   margin = "0",
   placeholder = "",
   valueMaxLength = 50,
@@ -44,6 +46,7 @@ export const InputAndButton: React.FC<InputAndButtonProps> = ({
           }
         }}
         inputWidth={inputWidth}
+        fontSize={fontSize}
         className="d-flex"
         placeholder={placeholder}
       />
@@ -68,8 +71,9 @@ const Form = styled.form<{ margin: string }>`
   }
 `;
 
-const Input = styled.input<{ inputWidth: number }>`
+const Input = styled.input<{ inputWidth: number; fontSize: number }>`
   width: ${(props) => props.inputWidth}px;
+  font-size: ${(props) => props.fontSize}px;
   text-align: center;
   padding: 10px;
   border-radius: 100px;
