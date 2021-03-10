@@ -9,6 +9,7 @@ interface InputAndButtonProps {
   buttonLabel: string;
   inputWidth?: number;
   fontSize?: number;
+  padding?: number;
   margin?: string;
   placeholder?: string;
   valueMaxLength?: number;
@@ -20,6 +21,7 @@ export const InputAndButton: React.FC<InputAndButtonProps> = ({
   buttonLabel,
   inputWidth = 250,
   fontSize = 18,
+  padding = 10,
   margin = "0",
   placeholder = "",
   valueMaxLength = 50,
@@ -47,6 +49,7 @@ export const InputAndButton: React.FC<InputAndButtonProps> = ({
         }}
         inputWidth={inputWidth}
         fontSize={fontSize}
+        padding={padding}
         className="d-flex"
         placeholder={placeholder}
       />
@@ -71,11 +74,11 @@ const Form = styled.form<{ margin: string }>`
   }
 `;
 
-const Input = styled.input<{ inputWidth: number; fontSize: number }>`
+const Input = styled.input<{ inputWidth: number; fontSize: number; padding: number }>`
   width: ${(props) => props.inputWidth}px;
   font-size: ${(props) => props.fontSize}px;
   text-align: center;
-  padding: 10px;
+  padding: ${(props) => props.padding}px;
   border-radius: 100px;
   border: 5px solid ${EStyles.lightBlue};
   outline: none;

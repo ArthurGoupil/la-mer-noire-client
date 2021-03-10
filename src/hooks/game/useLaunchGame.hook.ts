@@ -6,6 +6,8 @@ import { EGameStage } from "constants/GameStage.constants";
 import { setCookie } from "utils/cookies.util";
 import { ECookieName } from "constants/Cookies.constants";
 import { CaPasseOuCaCashState, PlayerData, PlayersPoints } from "models/Game.model";
+import { useSound } from "hooks/others/useSound.hook";
+import { ESounds } from "constants/Sounds.constants";
 
 interface useLaunchGameProps {
   shortId: string;
@@ -20,12 +22,14 @@ interface UseLaunchGameReturn {
 export const useLaunchGame = ({ shortId, players }: useLaunchGameProps): UseLaunchGameReturn => {
   const [launchCounter, setLaunchCounter] = React.useState<number | null>(null);
   const [updateGameStage] = useMutation(UPDATE_GAME_STAGE);
+  const { play, stop } = useSound({ sound: ESounds.gameStart, volume: 0.4 });
 
   const handleLaunchGameCounter = () => {
     if (!launchCounter) {
       setLaunchCounter(5);
     } else {
       setLaunchCounter(null);
+      stop();
     }
   };
 
@@ -49,6 +53,9 @@ export const useLaunchGame = ({ shortId, players }: useLaunchGameProps): UseLaun
     };
 
     let timeout: NodeJS.Timeout;
+    if (launchCounter === 4) {
+      play();
+    }
     if (launchCounter && launchCounter > 0) {
       timeout = setTimeout(() => {
         setLaunchCounter(launchCounter - 1);
@@ -57,8 +64,10 @@ export const useLaunchGame = ({ shortId, players }: useLaunchGameProps): UseLaun
       (async () => await launchGame())();
     }
 
-    return () => clearTimeout(timeout);
-  }, [launchCounter, shortId, players, updateGameStage]);
+    return () => {
+      clearTimeout(timeout);
+    };
+  }, [launchCounter, shortId, players, updateGameStage, play]);
 
   return {
     handleLaunchGameCounter,

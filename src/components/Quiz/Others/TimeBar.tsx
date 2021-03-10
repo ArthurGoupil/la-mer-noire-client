@@ -2,6 +2,8 @@ import React from "react";
 import styled from "styled-components";
 
 import { EStyles } from "constants/Styling.constants";
+import { useSound } from "hooks/others/useSound.hook";
+import { ESounds } from "constants/Sounds.constants";
 
 interface TimeBarProps {
   totalTime: number;
@@ -16,15 +18,37 @@ export const TimeBar: React.FC<TimeBarProps> = ({
   isOver,
   backgroundGradient,
 }): JSX.Element => {
+  const { play } = useSound({ sound: ESounds.quizOver });
   const initialWidth = 100 - (100 * remainingTime) / totalTime + "%";
   const barContainerRef = React.useRef<HTMLDivElement>(null);
   const barRef = React.useRef<HTMLDivElement>(null);
 
   const [barCurrentWidth, setBarCurrentWidth] = React.useState<number>();
+  const [soundTimeoutHasBeenLaunched, setSoundTimeoutHasBeenLaunched] = React.useState<boolean>(
+    false,
+  );
 
   React.useEffect(() => {
-    if (barRef.current?.clientWidth) setBarCurrentWidth(barRef.current?.clientWidth);
+    if (barRef.current?.clientWidth) {
+      setBarCurrentWidth(barRef.current?.clientWidth);
+    }
   }, []);
+
+  React.useEffect(() => {
+    let timeout: NodeJS.Timeout;
+    if (remainingTime > 5 && !soundTimeoutHasBeenLaunched) {
+      setSoundTimeoutHasBeenLaunched(true);
+      timeout = setTimeout(() => {
+        if (!isOver) {
+          play();
+        }
+      }, remainingTime * 1000 - 4000);
+    }
+
+    return () => {
+      clearTimeout(timeout);
+    };
+  }, [play, remainingTime, soundTimeoutHasBeenLaunched, isOver]);
 
   return (
     <BarContainer ref={barContainerRef} className="d-flex justify-start">

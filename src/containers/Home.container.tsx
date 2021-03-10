@@ -44,6 +44,7 @@ export const HomeContainer: React.FC = (): JSX.Element => {
         buttonLabel="Rejoindre la partie"
         inputWidth={130}
         fontSize={25}
+        padding={8}
         margin={`0 0 15px 0`}
         placeholder="52E5E"
         isLoading={loading}

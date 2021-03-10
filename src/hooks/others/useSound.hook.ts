@@ -12,6 +12,8 @@ interface UseSoundProps {
 
 interface UseSoundReturn {
   play: () => void;
+  stop: () => void;
+  isPlaying: boolean;
   status: "loading" | "ready";
 }
 
@@ -59,5 +61,10 @@ export const useSound = ({
     }
   }, [howlSound, condition, fadeOut, volume, autoplay]);
 
-  return { play: () => howlSound.play(), status };
+  return {
+    play: () => howlSound.play(),
+    stop: () => howlSound.stop(),
+    isPlaying: howlSound.playing(),
+    status,
+  };
 };

@@ -14,7 +14,11 @@ interface StageNameProps {
 export const StageName: React.FC<StageNameProps> = ({ gameStage, canPlaySound }): JSX.Element => {
   const stageName = getStageName({ gameStage });
   const [showStageName, setShowStageName] = React.useState<boolean>(false);
-  const { play, status } = useSound({ sound: ESounds.CPOCCJingle, condition: canPlaySound });
+  const { play, status } = useSound({
+    sound: ESounds.CPOCCJingle,
+    condition: canPlaySound,
+    volume: 0.8,
+  });
 
   React.useEffect(() => {
     if (status === "ready" && canPlaySound && !showStageName) {
