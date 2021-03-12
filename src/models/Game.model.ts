@@ -1,6 +1,6 @@
 import {
-  ECaPasseOuCaCashStatesBottomScreensStateNames,
-  ECaPasseOuCaCashStatesTopScreensStatesNames,
+  ECaPasseOuCaCashBottomScreensStates,
+  ECaPasseOuCaCashTopScreensStates,
 } from "constants/CaPasseOuCaCash.constants";
 import { EGameStage } from "constants/GameStage.constants";
 import { Player } from "models/Player.model";
@@ -55,10 +55,10 @@ export interface AnswerTypeChoice {
 export type PlayerPoints = { previous: number; current: number };
 export type PlayersPoints = Record<string, PlayerPoints>;
 
-export interface CaPasseOuCaCashState {
-  stateName:
-    | keyof typeof ECaPasseOuCaCashStatesBottomScreensStateNames
-    | keyof typeof ECaPasseOuCaCashStatesTopScreensStatesNames;
+export interface CaPasseOuCaCashMaster {
+  state:
+    | keyof typeof ECaPasseOuCaCashBottomScreensStates
+    | keyof typeof ECaPasseOuCaCashTopScreensStates;
   quizLevel: QuizLevel;
   questionNumber: QuestionNumber;
   playersPoints: PlayersPoints;

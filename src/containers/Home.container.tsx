@@ -23,7 +23,6 @@ export const HomeContainer: React.FC = (): JSX.Element => {
     autoplay: true,
     loop: true,
     condition: isDesktop(),
-    fadeOut: true,
     volume: 0.7,
   });
 

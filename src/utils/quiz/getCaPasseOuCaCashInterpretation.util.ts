@@ -1,49 +1,62 @@
-import { CaPasseOuCaCashState } from "models/Game.model";
+import { CaPasseOuCaCashMaster } from "models/Game.model";
 
-interface GetCaPasseOuCaCashStateInterpretationProps {
-  caPasseOuCaCashState: CaPasseOuCaCashState;
+interface GetCaPasseOuCaCashMasterInterpretationProps {
+  caPasseOuCaCashMaster: CaPasseOuCaCashMaster;
 }
 
-interface GetCaPasseOuCaCashStateInterpretationReturn {
-  fetchQuizItemData: boolean;
-  showAdditionalPoints: boolean;
-  questionSummaryEnter: boolean;
-  questionSummaryLeave: boolean;
-  showPreviousRanking: boolean;
-  playersRankingEnter: boolean;
-  playersRankingLeave: boolean;
-  showThemeSubTheme: boolean;
-  quizItemInfosEnter: boolean;
+interface GetCaPasseOuCaCashMasterInterpretationReturn {
   stageNameEnter: boolean;
   stageNameCanPlay: boolean;
   stageNameLeave: boolean;
+
+  quizItemInfosEnter: boolean;
+  showThemeSubTheme: boolean;
+
+  fetchQuizItemData: boolean;
+
+  clearQuestionOverSound: boolean;
+
+  questionSummaryEnter: boolean;
+  questionSummaryLeave: boolean;
+  showAdditionalPoints: boolean;
+
+  showPreviousRanking: boolean;
+  playersRankingEnter: boolean;
+  playersRankingLeave: boolean;
 }
 
-export const getCaPasseOuCaCashStateInterpretation = ({
-  caPasseOuCaCashState,
-}: GetCaPasseOuCaCashStateInterpretationProps): GetCaPasseOuCaCashStateInterpretationReturn => {
+export const getCaPasseOuCaCashMasterInterpretation = ({
+  caPasseOuCaCashMaster,
+}: GetCaPasseOuCaCashMasterInterpretationProps): GetCaPasseOuCaCashMasterInterpretationReturn => {
   return {
-    fetchQuizItemData: caPasseOuCaCashState.stateName === "quizItemInfos_fetchQuizItemData",
-    showAdditionalPoints: caPasseOuCaCashState.stateName === "questionSummary_points",
-    questionSummaryEnter: caPasseOuCaCashState.stateName.includes("questionSummary"),
-    questionSummaryLeave: caPasseOuCaCashState.stateName.includes("playersRanking"),
-    showPreviousRanking:
-      caPasseOuCaCashState.stateName === "playersRanking_previous" ||
-      caPasseOuCaCashState.stateName === "questionSummary_points",
-    playersRankingEnter: caPasseOuCaCashState.stateName.includes("playersRanking"),
-    playersRankingLeave:
-      caPasseOuCaCashState.stateName.includes("quizItemInfos") &&
-      caPasseOuCaCashState.questionNumber !== 1,
-    showThemeSubTheme:
-      caPasseOuCaCashState.stateName === "quizItemInfos_showThemeSubTheme" ||
-      caPasseOuCaCashState.stateName === "question",
-    quizItemInfosEnter:
-      caPasseOuCaCashState.stateName.includes("quizItemInfos") ||
-      caPasseOuCaCashState.stateName === "question",
-    stageNameEnter: caPasseOuCaCashState.stateName.includes("stageName"),
-    stageNameCanPlay: caPasseOuCaCashState.stateName === "stageName",
+    stageNameEnter: caPasseOuCaCashMaster.state.includes("stageName"),
+    stageNameCanPlay: caPasseOuCaCashMaster.state === "stageName",
     stageNameLeave:
-      caPasseOuCaCashState.stateName.includes("quizItemInfos") &&
-      caPasseOuCaCashState.questionNumber === 1,
+      caPasseOuCaCashMaster.state.includes("quizItemInfos") &&
+      caPasseOuCaCashMaster.questionNumber === 1,
+
+    quizItemInfosEnter:
+      caPasseOuCaCashMaster.state.includes("quizItemInfos") ||
+      caPasseOuCaCashMaster.state === "question" ||
+      caPasseOuCaCashMaster.state === "question_fetchTimestamp",
+    showThemeSubTheme:
+      caPasseOuCaCashMaster.state === "quizItemInfos_showThemeSubTheme" ||
+      caPasseOuCaCashMaster.state === "question",
+
+    fetchQuizItemData: caPasseOuCaCashMaster.state === "quizItemInfos_fetchQuizItemData",
+
+    clearQuestionOverSound: caPasseOuCaCashMaster.state === "questionMustTimeout",
+
+    questionSummaryEnter: caPasseOuCaCashMaster.state.includes("questionSummary"),
+    questionSummaryLeave: caPasseOuCaCashMaster.state.includes("playersRanking"),
+    showAdditionalPoints: caPasseOuCaCashMaster.state === "questionSummary_points",
+
+    showPreviousRanking:
+      caPasseOuCaCashMaster.state === "playersRanking_previous" ||
+      caPasseOuCaCashMaster.state === "questionSummary_points",
+    playersRankingEnter: caPasseOuCaCashMaster.state.includes("playersRanking"),
+    playersRankingLeave:
+      caPasseOuCaCashMaster.state.includes("quizItemInfos") &&
+      caPasseOuCaCashMaster.questionNumber !== 1,
   };
 };

@@ -40,21 +40,21 @@ export const QuizItemInfos: React.FC<QuizItemInfosProps> = ({
         NIVEAU <QuestionLevel color={levelColor}>{quizLevelString}</QuestionLevel>
       </QuestionLevelContainer>
       <WaveSeparator />
-      <ThemeSubThemeWrapper
+      <ThemeSubThemeWaveWrapper
         height={showThemeSubTheme ? themeSubThemeRef.current?.clientHeight || 0 : 0}
       >
-        <ThemeSubThemeContainer
+        <ThemeSubThemeWaveContainer
           ref={themeSubThemeRef}
           color={levelColor}
           className="d-flex flex-column align-center justify-center"
         >
-          <div>
+          <ThemeSubThemeContainer style={{ textAlign: "center" }}>
             {theme.toUpperCase()}
             <SubThemeContainer>{subTheme.toUpperCase()}</SubThemeContainer>
-          </div>
+          </ThemeSubThemeContainer>
           <WaveSeparator />
-        </ThemeSubThemeContainer>
-      </ThemeSubThemeWrapper>
+        </ThemeSubThemeWaveContainer>
+      </ThemeSubThemeWaveWrapper>
       <AnswerTypePoints quizLevel={quizLevel} />
     </div>
   );
@@ -84,17 +84,22 @@ const QuestionLevel = styled.span<{ color: string }>`
   text-shadow: 5px 5px 0 ${EStyles.darkBlue};
 `;
 
-const ThemeSubThemeWrapper = styled.div<{ height: number }>`
+const ThemeSubThemeWaveWrapper = styled.div<{ height: number }>`
   height: ${(props) => props.height}px;
   transition: height 0.5s;
   overflow: hidden;
 `;
 
-const ThemeSubThemeContainer = styled.div<{ color: string }>`
+const ThemeSubThemeWaveContainer = styled.div<{ color: string }>`
   font-family: "Boogaloo", cursive;
   font-size: 30px;
+  line-height: 35px;
   color: ${(props) => props.color};
   text-shadow: 2px 2px 0 ${EStyles.darkBlue};
+`;
+
+const ThemeSubThemeContainer = styled.div`
+  text-align: center;
 `;
 
 const SubThemeContainer = styled.span`

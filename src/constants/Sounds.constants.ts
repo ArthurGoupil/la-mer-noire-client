@@ -10,4 +10,5 @@ export enum ESounds {
   wrong = "/sounds/Wrong.mp3",
   gameStart = "/sounds/GameStart.mp3",
   quizOver = "/sounds/QuizOver.mp3",
+  quizBackground = "/sounds/QuizBackground.mp3",
 }

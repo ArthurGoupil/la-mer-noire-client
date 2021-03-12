@@ -5,7 +5,7 @@ import { UPDATE_GAME_STAGE } from "services/games.service";
 import { EGameStage } from "constants/GameStage.constants";
 import { setCookie } from "utils/cookies.util";
 import { ECookieName } from "constants/Cookies.constants";
-import { CaPasseOuCaCashState, PlayerData, PlayersPoints } from "models/Game.model";
+import { CaPasseOuCaCashMaster, PlayerData, PlayersPoints } from "models/Game.model";
 import { useSound } from "hooks/others/useSound.hook";
 import { ESounds } from "constants/Sounds.constants";
 
@@ -35,11 +35,11 @@ export const useLaunchGame = ({ shortId, players }: useLaunchGameProps): UseLaun
 
   React.useEffect(() => {
     const launchGame = async () => {
-      setCookie<CaPasseOuCaCashState>({
+      setCookie<CaPasseOuCaCashMaster>({
         prefix: shortId,
-        cookieName: ECookieName.caPasseOuCaCashState,
+        cookieName: ECookieName.caPasseOuCaCashMaster,
         cookieValue: {
-          stateName: "stageName_wait",
+          state: "stageName_wait",
           quizLevel: "beginner",
           questionNumber: 1,
           playersPoints: players.reduce((acc: PlayersPoints, cur: PlayerData) => {

@@ -38,6 +38,7 @@ export const StageName: React.FC<StageNameProps> = ({ gameStage, canPlaySound })
 
 const StageNameContainer = styled.h2<{ transform: string }>`
   font-size: 90px;
+  line-height: 100px;
   transform: rotate(-7deg);
   color: ${EStyles.redOrange};
   text-shadow: 2px 2px 0 ${EStyles.yellow};

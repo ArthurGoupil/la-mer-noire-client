@@ -7,8 +7,9 @@ import { ESounds } from "constants/Sounds.constants";
 
 interface TimeBarProps {
   totalTime: number;
-  remainingTime: number;
+  remainingTime: number | null;
   isOver: boolean;
+  soundShouldStop: boolean;
   backgroundGradient: string[];
 }
 
@@ -16,53 +17,64 @@ export const TimeBar: React.FC<TimeBarProps> = ({
   totalTime,
   remainingTime,
   isOver,
+  soundShouldStop,
   backgroundGradient,
 }): JSX.Element => {
-  const { play } = useSound({ sound: ESounds.quizOver });
-  const initialWidth = 100 - (100 * remainingTime) / totalTime + "%";
+  const { play, stop, isPlaying } = useSound({ sound: ESounds.quizOver });
+
   const barContainerRef = React.useRef<HTMLDivElement>(null);
   const barRef = React.useRef<HTMLDivElement>(null);
 
-  const [barCurrentWidth, setBarCurrentWidth] = React.useState<number>();
-  const [soundTimeoutHasBeenLaunched, setSoundTimeoutHasBeenLaunched] = React.useState<boolean>(
-    false,
-  );
-
-  React.useEffect(() => {
-    if (barRef.current?.clientWidth) {
-      setBarCurrentWidth(barRef.current?.clientWidth);
+  const getInitialWidth = (): string => {
+    if (remainingTime !== null) {
+      // 100.5 to let a margin so that TB doesn't appear full at beginning of quiz
+      return `${100.5 - (100 * remainingTime) / totalTime}%`;
     }
-  }, []);
+    return "0%";
+  };
+
+  const getAnimationString = (): string => {
+    if (!isOver && remainingTime) {
+      return `normalTransformX ${remainingTime}s linear`;
+    }
+    return "overTransformX 0.7s ease-out";
+  };
 
   React.useEffect(() => {
-    let timeout: NodeJS.Timeout;
-    if (remainingTime > 5 && !soundTimeoutHasBeenLaunched) {
-      setSoundTimeoutHasBeenLaunched(true);
+    let timeout: NodeJS.Timeout | null = null;
+    if (!timeout && remainingTime && remainingTime > 5) {
       timeout = setTimeout(() => {
-        if (!isOver) {
-          play();
-        }
+        play();
       }, remainingTime * 1000 - 4000);
     }
 
+    if (soundShouldStop) {
+      if (timeout) {
+        clearTimeout(timeout);
+      } else if (isPlaying) {
+        stop();
+      }
+    }
+
     return () => {
-      if (isOver && soundTimeoutHasBeenLaunched) {
-        setSoundTimeoutHasBeenLaunched(false);
+      if (timeout) {
         clearTimeout(timeout);
       }
     };
-  }, [play, remainingTime, soundTimeoutHasBeenLaunched, isOver]);
+  }, [play, remainingTime, isPlaying, stop, soundShouldStop]);
 
   return (
     <BarContainer ref={barContainerRef} className="d-flex justify-start">
       <Bar
         ref={barRef}
-        initialWidth={initialWidth}
-        remainingTime={remainingTime}
-        isOver={isOver}
-        currentWidth={barCurrentWidth as number}
-        containerWidth={barContainerRef.current?.clientWidth as number}
-        opacity={remainingTime ? 1 : 0}
+        initialWidth={getInitialWidth()}
+        overInitialWidth={`${
+          ((barRef.current?.clientWidth || 0) /
+            ((barContainerRef.current?.clientWidth || 0) - 20)) *
+          100
+        }%`}
+        animation={getAnimationString()}
+        opacity={remainingTime !== null ? 1 : 0}
         background={`linear-gradient(to bottom, ${backgroundGradient[0]} 20%, ${backgroundGradient[1]} 100%);`}
       />
     </BarContainer>
@@ -71,6 +83,7 @@ export const TimeBar: React.FC<TimeBarProps> = ({
 
 const BarContainer = styled.div`
   width: 100%;
+  height: 60px;
   padding: 10px;
   background-color: ${EStyles.darken_darkBlue};
   border-radius: 5px;
@@ -78,10 +91,8 @@ const BarContainer = styled.div`
 
 const Bar = styled.div<{
   initialWidth: string;
-  remainingTime: number;
-  isOver: boolean;
-  currentWidth: number;
-  containerWidth: number;
+  overInitialWidth: string;
+  animation: string;
   opacity: number;
   background: string;
 }>`
@@ -91,10 +102,7 @@ const Bar = styled.div<{
   border-radius: 5px;
   opacity: ${(props) => props.opacity};
   transition: opacity 0.5s;
-  animation: ${(props) =>
-    !props.isOver
-      ? `normalTransformX ${props.remainingTime}s linear`
-      : "overTransformX 0.5s ease-out"};
+  animation: ${(props) => props.animation};
 
   @keyframes normalTransformX {
     from {
@@ -103,7 +111,7 @@ const Bar = styled.div<{
   }
   @keyframes overTransformX {
     from {
-      width: ${(props) => `${(props.currentWidth / (props.containerWidth - 20)) * 100}%`};
+      width: ${(props) => props.overInitialWidth};
     }
   }
 `;

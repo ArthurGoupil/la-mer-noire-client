@@ -4,14 +4,15 @@ export const ECaPasseOuCaCashPoints = {
   expert: { duo: 3, carre: 6, cash: 10 },
 };
 
-export enum ECaPasseOuCaCashStatesBottomScreensStateNames {
+export enum ECaPasseOuCaCashBottomScreensStates {
+  question_fetchTimestamp = "question_fetchTimestamp",
   question = "question",
   allPlayersHaveAnswered = "allPlayersHaveAnswered",
   questionIsTimedOut = "questionIsTimedOut",
   questionMustTimeout = "questionMustTimeout",
 }
 
-export enum ECaPasseOuCaCashStatesTopScreensStatesNames {
+export enum ECaPasseOuCaCashTopScreensStates {
   stageName_wait = "stageName_wait",
   stageName = "stageName",
   quizItemInfos = "quizItemInfos",

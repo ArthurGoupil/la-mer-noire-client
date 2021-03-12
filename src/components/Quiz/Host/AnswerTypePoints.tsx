@@ -54,7 +54,7 @@ const AnswerTypePointsContainer = styled.span<{ backgroundColor: string; noMargi
   line-height: 32px;
   margin-right: ${(props) => (props.noMarginRight ? 0 : "15px")};
   background-color: ${(props) => props.backgroundColor};
-  padding: 5px 10px;
+  padding: 10px 10px;
   border-radius: 5px;
   text-shadow: 3px 2px 0px ${EStyles.darkBlue};
 `;

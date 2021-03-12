@@ -4,21 +4,20 @@ import { QuestionDisplay } from "components/Quiz/Host/QuestionDisplay";
 import { Game, PlayerData } from "models/Game.model";
 import { TimeBar } from "components/Quiz/Others/TimeBar";
 import { PlayerAnswer } from "components/Quiz/Host/PlayerAnswer";
-import { useQuizLifetime } from "hooks/quiz/useQuizLifetime.hook";
 import { useMutation } from "@apollo/client";
 import { GENERATE_NEW_CURRENT_QUIZ_ITEM, GET_GAME } from "services/games.service";
 import { QuizItemData } from "models/Quiz.model";
 import { usePlayersAnswers } from "hooks/quiz/usePlayersAnswers.hook";
 import { EQuizDuration } from "constants/QuizDuration.constants";
-import { useCaPasseOuCaCashState } from "hooks/game/useCaPasseOuCaCashState.hook";
+import { useCaPasseOuCaCashMaster } from "hooks/game/useCaPasseOuCaCashMaster.hook";
 import { QuizItemInfos } from "components/Quiz/Host/QuizItemInfos";
 import { useNonNullQuizItemData } from "hooks/quiz/useNonNullQuizItemData.hook";
 import { QuizLayout } from "components/Quiz/Host/QuizLayout";
 import { getQuizLevelGradient } from "utils/quiz/getQuizLevelGradient.util";
 import { QuestionSummary } from "components/Quiz/Host/QuestionSummary";
 import { PlayersRanking } from "components/Quiz/Host/PlayersRanking";
-import { ECaPasseOuCaCashStatesTopScreensStatesNames } from "constants/CaPasseOuCaCash.constants";
-import { getCaPasseOuCaCashStateInterpretation } from "utils/quiz/getCaPasseOuCaCashInterpretation.util";
+import { ECaPasseOuCaCashTopScreensStates } from "constants/CaPasseOuCaCash.constants";
+import { getCaPasseOuCaCashMasterInterpretation } from "utils/quiz/getCaPasseOuCaCashInterpretation.util";
 import { StageName } from "components/Quiz/Host/StageName";
 
 interface CaPasseOuCaCashContainerProps {
@@ -48,21 +47,13 @@ export const CaPasseOuCaCashContainer: React.FC<CaPasseOuCaCashContainerProps> =
     quizAnswer: nonNullQuizItemData.quiz.answer,
   });
 
-  const { remainingTime, questionsRecord } = useQuizLifetime({
-    shortId: game.shortId,
-    quizItemSignature: nonNullQuizItemData.quizItemSignature,
-    allPlayersHaveAnswered,
-    duration: EQuizDuration.caPasseOuCaCash,
-  });
-
-  const { caPasseOuCaCashState } = useCaPasseOuCaCashState({
+  const { caPasseOuCaCashMaster, questionsRecord, remainingTime } = useCaPasseOuCaCashMaster({
     shortId: game.shortId,
     quizItemData,
     allPlayersHaveAnswered,
     playersAnswers,
-    quizAnswer: nonNullQuizItemData.quiz.answer,
+    quizItemSignature: nonNullQuizItemData.quizItemSignature,
     quizLevel: nonNullQuizItemData.level,
-    questionsRecord,
   });
 
   const {
@@ -78,8 +69,9 @@ export const CaPasseOuCaCashContainer: React.FC<CaPasseOuCaCashContainerProps> =
     stageNameEnter,
     stageNameCanPlay,
     stageNameLeave,
-  } = getCaPasseOuCaCashStateInterpretation({
-    caPasseOuCaCashState,
+    clearQuestionOverSound,
+  } = getCaPasseOuCaCashMasterInterpretation({
+    caPasseOuCaCashMaster,
   });
 
   React.useEffect(() => {
@@ -88,11 +80,11 @@ export const CaPasseOuCaCashContainer: React.FC<CaPasseOuCaCashContainerProps> =
         await generateNewCurrentQuizItem({
           variables: {
             shortId: game.shortId,
-            level: caPasseOuCaCashState.quizLevel,
+            level: caPasseOuCaCashMaster.quizLevel,
           },
         }))();
     }
-  }, [game.shortId, generateNewCurrentQuizItem, caPasseOuCaCashState, fetchQuizItemData]);
+  }, [game.shortId, generateNewCurrentQuizItem, caPasseOuCaCashMaster, fetchQuizItemData]);
 
   const topScreens = [
     {
@@ -106,7 +98,7 @@ export const CaPasseOuCaCashContainer: React.FC<CaPasseOuCaCashContainerProps> =
           quizAnswer={nonNullQuizItemData.quiz.answer}
           players={game.players}
           playersAnswers={playersAnswers}
-          playersPoints={caPasseOuCaCashState.playersPoints}
+          playersPoints={caPasseOuCaCashMaster.playersPoints}
           showAdditionalPoints={showAdditionalPoints}
         />
       ),
@@ -116,7 +108,7 @@ export const CaPasseOuCaCashContainer: React.FC<CaPasseOuCaCashContainerProps> =
     {
       component: (
         <PlayersRanking
-          playersPoints={{ ...caPasseOuCaCashState.playersPoints }}
+          playersPoints={{ ...caPasseOuCaCashMaster.playersPoints }}
           players={game.players}
           showPreviousRanking={showPreviousRanking}
         />
@@ -127,8 +119,8 @@ export const CaPasseOuCaCashContainer: React.FC<CaPasseOuCaCashContainerProps> =
     {
       component: (
         <QuizItemInfos
-          questionNumber={caPasseOuCaCashState.questionNumber}
-          quizLevel={caPasseOuCaCashState.quizLevel}
+          questionNumber={caPasseOuCaCashMaster.questionNumber}
+          quizLevel={caPasseOuCaCashMaster.quizLevel}
           theme={nonNullQuizItemData.theme}
           subTheme={nonNullQuizItemData.subTheme}
           showThemeSubTheme={showThemeSubTheme}
@@ -137,7 +129,7 @@ export const CaPasseOuCaCashContainer: React.FC<CaPasseOuCaCashContainerProps> =
       shouldEnter: quizItemInfosEnter,
       shouldLeave: false,
       wavesBackgroundGradient: getQuizLevelGradient({
-        quizLevel: caPasseOuCaCashState.quizLevel,
+        quizLevel: caPasseOuCaCashMaster.quizLevel,
       }),
     },
   ];
@@ -146,7 +138,7 @@ export const CaPasseOuCaCashContainer: React.FC<CaPasseOuCaCashContainerProps> =
     <QuizLayout
       stage={game.stage}
       gameName={game.name}
-      showTopScreen={caPasseOuCaCashState.stateName in ECaPasseOuCaCashStatesTopScreensStatesNames}
+      showTopScreen={caPasseOuCaCashMaster.state in ECaPasseOuCaCashTopScreensStates}
       topScreens={topScreens}
     >
       <div className="d-flex flex-column align-center justify-center flex-grow">
@@ -169,10 +161,11 @@ export const CaPasseOuCaCashContainer: React.FC<CaPasseOuCaCashContainerProps> =
       </div>
       <TimeBar
         totalTime={EQuizDuration.caPasseOuCaCash}
-        remainingTime={remainingTime - 0.5}
+        remainingTime={remainingTime}
         isOver={questionsRecord[nonNullQuizItemData.quizItemSignature]?.isDone}
+        soundShouldStop={clearQuestionOverSound}
         backgroundGradient={getQuizLevelGradient({
-          quizLevel: caPasseOuCaCashState.quizLevel,
+          quizLevel: caPasseOuCaCashMaster.quizLevel,
         })}
       />
     </QuizLayout>

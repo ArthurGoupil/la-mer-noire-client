@@ -11,8 +11,6 @@ import { FullScreenError } from "components/Utils/FullScreenError";
 import { useCurrentAnswer } from "hooks/quiz/useCurrentAnswer.hook";
 import { useNonNullQuizItemData } from "hooks/quiz/useNonNullQuizItemData.hook";
 import { usePlayersAnswers } from "hooks/quiz/usePlayersAnswers.hook";
-import { EQuizDuration } from "constants/QuizDuration.constants";
-import { useQuizLifetime } from "hooks/quiz/useQuizLifetime.hook";
 
 interface DuoCarreCashAnswerContainerProps {
   game: Game;
@@ -38,7 +36,7 @@ export const DuoCarreCashAnswerContainer: React.FC<DuoCarreCashAnswerContainerPr
     quizItemSignature: nonNullQuizItemData.quizItemSignature,
   });
 
-  const { allPlayersHaveAnswered } = usePlayersAnswers({
+  usePlayersAnswers({
     shortId: game.shortId,
     quizItemSignature: quizItemData?.quizItemSignature,
     players: game.players,
@@ -46,18 +44,11 @@ export const DuoCarreCashAnswerContainer: React.FC<DuoCarreCashAnswerContainerPr
     playerId,
   });
 
-  const { questionsRecord } = useQuizLifetime({
-    shortId: game.shortId,
-    quizItemSignature: nonNullQuizItemData.quizItemSignature,
-    allPlayersHaveAnswered,
-    duration: EQuizDuration.caPasseOuCaCash,
-  });
-
   if (answerTypeChoice?.quizItemSignature !== nonNullQuizItemData.quizItemSignature) {
     return (
       <AnswerTypeSelection
         quizItemSignature={nonNullQuizItemData.quizItemSignature}
-        questionIsOver={questionsRecord[nonNullQuizItemData.quizItemSignature]?.isDone}
+        questionIsOver={false}
         setAnswerTypeChoice={setAnswerTypeChoice}
       />
     );
@@ -74,7 +65,7 @@ export const DuoCarreCashAnswerContainer: React.FC<DuoCarreCashAnswerContainerPr
           playerId={playerId}
           currentAnswer={currentAnswer}
           onClick={setCurrentAnswer}
-          questionIsOver={questionsRecord[nonNullQuizItemData.quizItemSignature]?.isDone}
+          questionIsOver={false}
         />
       ),
       carre: (
@@ -84,7 +75,7 @@ export const DuoCarreCashAnswerContainer: React.FC<DuoCarreCashAnswerContainerPr
           playerId={playerId}
           currentAnswer={currentAnswer}
           onClick={setCurrentAnswer}
-          questionIsOver={questionsRecord[nonNullQuizItemData.quizItemSignature]?.isDone}
+          questionIsOver={false}
         />
       ),
       cash: (
@@ -94,7 +85,7 @@ export const DuoCarreCashAnswerContainer: React.FC<DuoCarreCashAnswerContainerPr
           answer={nonNullQuizItemData.quiz.answer}
           currentAnswer={currentAnswer}
           onSubmit={setCurrentAnswer}
-          questionIsOver={questionsRecord[nonNullQuizItemData.quizItemSignature]?.isDone}
+          questionIsOver={false}
         />
       ),
     }[answerTypeChoice.answerType];

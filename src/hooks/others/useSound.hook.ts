@@ -5,7 +5,6 @@ interface UseSoundProps {
   sound: string;
   autoplay?: boolean;
   loop?: boolean;
-  fadeOut?: boolean;
   condition?: boolean;
   volume?: number;
 }
@@ -13,6 +12,7 @@ interface UseSoundProps {
 interface UseSoundReturn {
   play: () => void;
   stop: () => void;
+  fadeOutAndStop: () => void;
   isPlaying: boolean;
   status: "loading" | "ready";
 }
@@ -21,7 +21,6 @@ export const useSound = ({
   sound,
   autoplay = false,
   loop = false,
-  fadeOut = false,
   condition = true,
   volume = 1,
 }: UseSoundProps): UseSoundReturn => {
@@ -30,9 +29,9 @@ export const useSound = ({
       new Howl({
         src: [sound],
         loop,
-        volume: fadeOut ? 0 : volume,
+        volume,
       }),
-    [sound, loop, fadeOut, volume],
+    [sound, loop, volume],
   );
 
   const [status, setStatus] = React.useState<"loading" | "ready">("loading");
@@ -42,6 +41,14 @@ export const useSound = ({
     if (status !== "ready") setStatus("ready");
   });
 
+  const fadeOutAndStop = (): void => {
+    howlSound.fade(volume, 0, 1000);
+    setTimeout(() => {
+      howlSound.stop();
+      howlSound.volume(volume);
+    }, 1000);
+  };
+
   React.useEffect(() => {
     if (condition) {
       if (autoplay) {
@@ -50,20 +57,14 @@ export const useSound = ({
       } else {
         howlSound.load();
       }
-
-      return () => {
-        if (fadeOut) {
-          howlSound.fade(volume, 0, 1000);
-        } else {
-          howlSound.unload();
-        }
-      };
     }
-  }, [howlSound, condition, fadeOut, volume, autoplay]);
+    return () => howlSound.unload();
+  }, [autoplay, condition, howlSound, volume]);
 
   return {
     play: () => howlSound.play(),
     stop: () => howlSound.stop(),
+    fadeOutAndStop,
     isPlaying: howlSound.playing(),
     status,
   };

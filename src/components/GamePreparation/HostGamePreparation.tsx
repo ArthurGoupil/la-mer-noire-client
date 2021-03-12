@@ -27,7 +27,6 @@ export const HostGamePreparation: React.FC<HostGamePreparationProps> = ({ game }
     sound: ESounds.gamePrep,
     autoplay: true,
     loop: true,
-    fadeOut: true,
     volume: 0.5,
   });
 
