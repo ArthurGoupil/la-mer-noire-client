@@ -5,7 +5,7 @@ import { HostGamePreparation } from "components/GamePreparation/HostGamePreparat
 import { JoinGamePreparation } from "components/GamePreparation/JoinGamePreparation";
 import { FullScreenError } from "components/Utils/FullScreenError";
 import { useGame } from "hooks/game/useGame.hook";
-import { getNS } from "utils/networkStatus.util";
+import { getGlobalNetworkStatus } from "utils/networkStatus.util";
 import { FullHeightLoader } from "components/Utils/FullHeightLoader";
 import { Game } from "models/Game.model";
 
@@ -49,7 +49,12 @@ export const GamePreparationContainer: React.FC<GamePreparationProps> = ({
           linkLabel="Revenir au menu principal"
         />
       ),
-    }[getNS(networkStatus)];
+    }[
+      getGlobalNetworkStatus({
+        networkStatuses: [networkStatus],
+        booleanCondition: currentGameData !== undefined,
+      })
+    ];
   }
 
   return (

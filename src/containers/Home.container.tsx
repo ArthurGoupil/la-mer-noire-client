@@ -49,13 +49,14 @@ export const HomeContainer: React.FC = (): JSX.Element => {
           noSleep.enable();
         }}
         buttonLabel="Rejoindre la partie"
-        inputWidth={130}
-        fontSize={25}
-        padding={8}
+        inputWidth="130px"
+        fontSize="25px"
+        padding="8px"
         margin={`0 0 15px 0`}
         placeholder="52E5E"
         isLoading={loading}
         valueMaxLength={5}
+        hideRemainingLetters
       />
       <CreateGameWrapper>
         <Link to="/create">Créer une partie</Link>

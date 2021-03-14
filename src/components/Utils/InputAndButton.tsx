@@ -7,25 +7,27 @@ import { Loader } from "./Loader";
 interface InputAndButtonProps {
   handleSubmit: (value: string) => void;
   buttonLabel: string;
-  inputWidth?: number;
-  fontSize?: number;
-  padding?: number;
+  inputWidth?: string;
+  fontSize?: string;
+  padding?: string;
   margin?: string;
   placeholder?: string;
   valueMaxLength?: number;
   isLoading?: boolean;
+  hideRemainingLetters?: boolean;
 }
 
 export const InputAndButton: React.FC<InputAndButtonProps> = ({
   handleSubmit,
   buttonLabel,
-  inputWidth = 250,
-  fontSize = 18,
-  padding = 10,
+  inputWidth = "250px",
+  fontSize = "18px",
+  padding = "10px 30px 10px 10px",
   margin = "0",
   placeholder = "",
   valueMaxLength = 50,
   isLoading = false,
+  hideRemainingLetters = false,
 }): JSX.Element => {
   const [value, setValue] = React.useState<string>("");
 
@@ -40,19 +42,26 @@ export const InputAndButton: React.FC<InputAndButtonProps> = ({
       margin={margin}
       className="d-flex justify-center align-center"
     >
-      <Input
-        value={value}
-        onChange={(e) => {
-          if (e.target.value.length <= valueMaxLength) {
-            setValue(e.target.value);
-          }
-        }}
-        inputWidth={inputWidth}
-        fontSize={fontSize}
-        padding={padding}
-        className="d-flex"
-        placeholder={placeholder}
-      />
+      <InputContainer className="d-flex align-center">
+        <Input
+          value={value}
+          onChange={(e) => {
+            if (e.target.value.length <= valueMaxLength) {
+              setValue(e.target.value);
+            }
+          }}
+          inputWidth={inputWidth}
+          fontSize={fontSize}
+          padding={padding}
+          className="d-flex"
+          placeholder={placeholder}
+        />
+        {!hideRemainingLetters && (
+          <RemainingLetters color={valueMaxLength - value.length > 0 ? Styles.good : Styles.wrong}>
+            {valueMaxLength - value.length}
+          </RemainingLetters>
+        )}
+      </InputContainer>
       <Button
         disabled={value.trim().length === 0}
         type="submit"
@@ -74,11 +83,15 @@ const Form = styled.form<{ margin: string }>`
   }
 `;
 
-const Input = styled.input<{ inputWidth: number; fontSize: number; padding: number }>`
-  width: ${(props) => props.inputWidth}px;
-  font-size: ${(props) => props.fontSize}px;
+const InputContainer = styled.div`
+  position: relative;
+`;
+
+const Input = styled.input<{ inputWidth: string; fontSize: string; padding: string }>`
+  width: ${(props) => props.inputWidth};
+  font-size: ${(props) => props.fontSize};
   text-align: center;
-  padding: ${(props) => props.padding}px;
+  padding: ${(props) => props.padding};
   border-radius: 100px;
   border: 5px solid ${Styles.lightBlue};
   outline: none;
@@ -92,6 +105,14 @@ const Input = styled.input<{ inputWidth: number; fontSize: number; padding: numb
   &:focus {
     border: 5px solid ${Styles.darken_lightBlue};
   }
+`;
+
+const RemainingLetters = styled.span<{ color: string }>`
+  font-family: Boogaloo, cursive;
+  color: ${(props) => props.color};
+  position: absolute;
+  right: 15px;
+  margin-bottom: 15px;
 `;
 
 const Button = styled.button<{ isDisabled: boolean }>`

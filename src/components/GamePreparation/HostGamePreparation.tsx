@@ -37,7 +37,7 @@ export const HostGamePreparation: React.FC<HostGamePreparationProps> = ({ game }
         <div className="d-flex flex-column align-center space-around flex-grow">
           <GameName>{game.name.toUpperCase()}</GameName>
           <GameCodeBloc gameCode={game.shortId} />
-          {game.players.length > 0 && <PlayersList playersList={game.players} />}
+          {game.players.length > 0 && <PlayersList playersList={game.players} isHost />}
           <Button
             disabled={game.players.length < 1}
             onClick={handleLaunchGameCounter}

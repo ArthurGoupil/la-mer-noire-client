@@ -32,17 +32,19 @@ export const JoinGamePreparation: React.FC<JoinGamePreparationProps> = ({
         <GameName>{game.name.toUpperCase()}</GameName>
         {userType === "join" && (
           <div className="d-flex flex-column align-center">
-            <InputAndButton
-              handleSubmit={async (value) => await handlePlayerJoinGame({ name: value })}
-              buttonLabel="Rejoindre la partie"
-              placeholder="My lovely name"
-              margin={`0 0 5px 0`}
-              isLoading={loading}
-              valueMaxLength={25}
-            />
+            {game.players.length < 10 && (
+              <InputAndButton
+                handleSubmit={async (value) => await handlePlayerJoinGame({ name: value })}
+                buttonLabel="Rejoindre la partie"
+                placeholder="My lovely name"
+                margin={`0 0 5px 0`}
+                isLoading={loading}
+                valueMaxLength={25}
+              />
+            )}
             <ErrorMessage
-              errorMessage={errorMessage}
-              isDisplayed={errorMessage !== null}
+              errorMessage={errorMessage || "La partie compte déjà 10 participants."}
+              isDisplayed={errorMessage !== null || game.players.length > 9}
               margin="0 15px 0 0"
             />
           </div>

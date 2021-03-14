@@ -7,12 +7,24 @@ import { PlayerData } from "models/Game.model";
 
 interface PlayersListProps {
   playersList: PlayerData[];
+  isHost?: boolean;
 }
 
-export const PlayersList: React.FC<PlayersListProps> = ({ playersList }): JSX.Element => {
+export const PlayersList: React.FC<PlayersListProps> = ({
+  playersList,
+  isHost = false,
+}): JSX.Element => {
   return (
     <PlayersListContainer className="d-flex flex-column align-center flex-wrap">
-      <PlayersTitle>DANS LES STARTING BLOCKS</PlayersTitle>
+      <PlayersTitle margin={!isHost ? "10px 0" : "0"}>DANS LES STARTING BLOCKS</PlayersTitle>
+      {isHost && (
+        <RemainingPlayers>
+          <RemainingPlayersNumber color={10 - playersList.length > 0 ? Styles.good : Styles.wrong}>
+            {10 - playersList.length}
+          </RemainingPlayersNumber>{" "}
+          places restantes
+        </RemainingPlayers>
+      )}
       <div className="d-flex justify-center flex-wrap">
         {playersList.map((playerData: PlayerData, index: number) => (
           <Player key={index}>{playerData.player.name.toUpperCase()}</Player>
@@ -27,13 +39,24 @@ const PlayersListContainer = styled.ul`
   max-width: 90vw;
 `;
 
-const PlayersTitle = styled.div`
+const PlayersTitle = styled.div<{ margin: string }>`
   font-family: "Boogaloo", cursive;
   font-size: 28px;
   line-height: 32px;
   color: ${Styles.redOrange};
   text-align: center;
-  margin: 10px 0;
+  margin: ${(props) => props.margin};
+`;
+
+const RemainingPlayers = styled.div`
+  font-size: 15px;
+  margin-bottom: 15px;
+  font-style: italic;
+`;
+
+const RemainingPlayersNumber = styled.span<{ color: string }>`
+  color: ${(props) => props.color};
+  font-weight: bold;
 `;
 
 const Player = styled.li`
