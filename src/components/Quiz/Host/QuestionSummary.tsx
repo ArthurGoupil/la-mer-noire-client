@@ -2,7 +2,7 @@ import React from "react";
 import styled from "styled-components";
 
 import { EStyles } from "constants/Styling.constants";
-import { Answer, AnswerType, PlayerData, PlayersPoints } from "models/Game.model";
+import { Answer, PlayerData, PlayersPoints } from "models/Game.model";
 import { getStringFromAnswerType } from "utils/quiz/getStringFromAnswerType";
 import { getAnswerTypeColor } from "utils/quiz/getAnswerTypeColor.util";
 

@@ -53,6 +53,7 @@ export const PlayerAnswer: React.FC<PlayerAnswerProps> = ({
 };
 
 const PlayerAnswerContainer = styled.div<{ noMarginRight: boolean }>`
+  max-width: 150px;
   font-family: "Boogaloo", cursive;
   background-color: ${EStyles.darken_blue};
   padding: 15px;
@@ -60,12 +61,12 @@ const PlayerAnswerContainer = styled.div<{ noMarginRight: boolean }>`
   margin-right: ${(props) => (props.noMarginRight ? 0 : "20px")};
   border-radius: 10px;
   font-weight: 500;
-  max-width: 160px;
   white-space: nowrap;
   text-align: center;
   overflow: hidden;
   position: relative;
   z-index: 0;
+  font-size: 17px;
 `;
 
 const InnerShadow = styled.div`
