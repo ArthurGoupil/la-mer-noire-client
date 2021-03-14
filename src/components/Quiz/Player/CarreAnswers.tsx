@@ -1,9 +1,10 @@
 import React from "react";
 
-import { EStyles } from "constants/Styling.constants";
+import { Styles } from "constants/Styling.constants";
 import { AnswerChoice } from "./AnswerChoice";
-import { AnswerType, CurrentAnswer } from "models/Game.model";
+import { CurrentAnswer } from "models/Game.model";
 import { SetCurrentAnswerProps } from "hooks/quiz/useCurrentAnswer.hook";
+import { AnswerType } from "constants/AnswerType.constants";
 
 interface CarreAnswersProps {
   quizItemSignature: string;
@@ -25,7 +26,7 @@ export const CarreAnswers: React.FC<CarreAnswersProps> = ({
   return (
     <>
       <AnswerChoice
-        color={EStyles.darkBlue}
+        color={Styles.darkBlue}
         quizAnswer={choices[0]}
         quizItemSignature={quizItemSignature}
         answerType={AnswerType.carre}
@@ -35,7 +36,7 @@ export const CarreAnswers: React.FC<CarreAnswersProps> = ({
         questionIsOver={questionIsOver}
       />
       <AnswerChoice
-        color={EStyles.yellow}
+        color={Styles.yellow}
         quizAnswer={choices[1]}
         quizItemSignature={quizItemSignature}
         answerType={AnswerType.carre}
@@ -45,7 +46,7 @@ export const CarreAnswers: React.FC<CarreAnswersProps> = ({
         questionIsOver={questionIsOver}
       />
       <AnswerChoice
-        color={EStyles.redOrange}
+        color={Styles.redOrange}
         quizAnswer={choices[2]}
         quizItemSignature={quizItemSignature}
         answerType={AnswerType.carre}
@@ -55,7 +56,7 @@ export const CarreAnswers: React.FC<CarreAnswersProps> = ({
         questionIsOver={questionIsOver}
       />
       <AnswerChoice
-        color={EStyles.turquoise}
+        color={Styles.turquoise}
         quizAnswer={choices[3]}
         quizItemSignature={quizItemSignature}
         answerType={AnswerType.carre}

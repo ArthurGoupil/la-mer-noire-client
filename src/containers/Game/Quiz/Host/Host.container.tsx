@@ -4,7 +4,7 @@ import { useQuery } from "@apollo/client";
 import { Game } from "models/Game.model";
 import { GET_QUIZ_ITEM_DATA } from "services/quizzes.service";
 import { CaPasseOuCaCashContainer } from "./CaPasseOuCaCash.container";
-import { EQuizStage } from "constants/GameStage.constants";
+import { QuizStage } from "constants/GameStage.constants";
 import { QuizItemId, QuizLevel } from "models/Quiz.model";
 
 interface HostProps {
@@ -27,5 +27,5 @@ export const HostContainer: React.FC<HostProps> = ({ game }): JSX.Element => {
 
   return {
     caPasseOuCaCash: <CaPasseOuCaCashContainer game={game} quizItemData={quizItemData} />,
-  }[(stage as unknown) as EQuizStage];
+  }[(stage as unknown) as QuizStage];
 };

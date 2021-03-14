@@ -2,12 +2,12 @@ import React from "react";
 import { useMutation } from "@apollo/client";
 
 import { UPDATE_GAME_STAGE } from "services/games.service";
-import { EGameStage } from "constants/GameStage.constants";
+import { GameStage } from "constants/GameStage.constants";
 import { setCookie } from "utils/cookies.util";
-import { ECookieName } from "constants/Cookies.constants";
+import { CookieName } from "constants/Cookies.constants";
 import { CaPasseOuCaCashMaster, PlayerData, PlayersPoints } from "models/Game.model";
 import { useSound } from "hooks/others/useSound.hook";
-import { ESounds } from "constants/Sounds.constants";
+import { Sounds } from "constants/Sounds.constants";
 
 interface useLaunchGameProps {
   shortId: string;
@@ -21,8 +21,8 @@ interface UseLaunchGameReturn {
 
 export const useLaunchGame = ({ shortId, players }: useLaunchGameProps): UseLaunchGameReturn => {
   const [launchCounter, setLaunchCounter] = React.useState<number | null>(null);
-  const [updateGameStage] = useMutation(UPDATE_GAME_STAGE);
-  const { play, stop } = useSound({ sound: ESounds.gameStart, volume: 0.4 });
+  const [updatGameStage] = useMutation(UPDATE_GAME_STAGE);
+  const { play, stop } = useSound({ sound: Sounds.gameStart, volume: 0.4 });
 
   const handleLaunchGameCounter = () => {
     if (!launchCounter) {
@@ -37,7 +37,7 @@ export const useLaunchGame = ({ shortId, players }: useLaunchGameProps): UseLaun
     const launchGame = async () => {
       setCookie<CaPasseOuCaCashMaster>({
         prefix: shortId,
-        cookieName: ECookieName.caPasseOuCaCashMaster,
+        cookieName: CookieName.caPasseOuCaCashMaster,
         cookieValue: {
           state: "stageName_wait",
           quizLevel: "beginner",
@@ -47,8 +47,8 @@ export const useLaunchGame = ({ shortId, players }: useLaunchGameProps): UseLaun
           }, {}),
         },
       });
-      await updateGameStage({
-        variables: { stage: EGameStage.caPasseOuCaCash, shortId },
+      await updatGameStage({
+        variables: { stage: GameStage.caPasseOuCaCash, shortId },
       });
     };
 
@@ -67,7 +67,7 @@ export const useLaunchGame = ({ shortId, players }: useLaunchGameProps): UseLaun
     return () => {
       clearTimeout(timeout);
     };
-  }, [launchCounter, shortId, players, updateGameStage, play]);
+  }, [launchCounter, shortId, players, updatGameStage, play]);
 
   return {
     handleLaunchGameCounter,

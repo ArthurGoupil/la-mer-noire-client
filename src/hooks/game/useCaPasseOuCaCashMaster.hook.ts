@@ -1,7 +1,7 @@
 import React from "react";
 
-import { ECaPasseOuCaCashPoints } from "constants/CaPasseOuCaCash.constants";
-import { ECookieName } from "constants/Cookies.constants";
+import { CaPasseOuCaCashPoints } from "constants/CaPasseOuCaCash.constants";
+import { CookieName } from "constants/Cookies.constants";
 import { CaPasseOuCaCashMaster, Answer, PlayersPoints, QuestionRecord } from "models/Game.model";
 import { QuizItemData, QuizLevel } from "models/Quiz.model";
 import { getCookie, setCookie } from "utils/cookies.util";
@@ -10,9 +10,9 @@ import {
   QuestionNumber,
 } from "utils/quiz/getQuizLevelByQuestionNumber.util";
 import { useQuizLifetime } from "hooks/quiz/useQuizLifetime.hook";
-import { EQuizDuration } from "constants/QuizDuration.constants";
+import { QuizDuration } from "constants/QuizDuration.constants";
 import { useSound } from "hooks/others/useSound.hook";
-import { ESounds } from "constants/Sounds.constants";
+import { Sounds } from "constants/Sounds.constants";
 
 interface UseCaPasseOuCaCashMasterProps {
   shortId: string;
@@ -40,7 +40,7 @@ export const useCaPasseOuCaCashMaster = ({
   const [caPasseOuCaCashMaster, setCaPasseOuCaCashMaster] = React.useState<CaPasseOuCaCashMaster>(
     getCookie({
       prefix: shortId,
-      cookieName: ECookieName.caPasseOuCaCashMaster,
+      cookieName: CookieName.caPasseOuCaCashMaster,
     }),
   );
 
@@ -48,13 +48,13 @@ export const useCaPasseOuCaCashMaster = ({
     play: quizBackgroundSoundPlay,
     fadeOutAndStop: quizBackgroundSoundFadeOutAndStop,
     isPlaying: quizBackgroundSoundisPlaying,
-  } = useSound({ sound: ESounds.quizBackground });
+  } = useSound({ sound: Sounds.quizBackground });
 
   const { remainingTime, questionsRecord } = useQuizLifetime({
     shortId,
     quizItemSignature,
     allPlayersHaveAnswered,
-    duration: EQuizDuration.caPasseOuCaCash,
+    duration: QuizDuration.caPasseOuCaCash,
     shouldFetchTimestampRef: caPasseOuCaCashMaster.state === "question_fetchTimestamp",
   });
 
@@ -73,7 +73,7 @@ export const useCaPasseOuCaCashMaster = ({
       };
       setCookie<CaPasseOuCaCashMaster>({
         prefix: shortId,
-        cookieName: ECookieName.caPasseOuCaCashMaster,
+        cookieName: CookieName.caPasseOuCaCashMaster,
         cookieValue: newCaPasseOuCaCashMaster,
       });
       setCaPasseOuCaCashMaster(newCaPasseOuCaCashMaster);
@@ -84,7 +84,7 @@ export const useCaPasseOuCaCashMaster = ({
       for (const playerId of Object.keys(caPasseOuCaCashMaster.playersPoints)) {
         playersPoints[playerId].previous = caPasseOuCaCashMaster.playersPoints[playerId].current;
         const additionalPoints = playersAnswers[playerId]?.isGoodAnswer
-          ? ECaPasseOuCaCashPoints[quizLevel][playersAnswers[playerId].answerType] +
+          ? CaPasseOuCaCashPoints[quizLevel][playersAnswers[playerId].answerType] +
             (playersAnswers[playerId].isFirstGoodCash ? 1 : 0)
           : 0;
 

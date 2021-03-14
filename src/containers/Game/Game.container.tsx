@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 
 import { FullScreenError } from "components/Utils/FullScreenError";
 import { useGame } from "hooks/game/useGame.hook";
-import { EUserType } from "constants/GameUserType.constants";
+import { UserType } from "constants/GameUserType.constants";
 import { FullHeightLoader } from "components/Utils/FullHeightLoader";
 import { GamePreparationContainer } from "./GamePreparation/GamePreparation.container";
 import { QuizContainer } from "containers/Game/Quiz/Quiz.container";
@@ -11,7 +11,7 @@ import { getNS } from "utils/networkStatus.util";
 
 interface Params {
   shortId: string;
-  userType: EUserType;
+  userType: UserType;
 }
 
 export const GameContainer: React.FC = (): JSX.Element => {

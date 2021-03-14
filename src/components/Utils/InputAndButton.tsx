@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 
-import { EStyles } from "constants/Styling.constants";
+import { Styles } from "constants/Styling.constants";
 import { Loader } from "./Loader";
 
 interface InputAndButtonProps {
@@ -69,7 +69,7 @@ export const InputAndButton: React.FC<InputAndButtonProps> = ({
 const Form = styled.form<{ margin: string }>`
   margin: ${(props) => props.margin};
 
-  @media only screen and (max-width: ${EStyles.mobileBreakPoint}) {
+  @media only screen and (max-width: ${Styles.mobileBreakPoint}) {
     flex-direction: column;
   }
 `;
@@ -80,7 +80,7 @@ const Input = styled.input<{ inputWidth: number; fontSize: number; padding: numb
   text-align: center;
   padding: ${(props) => props.padding}px;
   border-radius: 100px;
-  border: 5px solid ${EStyles.lightBlue};
+  border: 5px solid ${Styles.lightBlue};
   outline: none;
   transition: 0.2s border;
 
@@ -90,18 +90,18 @@ const Input = styled.input<{ inputWidth: number; fontSize: number; padding: numb
   }
 
   &:focus {
-    border: 5px solid ${EStyles.darken_lightBlue};
+    border: 5px solid ${Styles.darken_lightBlue};
   }
 `;
 
 const Button = styled.button<{ isDisabled: boolean }>`
-  background-color: ${EStyles.lightBlue};
+  background-color: ${Styles.lightBlue};
   text-align: center;
   padding: 10px;
   margin: 10px;
   border-radius: 100px;
   outline: none;
-  border: 5px solid ${EStyles.lightBlue};
+  border: 5px solid ${Styles.lightBlue};
   transition: 0.2s background-color;
   white-space: nowrap;
   font-weight: 500;
@@ -109,8 +109,7 @@ const Button = styled.button<{ isDisabled: boolean }>`
   cursor: ${(props) => (props.isDisabled ? "not-allowed" : "pointer")};
 
   &:hover {
-    background-color: ${(props) =>
-      props.isDisabled ? EStyles.lightBlue : EStyles.darken_lightBlue};
+    background-color: ${(props) => (props.isDisabled ? Styles.lightBlue : Styles.darken_lightBlue)};
   }
 `;
 

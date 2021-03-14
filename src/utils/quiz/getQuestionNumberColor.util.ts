@@ -1,4 +1,4 @@
-import { EStyles } from "constants/Styling.constants";
+import { Styles } from "constants/Styling.constants";
 import { QuestionNumber } from "./getQuizLevelByQuestionNumber.util";
 
 interface GetQuestionNumberColorProps {
@@ -6,5 +6,5 @@ interface GetQuestionNumberColorProps {
 }
 
 export const getQuestionNumberColor = ({ questionNumber }: GetQuestionNumberColorProps): string => {
-  return questionNumber < 4 ? EStyles.turquoise : questionNumber < 7 ? EStyles.yellow : EStyles.red;
+  return questionNumber < 4 ? Styles.turquoise : questionNumber < 7 ? Styles.yellow : Styles.red;
 };

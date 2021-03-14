@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 
-import { EStyles } from "constants/Styling.constants";
+import { Styles } from "constants/Styling.constants";
 import { GameCodeBloc } from "components/GamePreparation/GameCodeBloc";
 import { PlayersList } from "components/GamePreparation/PlayersList";
 import { LMNLogo } from "components/Utils/LMNLogo";
@@ -11,7 +11,7 @@ import { Button } from "components/Utils/Button";
 import { Game } from "models/Game.model";
 import { AnimatedSubmarine } from "components/Utils/AnimatedSubmarine";
 import { useSound } from "hooks/others/useSound.hook";
-import { ESounds } from "constants/Sounds.constants";
+import { Sounds } from "constants/Sounds.constants";
 import { FullHeightLoader } from "components/Utils/FullHeightLoader";
 
 interface HostGamePreparationProps {
@@ -24,7 +24,7 @@ export const HostGamePreparation: React.FC<HostGamePreparationProps> = ({ game }
     players: game.players,
   });
   const { status } = useSound({
-    sound: ESounds.gamePrep,
+    sound: Sounds.gamePrep,
     autoplay: true,
     loop: true,
     volume: 0.5,
@@ -52,8 +52,8 @@ export const HostGamePreparation: React.FC<HostGamePreparationProps> = ({ game }
 };
 
 const GameName = styled.h1`
-  color: ${EStyles.yellow};
-  text-shadow: 3px 3px 0 ${EStyles.redOrange};
+  color: ${Styles.yellow};
+  text-shadow: 3px 3px 0 ${Styles.redOrange};
   text-align: center;
   margin-bottom: 20px;
 `;

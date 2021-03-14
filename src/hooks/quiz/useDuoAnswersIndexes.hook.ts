@@ -2,7 +2,7 @@ import React from "react";
 
 import { DuoAnswersIndexes, QuizItemData } from "models/Quiz.model";
 import { getCookie, setCookie } from "utils/cookies.util";
-import { ECookieName } from "constants/Cookies.constants";
+import { CookieName } from "constants/Cookies.constants";
 import { getRandomDuoAnswersIndexes } from "utils/quiz/getRandomDuoAnswersIndexes.util";
 
 interface UseDuoAnswersIndexesProps {
@@ -21,7 +21,7 @@ export const useDuoAnswersIndexes = ({
   const [duoAnswersIndexes, setDuoAnswersIndexes] = React.useState<DuoAnswersIndexes>(
     getCookie({
       prefix: shortId,
-      cookieName: ECookieName.duoAnswersIndexes,
+      cookieName: CookieName.duoAnswersIndexes,
     }),
   );
   React.useEffect(() => {
@@ -37,7 +37,7 @@ export const useDuoAnswersIndexes = ({
         setDuoAnswersIndexes(duoAnswersIndexesToStore);
         setCookie<DuoAnswersIndexes>({
           prefix: shortId,
-          cookieName: ECookieName.duoAnswersIndexes,
+          cookieName: CookieName.duoAnswersIndexes,
           cookieValue: duoAnswersIndexesToStore,
         });
       }

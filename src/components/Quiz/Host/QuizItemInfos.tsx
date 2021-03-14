@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 
-import { EStyles } from "constants/Styling.constants";
+import { Styles } from "constants/Styling.constants";
 import { QuizLevel } from "models/Quiz.model";
 import { getQuizLevelString } from "utils/quiz/getQuizLevelString.util";
 import { AnswerTypePoints } from "./AnswerTypePoints";
@@ -64,24 +64,24 @@ const QuestionNumberContainer = styled.div`
   font-family: "Boogaloo", cursive;
   font-size: 70px;
   line-height: 70px;
-  color: ${EStyles.darkBlue};
+  color: ${Styles.darkBlue};
 `;
 
 const Number = styled.span<{ color: string }>`
   color: ${(props) => props.color};
-  text-shadow: 5px 5px 0 ${EStyles.darkBlue};
+  text-shadow: 5px 5px 0 ${Styles.darkBlue};
 `;
 
 const QuestionLevelContainer = styled.div`
   font-family: "Boogaloo", cursive;
   font-size: 70px;
   line-height: 70px;
-  color: ${EStyles.darkBlue};
+  color: ${Styles.darkBlue};
 `;
 
 const QuestionLevel = styled.span<{ color: string }>`
   color: ${(props) => props.color};
-  text-shadow: 5px 5px 0 ${EStyles.darkBlue};
+  text-shadow: 5px 5px 0 ${Styles.darkBlue};
 `;
 
 const ThemeSubThemeWaveWrapper = styled.div<{ height: number }>`
@@ -95,7 +95,7 @@ const ThemeSubThemeWaveContainer = styled.div<{ color: string }>`
   font-size: 30px;
   line-height: 35px;
   color: ${(props) => props.color};
-  text-shadow: 2px 2px 0 ${EStyles.darkBlue};
+  text-shadow: 2px 2px 0 ${Styles.darkBlue};
 `;
 
 const ThemeSubThemeContainer = styled.div`
@@ -103,7 +103,7 @@ const ThemeSubThemeContainer = styled.div`
 `;
 
 const SubThemeContainer = styled.span`
-  color: ${EStyles.darkBlue};
+  color: ${Styles.darkBlue};
   text-shadow: none;
   margin-left: 15px;
 `;

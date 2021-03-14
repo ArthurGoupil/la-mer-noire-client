@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 
-import { EStyles } from "constants/Styling.constants";
+import { Styles } from "constants/Styling.constants";
 
 interface GameCodeBlocProps {
   gameCode: string;
@@ -24,7 +24,7 @@ export const GameCodeBloc: React.FC<GameCodeBlocProps> = ({ gameCode }): JSX.Ele
 const GameCodeBlocContainer = styled.div`
   border-radius: 10px;
   padding: 20px;
-  border: 5px solid ${EStyles.blue};
+  border: 5px solid ${Styles.blue};
 `;
 
 const GameCodeContainer = styled.span`
@@ -46,7 +46,7 @@ const LMNUrl = styled.span`
 
 const GameCode = styled.div`
   font-family: "Boogaloo", cursive;
-  color: ${EStyles.redOrange};
+  color: ${Styles.redOrange};
   font-size: 50px;
   line-height: 50px;
   margin-left: 20px;

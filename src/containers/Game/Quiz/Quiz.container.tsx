@@ -3,14 +3,14 @@ import React from "react";
 import { HostContainer } from "containers/Game/Quiz/Host/Host.container";
 import { PlayerContainer } from "containers/Game/Quiz/Player/Player.container";
 import { FullScreenError } from "components/Utils/FullScreenError";
-import { EUserType } from "constants/GameUserType.constants";
+import { UserType } from "constants/GameUserType.constants";
 import { useGame } from "hooks/game/useGame.hook";
 import { getNS } from "utils/networkStatus.util";
 import { FullHeightLoader } from "components/Utils/FullHeightLoader";
 
 interface QuizProps {
   shortId: string;
-  userType: EUserType;
+  userType: UserType;
 }
 
 export const QuizContainer: React.FC<QuizProps> = ({ shortId, userType }): JSX.Element => {
@@ -19,11 +19,11 @@ export const QuizContainer: React.FC<QuizProps> = ({ shortId, userType }): JSX.E
     subscribe: {
       stage: true,
       players: true,
-      currentQuizItem: userType === EUserType.play || userType === EUserType.join,
+      currentQuizItem: userType === UserType.play || userType === UserType.join,
     },
   });
 
-  if (userType in EUserType) {
+  if (userType in UserType) {
     return {
       ready: {
         host: <HostContainer game={game} />,

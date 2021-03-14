@@ -1,4 +1,4 @@
-export enum ESounds {
+export enum Sounds {
   homeWater = "/sounds/Home-water.mp3",
   gamePrep = "/sounds/GamePrep.mp3",
   CPOCCJingle = "/sounds/CaPasseOuCaCash.mp3",

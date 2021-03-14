@@ -6,11 +6,12 @@ import { DuoAnswersIndexes, QuizItemData } from "models/Quiz.model";
 import { DuoAnswers } from "components/Quiz/Player/DuoAnswers";
 import { CarreAnswers } from "components/Quiz/Player/CarreAnswers";
 import { CashAnswer } from "components/Quiz/Player/CashAnswer";
-import { AnswerType, Game } from "models/Game.model";
+import { Game } from "models/Game.model";
 import { FullScreenError } from "components/Utils/FullScreenError";
 import { useCurrentAnswer } from "hooks/quiz/useCurrentAnswer.hook";
 import { useNonNullQuizItemData } from "hooks/quiz/useNonNullQuizItemData.hook";
 import { usePlayersAnswers } from "hooks/quiz/usePlayersAnswers.hook";
+import { AnswerType } from "constants/AnswerType.constants";
 
 interface DuoCarreCashAnswerContainerProps {
   game: Game;

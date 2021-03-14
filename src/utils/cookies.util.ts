@@ -1,15 +1,15 @@
 import Cookies from "js-cookie";
-import { ECookieName } from "constants/Cookies.constants";
+import { CookieName } from "constants/Cookies.constants";
 
 interface SetGameCookieProps<T> {
   prefix: string;
-  cookieName: ECookieName;
+  cookieName: CookieName;
   cookieValue: T;
 }
 
 interface GetCookieProps {
   prefix: string;
-  cookieName: ECookieName;
+  cookieName: CookieName;
 }
 
 export const getCookie = <T>({ prefix, cookieName }: GetCookieProps): T => {

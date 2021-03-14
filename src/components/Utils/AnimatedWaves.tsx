@@ -1,4 +1,4 @@
-import { EStyles } from "constants/Styling.constants";
+import { Styles } from "constants/Styling.constants";
 import React from "react";
 import styled from "styled-components";
 
@@ -7,7 +7,7 @@ interface AnimatedWavesProps {
 }
 
 export const AnimatedWaves: React.FC<AnimatedWavesProps> = ({
-  backgroundGradient = [EStyles.redOrange, EStyles.yellow],
+  backgroundGradient = [Styles.redOrange, Styles.yellow],
 }): JSX.Element => {
   const svgContainerRef = React.useRef<HTMLDivElement>(null);
 
@@ -36,9 +36,9 @@ export const AnimatedWaves: React.FC<AnimatedWavesProps> = ({
           />
         </defs>
         <Parallax>
-          <use xlinkHref="#gentle-wave" x="50" y="0" fill={EStyles.darkBlue} />
-          <use xlinkHref="#gentle-wave" x="50" y="3" fill={EStyles.blue} />
-          <use xlinkHref="#gentle-wave" x="50" y="6" fill={EStyles.lightBlue} />
+          <use xlinkHref="#gentle-wave" x="50" y="0" fill={Styles.darkBlue} />
+          <use xlinkHref="#gentle-wave" x="50" y="3" fill={Styles.blue} />
+          <use xlinkHref="#gentle-wave" x="50" y="6" fill={Styles.lightBlue} />
         </Parallax>
       </SvgWave>
     </SvgContainer>

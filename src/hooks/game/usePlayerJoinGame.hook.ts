@@ -2,7 +2,7 @@ import React from "react";
 import { useMutation } from "@apollo/client";
 import { useHistory } from "react-router-dom";
 
-import { ECookieName } from "constants/Cookies.constants";
+import { CookieName } from "constants/Cookies.constants";
 import { ADD_PLAYER_TO_GAME } from "services/games.service";
 import { resetCookies, setCookie } from "utils/cookies.util";
 
@@ -36,7 +36,7 @@ export const usePlayerJoinGame = ({ shortId }: UsePlayerJoinGameProps): UsePlaye
       ).data.addPlayerToGame;
       setCookie<string>({
         prefix: shortId,
-        cookieName: ECookieName.playerId,
+        cookieName: CookieName.playerId,
         cookieValue: playerId,
       });
 

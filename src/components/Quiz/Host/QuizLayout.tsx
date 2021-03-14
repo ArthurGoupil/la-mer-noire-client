@@ -5,14 +5,14 @@ import { FullWidthContainer } from "components/Utils/FullWidthContainer";
 import { LMNLogo } from "components/Utils/LMNLogo";
 import { GameName } from "./GameName";
 import { StageNameMini } from "./StageNameMini";
-import { EGameStage } from "constants/GameStage.constants";
+import { GameStage } from "constants/GameStage.constants";
 import { useWindowHeight } from "hooks/others/useWindowHeight.hook";
-import { EStyles } from "constants/Styling.constants";
+import { Styles } from "constants/Styling.constants";
 import { AnimatedWaves } from "components/Utils/AnimatedWaves";
 
 interface QuizLayoutProps {
   gameName: string;
-  stage: EGameStage;
+  stage: GameStage;
   topScreens: TopScreen[];
   showTopScreen: boolean;
   children: React.ReactNode;
@@ -128,7 +128,7 @@ const QuizLayoutContainer = styled.div<{ minHeight: number }>`
   height: 100%;
   min-height: ${(props) => props.minHeight}px;
   padding: 40px;
-  background: linear-gradient(to bottom, ${EStyles.blue}, ${EStyles.darkBlue});
+  background: linear-gradient(to bottom, ${Styles.blue}, ${Styles.darkBlue});
   position: relative;
 `;
 
@@ -138,7 +138,7 @@ const TopScreenAndWaveContainer = styled.div<{ display: string }>`
   position: absolute;
   top: -100%;
   display: ${(props) => props.display};
-  background: linear-gradient(to bottom, ${EStyles.lightBlue} 15%, ${EStyles.blue} 100%);
+  background: linear-gradient(to bottom, ${Styles.lightBlue} 15%, ${Styles.blue} 100%);
 `;
 
 const TopScreenContainer = styled.div<{ minHeight: number }>`

@@ -1,5 +1,5 @@
-import { EStyles } from "constants/Styling.constants";
-import { AnswerType } from "models/Game.model";
+import { AnswerType } from "constants/AnswerType.constants";
+import { Styles } from "constants/Styling.constants";
 
 interface GetAnswerTypeColorProps {
   answerType: AnswerType;
@@ -7,8 +7,8 @@ interface GetAnswerTypeColorProps {
 
 export const getAnswerTypeColor = ({ answerType }: GetAnswerTypeColorProps): string => {
   return {
-    duo: EStyles.turquoise,
-    carre: EStyles.yellow,
-    cash: EStyles.red,
+    duo: Styles.turquoise,
+    carre: Styles.yellow,
+    cash: Styles.red,
   }[answerType];
 };

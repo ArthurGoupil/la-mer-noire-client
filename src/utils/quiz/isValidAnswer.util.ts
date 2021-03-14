@@ -1,4 +1,4 @@
-import { AnswerType } from "models/Game.model";
+import { AnswerType } from "constants/AnswerType.constants";
 import removeAccents from "remove-accents";
 
 interface IsValidAnswerProps {

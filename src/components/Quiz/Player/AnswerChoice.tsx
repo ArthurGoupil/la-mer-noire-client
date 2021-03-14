@@ -1,9 +1,10 @@
 import React from "react";
 import styled from "styled-components";
 
-import { EStyles } from "constants/Styling.constants";
-import { AnswerType, CurrentAnswer } from "models/Game.model";
+import { Styles } from "constants/Styling.constants";
+import { CurrentAnswer } from "models/Game.model";
 import { SetCurrentAnswerProps } from "hooks/quiz/useCurrentAnswer.hook";
+import { AnswerType } from "constants/AnswerType.constants";
 
 interface AnswerChoiceProps {
   color: string;
@@ -61,7 +62,7 @@ const AnswerButton = styled.button<{
   width: 100%;
   flex: 1;
   margin: 10px 0;
-  text-shadow: 2px 2px 0px ${EStyles.darkBlue};
+  text-shadow: 2px 2px 0px ${Styles.darkBlue};
   font-weight: bold;
   background-color: ${(props) => props.color};
   border-radius: 5px;

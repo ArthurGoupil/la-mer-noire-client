@@ -52,8 +52,8 @@ export const ADD_PLAYER_TO_GAME: DocumentNode = gql`
 `;
 
 export const UPDATE_GAME_STAGE: DocumentNode = gql`
-  mutation UpdateGameStage($shortId: String!, $stage: String!) {
-    updateGameStage(shortId: $shortId, stage: $stage)
+  mutation UpdatGameStage($shortId: String!, $stage: String!) {
+    updatGameStage(shortId: $shortId, stage: $stage)
   }
 `;
 

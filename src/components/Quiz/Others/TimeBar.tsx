@@ -1,9 +1,9 @@
 import React from "react";
 import styled from "styled-components";
 
-import { EStyles } from "constants/Styling.constants";
+import { Styles } from "constants/Styling.constants";
 import { useSound } from "hooks/others/useSound.hook";
-import { ESounds } from "constants/Sounds.constants";
+import { Sounds } from "constants/Sounds.constants";
 
 interface TimeBarProps {
   totalTime: number;
@@ -20,7 +20,7 @@ export const TimeBar: React.FC<TimeBarProps> = ({
   soundShouldStop,
   backgroundGradient,
 }): JSX.Element => {
-  const { play, stop, isPlaying } = useSound({ sound: ESounds.quizOver });
+  const { play, stop, isPlaying } = useSound({ sound: Sounds.quizOver });
 
   const barContainerRef = React.useRef<HTMLDivElement>(null);
   const barRef = React.useRef<HTMLDivElement>(null);
@@ -85,7 +85,7 @@ const BarContainer = styled.div`
   width: 100%;
   height: 60px;
   padding: 10px;
-  background-color: ${EStyles.darken_darkBlue};
+  background-color: ${Styles.darken_darkBlue};
   border-radius: 5px;
 `;
 

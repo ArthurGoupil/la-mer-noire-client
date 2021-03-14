@@ -1,8 +1,8 @@
-export enum EGameStage {
+export enum GameStage {
   playersRegistration = "playersRegistration",
   caPasseOuCaCash = "caPasseOuCaCash",
 }
 
-export enum EQuizStage {
+export enum QuizStage {
   caPasseOuCaCash = "caPasseOuCaCash",
 }

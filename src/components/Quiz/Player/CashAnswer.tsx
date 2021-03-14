@@ -1,9 +1,10 @@
 import { Button } from "components/Utils/Button";
 import { FullHeightLayout } from "components/Utils/FullHeightLayout";
 import { FullWidthContainer } from "components/Utils/FullWidthContainer";
-import { EStyles } from "constants/Styling.constants";
+import { AnswerType } from "constants/AnswerType.constants";
+import { Styles } from "constants/Styling.constants";
 import { SetCurrentAnswerProps } from "hooks/quiz/useCurrentAnswer.hook";
-import { AnswerType, CurrentAnswer } from "models/Game.model";
+import { CurrentAnswer } from "models/Game.model";
 import React from "react";
 import styled from "styled-components";
 import { isDesktop } from "utils/isDesktop.util";
@@ -154,9 +155,9 @@ export const CashAnswer: React.FC<CashAnswerProps> = ({
         <div className="d-flex flex-grow align-center">
           <Button
             label="Afficher le clavier"
-            backgroundColor={EStyles.blue}
-            borderColor={EStyles.blue}
-            hoverColor={EStyles.darken_blue}
+            backgroundColor={Styles.blue}
+            borderColor={Styles.blue}
+            hoverColor={Styles.darken_blue}
             onClick={() => {
               answerWordsRefs[0]?.current?.focus();
             }}
@@ -201,7 +202,7 @@ const Input = styled.input<{
   border: none;
   background-color: transparent;
   text-align: left;
-  outline-color: ${EStyles.turquoise};
+  outline-color: ${Styles.turquoise};
   letter-spacing: ${(props) => props.letterSpacing}px;
   padding: 10px;
 
@@ -219,7 +220,7 @@ const InputPlaceholdersContainer = styled.div<{ width: number }>`
 const InputPlaceholder = styled.div<{ width: number; marginLeft: number }>`
   width: ${(props) => props.width}px;
   height: 3px;
-  background-color: ${EStyles.lightBlue};
+  background-color: ${Styles.lightBlue};
   pointer-events: none;
   margin-left: ${(props) => props.marginLeft}px;
   border-radius: 5px;

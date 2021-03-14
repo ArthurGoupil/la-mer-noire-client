@@ -1,10 +1,10 @@
 import React from "react";
 import styled from "styled-components";
 
-import { AnswerType } from "models/Game.model";
-import { EStyles } from "constants/Styling.constants";
+import { Styles } from "constants/Styling.constants";
 import { getStringFromAnswerType } from "utils/quiz/getStringFromAnswerType";
 import { FullWidthContainer } from "components/Utils/FullWidthContainer";
+import { AnswerType } from "constants/AnswerType.constants";
 
 interface PlayerAnswerProps {
   playerName: string;
@@ -27,11 +27,11 @@ export const PlayerAnswer: React.FC<PlayerAnswerProps> = ({
 
   const answerBackgroundColor = answerTypeString
     ? isGoodAnswer
-      ? EStyles.good
-      : EStyles.wrong
+      ? Styles.good
+      : Styles.wrong
     : !questionIsOver
-    ? EStyles.darkBlue
-    : EStyles.wrong;
+    ? Styles.darkBlue
+    : Styles.wrong;
 
   return (
     <PlayerAnswerContainer className="d-flex flex-column " noMarginRight={noMarginRight}>
@@ -40,7 +40,7 @@ export const PlayerAnswer: React.FC<PlayerAnswerProps> = ({
       <FullWidthContainer>
         <AnswerTypeContainer
           className="d-flex justify-center align-center"
-          color={answerTypeString || questionIsOver ? EStyles.darkBlue : "white"}
+          color={answerTypeString || questionIsOver ? Styles.darkBlue : "white"}
           backgroundColor={answerBackgroundColor}
           fontSize={answerTypeString ? "18px" : "12px"}
         >
@@ -55,7 +55,7 @@ export const PlayerAnswer: React.FC<PlayerAnswerProps> = ({
 const PlayerAnswerContainer = styled.div<{ noMarginRight: boolean }>`
   max-width: 150px;
   font-family: "Boogaloo", cursive;
-  background-color: ${EStyles.darken_blue};
+  background-color: ${Styles.darken_blue};
   padding: 15px;
   margin-bottom: 20px;
   margin-right: ${(props) => (props.noMarginRight ? 0 : "20px")};
@@ -75,7 +75,7 @@ const InnerShadow = styled.div`
   position: absolute;
   top: 0;
   left: 0;
-  box-shadow: -20px 0px 15px ${EStyles.darken_blue} inset;
+  box-shadow: -20px 0px 15px ${Styles.darken_blue} inset;
   z-index: 1;
 `;
 

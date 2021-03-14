@@ -1,4 +1,4 @@
-import { EStyles } from "constants/Styling.constants";
+import { Styles } from "constants/Styling.constants";
 import { QuizLevel } from "models/Quiz.model";
 
 interface GetLevelGradientProps {
@@ -7,8 +7,8 @@ interface GetLevelGradientProps {
 
 export const getQuizLevelGradient = ({ quizLevel }: GetLevelGradientProps): string[] => {
   return {
-    beginner: [EStyles.turquoise, EStyles.lightBlue],
-    intermediate: [EStyles.yellow, EStyles.orange],
-    expert: [EStyles.red, EStyles.redOrange],
+    beginner: [Styles.turquoise, Styles.lightBlue],
+    intermediate: [Styles.yellow, Styles.orange],
+    expert: [Styles.red, Styles.redOrange],
   }[quizLevel];
 };

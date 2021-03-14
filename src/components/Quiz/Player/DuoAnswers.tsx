@@ -1,9 +1,10 @@
 import React from "react";
 
-import { EStyles } from "constants/Styling.constants";
+import { Styles } from "constants/Styling.constants";
 import { AnswerChoice } from "./AnswerChoice";
-import { AnswerType, CurrentAnswer } from "models/Game.model";
+import { CurrentAnswer } from "models/Game.model";
 import { SetCurrentAnswerProps } from "hooks/quiz/useCurrentAnswer.hook";
+import { AnswerType } from "constants/AnswerType.constants";
 
 interface CarreAnswersProps {
   quizItemSignature: string;
@@ -25,7 +26,7 @@ export const DuoAnswers: React.FC<CarreAnswersProps> = ({
   return (
     <>
       <AnswerChoice
-        color={EStyles.darkBlue}
+        color={Styles.darkBlue}
         quizAnswer={choices[0]}
         answerType={AnswerType.duo}
         quizItemSignature={quizItemSignature}
@@ -35,7 +36,7 @@ export const DuoAnswers: React.FC<CarreAnswersProps> = ({
         questionIsOver={questionIsOver}
       />
       <AnswerChoice
-        color={EStyles.yellow}
+        color={Styles.yellow}
         quizAnswer={choices[1]}
         answerType={AnswerType.duo}
         quizItemSignature={quizItemSignature}

@@ -1,4 +1,4 @@
-export enum ECookieName {
+export enum CookieName {
   playerId = "playerId",
   currentAnswer = "currentAnswer",
   answerTypeChoice = "answerTypeChoice",

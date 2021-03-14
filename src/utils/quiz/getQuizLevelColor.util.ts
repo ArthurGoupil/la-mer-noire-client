@@ -1,4 +1,4 @@
-import { EStyles } from "constants/Styling.constants";
+import { Styles } from "constants/Styling.constants";
 import { QuizLevel } from "models/Quiz.model";
 
 interface GetQuizLevelColorProps {
@@ -7,8 +7,8 @@ interface GetQuizLevelColorProps {
 
 export const getQuizLevelColor = ({ quizLevel }: GetQuizLevelColorProps): string => {
   return {
-    beginner: EStyles.turquoise,
-    intermediate: EStyles.yellow,
-    expert: EStyles.red,
+    beginner: Styles.turquoise,
+    intermediate: Styles.yellow,
+    expert: Styles.red,
   }[quizLevel];
 };

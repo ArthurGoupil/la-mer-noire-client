@@ -1,12 +1,12 @@
-import { EGameStage } from "constants/GameStage.constants";
+import { GameStage } from "constants/GameStage.constants";
 
 interface GetStageNameProps {
-  gameStage: EGameStage;
+  gameStage: GameStage;
 }
 
 export const getStageName = ({ gameStage }: GetStageNameProps): string => {
   switch (gameStage) {
-    case EGameStage.caPasseOuCaCash:
+    case GameStage.caPasseOuCaCash:
       return "ÇA PASSE OU ÇA CASH !";
     default:
       return "Unknown game stage.";

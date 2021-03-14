@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 
-import { EStyles } from "constants/Styling.constants";
+import { Styles } from "constants/Styling.constants";
 import { useWindowHeight } from "hooks/others/useWindowHeight.hook";
 
 export const AnimatedSubmarine: React.FC = (): JSX.Element => {
@@ -34,10 +34,10 @@ const SubmarineContainer = styled.div<{ height: number }>`
   pointer-events: none;
 
   animation: translate 15s infinite linear;
-  @media only screen and (max-width: ${EStyles.tabletBreakPoint}) {
+  @media only screen and (max-width: ${Styles.tabletBreakPoint}) {
     animation: translateTablet 15s infinite linear;
   }
-  @media only screen and (max-width: ${EStyles.mobileBreakPoint}) {
+  @media only screen and (max-width: ${Styles.mobileBreakPoint}) {
     animation: translateMobile 10s infinite linear;
   }
 
@@ -95,10 +95,10 @@ const Submarine = styled.div`
   animation: upDown 1.5s alternate infinite ease-in-out;
 
   left: -20vw;
-  @media only screen and (max-width: ${EStyles.tabletBreakPoint}) {
+  @media only screen and (max-width: ${Styles.tabletBreakPoint}) {
     left: -40vw;
   }
-  @media only screen and (max-width: ${EStyles.mobileBreakPoint}) {
+  @media only screen and (max-width: ${Styles.mobileBreakPoint}) {
     left: -80vw;
   }
 `;
@@ -129,7 +129,7 @@ const BubbleBase = styled.div`
   position: absolute;
   background-color: #99d3f5;
   opacity: 1;
-  box-shadow: 2px 2px 0 ${EStyles.darkBlue};
+  box-shadow: 2px 2px 0 ${Styles.darkBlue};
 `;
 const Bubble1 = styled(BubbleBase)`
   width: 10px;

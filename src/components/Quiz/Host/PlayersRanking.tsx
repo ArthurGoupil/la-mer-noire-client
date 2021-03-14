@@ -2,7 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import { Flipper, Flipped } from "react-flip-toolkit";
 
-import { EStyles } from "constants/Styling.constants";
+import { Styles } from "constants/Styling.constants";
 import { PlayerData, PlayerPoints, PlayersPoints } from "models/Game.model";
 
 interface PlayersRankingProps {
@@ -91,7 +91,7 @@ const RankingContainer = styled.div`
 `;
 
 const RankingTitle = styled.h2`
-  text-shadow: 2px 2px 0 ${EStyles.redOrange};
+  text-shadow: 2px 2px 0 ${Styles.redOrange};
   margin-bottom: 50px;
   text-align: center;
   font-size: 50px;
@@ -124,15 +124,15 @@ const PlayerRank = styled.span`
   padding-right: 3px;
   font-size: 40px;
   color: white;
-  text-shadow: 2px 2px 0 ${EStyles.red};
+  text-shadow: 2px 2px 0 ${Styles.red};
 `;
 
 const PlayerName = styled.span`
   height: 100%;
   font-size: 25px;
-  background: linear-gradient(to bottom, ${EStyles.darkBlue} 0%, ${EStyles.blue} 150%);
+  background: linear-gradient(to bottom, ${Styles.darkBlue} 0%, ${Styles.blue} 150%);
   border-radius: 5px;
-  text-shadow: 2px 2px 0 ${EStyles.darkBlue};
+  text-shadow: 2px 2px 0 ${Styles.darkBlue};
   padding: 0 15px;
   white-space: nowrap;
   overflow: hidden;
@@ -145,8 +145,8 @@ const InnerShadow = styled.div`
   position: absolute;
   top: 0;
   right: 0;
-  /* box-shadow: -20px 0px 15px ${EStyles.darkBlue} inset; */
-  background: linear-gradient(to left, ${EStyles.darkBlue} 20%, transparent 100%);
+  /* box-shadow: -20px 0px 15px ${Styles.darkBlue} inset; */
+  background: linear-gradient(to left, ${Styles.darkBlue} 20%, transparent 100%);
   z-index: 1;
   overflow: hidden;
 `;
@@ -154,7 +154,7 @@ const InnerShadow = styled.div`
 const PlayerPointsContainer = styled.span`
   min-width: 45px;
   height: 100%;
-  background: linear-gradient(to bottom, ${EStyles.orange} 0%, ${EStyles.redOrange} 170%);
+  background: linear-gradient(to bottom, ${Styles.orange} 0%, ${Styles.redOrange} 170%);
   margin-left: 10px;
   border-radius: 5px;
   padding-right: 3px;
@@ -163,7 +163,7 @@ const PlayerPointsContainer = styled.span`
 const Points = styled.span<{ shouldRotate: boolean }>`
   font-size: 30px;
   color: white;
-  text-shadow: 2px 2px 0 ${EStyles.red};
+  text-shadow: 2px 2px 0 ${Styles.red};
   transform: ${(props) => (props.shouldRotate ? "rotate(720deg)" : "rotate(0deg)")};
   transition: transform 1s;
 `;

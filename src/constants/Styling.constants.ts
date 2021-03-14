@@ -1,4 +1,4 @@
-export const EStyles = {
+export const Styles = {
   // COLORS
   darkBlue: "#0d3b66",
   blue: "#056CF2",

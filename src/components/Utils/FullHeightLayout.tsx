@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 
-import { EStyles } from "constants/Styling.constants";
+import { Styles } from "constants/Styling.constants";
 import { useWindowHeight } from "hooks/others/useWindowHeight.hook";
 import { isDesktop } from "utils/isDesktop.util";
 
@@ -38,5 +38,5 @@ const Container = styled.div<{
   overflow: hidden;
   position: relative;
   padding: ${(props) => props.padding};
-  background: linear-gradient(to bottom, ${EStyles.blue}, ${EStyles.darkBlue});
+  background: linear-gradient(to bottom, ${Styles.blue}, ${Styles.darkBlue});
 `;

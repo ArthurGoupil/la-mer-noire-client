@@ -8,7 +8,7 @@ import { useMutation } from "@apollo/client";
 import { GENERATE_NEW_CURRENT_QUIZ_ITEM, GET_GAME } from "services/games.service";
 import { QuizItemData } from "models/Quiz.model";
 import { usePlayersAnswers } from "hooks/quiz/usePlayersAnswers.hook";
-import { EQuizDuration } from "constants/QuizDuration.constants";
+import { QuizDuration } from "constants/QuizDuration.constants";
 import { useCaPasseOuCaCashMaster } from "hooks/game/useCaPasseOuCaCashMaster.hook";
 import { QuizItemInfos } from "components/Quiz/Host/QuizItemInfos";
 import { useNonNullQuizItemData } from "hooks/quiz/useNonNullQuizItemData.hook";
@@ -16,7 +16,7 @@ import { QuizLayout } from "components/Quiz/Host/QuizLayout";
 import { getQuizLevelGradient } from "utils/quiz/getQuizLevelGradient.util";
 import { QuestionSummary } from "components/Quiz/Host/QuestionSummary";
 import { PlayersRanking } from "components/Quiz/Host/PlayersRanking";
-import { ECaPasseOuCaCashTopScreensStates } from "constants/CaPasseOuCaCash.constants";
+import { CaPasseOuCaCashTopScreensStates } from "constants/CaPasseOuCaCash.constants";
 import { getCaPasseOuCaCashMasterInterpretation } from "utils/quiz/getCaPasseOuCaCashInterpretation.util";
 import { StageName } from "components/Quiz/Host/StageName";
 
@@ -138,7 +138,7 @@ export const CaPasseOuCaCashContainer: React.FC<CaPasseOuCaCashContainerProps> =
     <QuizLayout
       stage={game.stage}
       gameName={game.name}
-      showTopScreen={caPasseOuCaCashMaster.state in ECaPasseOuCaCashTopScreensStates}
+      showTopScreen={caPasseOuCaCashMaster.state in CaPasseOuCaCashTopScreensStates}
       topScreens={topScreens}
     >
       <div className="d-flex flex-column align-center justify-center flex-grow">
@@ -160,7 +160,7 @@ export const CaPasseOuCaCashContainer: React.FC<CaPasseOuCaCashContainerProps> =
         </div>
       </div>
       <TimeBar
-        totalTime={EQuizDuration.caPasseOuCaCash}
+        totalTime={QuizDuration.caPasseOuCaCash}
         remainingTime={remainingTime}
         isOver={questionsRecord[nonNullQuizItemData.quizItemSignature]?.isDone}
         soundShouldStop={clearQuestionOverSound}

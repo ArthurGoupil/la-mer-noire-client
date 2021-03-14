@@ -1,20 +1,20 @@
 import React from "react";
 import styled from "styled-components";
 
-import { EStyles } from "constants/Styling.constants";
+import { Styles } from "constants/Styling.constants";
 import { PlayersList } from "components/GamePreparation/PlayersList";
 import { LMNLogo } from "components/Utils/LMNLogo";
 import { FullHeightLayout } from "components/Utils/FullHeightLayout";
 import { InputAndButton } from "components/Utils/InputAndButton";
 import { usePlayerJoinGame } from "hooks/game/usePlayerJoinGame.hook";
 import { Game } from "models/Game.model";
-import { EUserType } from "constants/GameUserType.constants";
+import { UserType } from "constants/GameUserType.constants";
 import { ErrorMessage } from "components/Utils/ErrorMessage";
 import { AnimatedSubmarine } from "components/Utils/AnimatedSubmarine";
 
 interface JoinGamePreparationProps {
   game: Game;
-  userType: EUserType;
+  userType: UserType;
 }
 
 export const JoinGamePreparation: React.FC<JoinGamePreparationProps> = ({
@@ -55,8 +55,8 @@ export const JoinGamePreparation: React.FC<JoinGamePreparationProps> = ({
 };
 
 const GameName = styled.h1`
-  color: ${EStyles.yellow};
-  text-shadow: 3px 3px 0 ${EStyles.redOrange};
+  color: ${Styles.yellow};
+  text-shadow: 3px 3px 0 ${Styles.redOrange};
   text-align: center;
   margin-bottom: 20px;
 `;

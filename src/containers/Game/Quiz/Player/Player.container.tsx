@@ -3,12 +3,12 @@ import React from "react";
 import { Game } from "models/Game.model";
 import { FullScreenError } from "components/Utils/FullScreenError";
 import { getCookie } from "utils/cookies.util";
-import { ECookieName } from "constants/Cookies.constants";
+import { CookieName } from "constants/Cookies.constants";
 import { FullHeightLayout } from "components/Utils/FullHeightLayout";
 import { useQuery } from "@apollo/client";
 import { GET_QUIZ_ITEM_DATA } from "services/quizzes.service";
 import { DuoCarreCashAnswerContainer } from "./DuoCarreCashAnswer.container";
-import { EQuizStage } from "constants/GameStage.constants";
+import { QuizStage } from "constants/GameStage.constants";
 import { getGlobalNetworkStatus } from "utils/networkStatus.util";
 import { FullHeightLoader } from "components/Utils/FullHeightLoader";
 import { useDuoAnswersIndexes } from "hooks/quiz/useDuoAnswersIndexes.hook";
@@ -23,7 +23,7 @@ export const PlayerContainer: React.FC<PlayerProps> = ({ game }): JSX.Element =>
 
   const playerId = getCookie<string>({
     prefix: game.shortId,
-    cookieName: ECookieName.playerId,
+    cookieName: CookieName.playerId,
   });
 
   const {
@@ -57,7 +57,7 @@ export const PlayerContainer: React.FC<PlayerProps> = ({ game }): JSX.Element =>
                 playerId={playerId}
               />
             ),
-          }[(stage as unknown) as EQuizStage]
+          }[(stage as unknown) as QuizStage]
         }
       </FullHeightLayout>
     ),

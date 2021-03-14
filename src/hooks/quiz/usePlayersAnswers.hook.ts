@@ -4,10 +4,10 @@ import { useSubscription } from "@apollo/client";
 import { PLAYER_ANSWERED } from "services/games.service";
 import { getCookie, setCookie } from "utils/cookies.util";
 import { Answer, PlayerData } from "models/Game.model";
-import { ECookieName } from "constants/Cookies.constants";
+import { CookieName } from "constants/Cookies.constants";
 import { isValidAnswer } from "utils/quiz/isValidAnswer.util";
 import { useSound } from "hooks/others/useSound.hook";
-import { ESounds } from "constants/Sounds.constants";
+import { Sounds } from "constants/Sounds.constants";
 
 interface UsePlayersAnswersProps {
   shortId: string;
@@ -33,16 +33,16 @@ export const usePlayersAnswers = ({
     variables: { shortId },
   });
 
-  const { play: playFirstCash } = useSound({ sound: ESounds.firstCash });
-  const { play: playCash } = useSound({ sound: ESounds.cash });
-  const { play: playCarre } = useSound({ sound: ESounds.carre });
-  const { play: playDuo } = useSound({ sound: ESounds.duo });
-  const { play: playWrong } = useSound({ sound: ESounds.wrong });
+  const { play: playFirstCash } = useSound({ sound: Sounds.firstCash });
+  const { play: playCash } = useSound({ sound: Sounds.cash });
+  const { play: playCarre } = useSound({ sound: Sounds.carre });
+  const { play: playDuo } = useSound({ sound: Sounds.duo });
+  const { play: playWrong } = useSound({ sound: Sounds.wrong });
 
   const [playersAnswers, setPlayersAnswers] = React.useState<Record<string, Answer>>(
     getCookie({
       prefix: shortId,
-      cookieName: ECookieName.playersAnswers,
+      cookieName: CookieName.playersAnswers,
     }) || {},
   );
 
@@ -54,7 +54,7 @@ export const usePlayersAnswers = ({
         setPlayersAnswers({});
         setCookie<Record<string, Answer>>({
           prefix: shortId,
-          cookieName: ECookieName.playersAnswers,
+          cookieName: CookieName.playersAnswers,
           cookieValue: {},
         });
         setAllPlayersHaveAnswered(false);
@@ -133,7 +133,7 @@ export const usePlayersAnswers = ({
       setPlayersAnswers({ ...playersAnswers });
       setCookie<Record<string, Answer>>({
         prefix: shortId,
-        cookieName: ECookieName.playersAnswers,
+        cookieName: CookieName.playersAnswers,
         cookieValue: playersAnswers,
       });
     }

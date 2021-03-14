@@ -1,8 +1,9 @@
+import { AnswerType } from "constants/AnswerType.constants";
 import {
-  ECaPasseOuCaCashBottomScreensStates,
-  ECaPasseOuCaCashTopScreensStates,
+  CaPasseOuCaCashBottomScreensStates,
+  CaPasseOuCaCashTopScreensStates,
 } from "constants/CaPasseOuCaCash.constants";
-import { EGameStage } from "constants/GameStage.constants";
+import { GameStage } from "constants/GameStage.constants";
 import { Player } from "models/Player.model";
 import { QuestionNumber } from "utils/quiz/getQuizLevelByQuestionNumber.util";
 import { QuizItemId, QuizLevel } from "./Quiz.model";
@@ -11,7 +12,7 @@ export interface Game {
   _id: string;
   shortId: string;
   name: string;
-  stage: EGameStage;
+  stage: GameStage;
   players: [PlayerData];
   currentPlayers: Player[];
   currentQuizItem: CurrentQuizItem;
@@ -41,12 +42,6 @@ export interface Answer extends CurrentAnswer {
   isFirstGoodCash: boolean;
 }
 
-export enum AnswerType {
-  duo = "duo",
-  carre = "carre",
-  cash = "cash",
-}
-
 export interface AnswerTypeChoice {
   quizItemSignature: string;
   answerType: AnswerType;
@@ -57,8 +52,8 @@ export type PlayersPoints = Record<string, PlayerPoints>;
 
 export interface CaPasseOuCaCashMaster {
   state:
-    | keyof typeof ECaPasseOuCaCashBottomScreensStates
-    | keyof typeof ECaPasseOuCaCashTopScreensStates;
+    | keyof typeof CaPasseOuCaCashBottomScreensStates
+    | keyof typeof CaPasseOuCaCashTopScreensStates;
   quizLevel: QuizLevel;
   questionNumber: QuestionNumber;
   playersPoints: PlayersPoints;

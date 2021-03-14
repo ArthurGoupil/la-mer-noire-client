@@ -1,10 +1,10 @@
-export const ECaPasseOuCaCashPoints = {
+export const CaPasseOuCaCashPoints = {
   beginner: { duo: 1, carre: 2, cash: 6 },
   intermediate: { duo: 2, carre: 4, cash: 8 },
   expert: { duo: 3, carre: 6, cash: 10 },
 };
 
-export enum ECaPasseOuCaCashBottomScreensStates {
+export enum CaPasseOuCaCashBottomScreensStates {
   question_fetchTimestamp = "question_fetchTimestamp",
   question = "question",
   allPlayersHaveAnswered = "allPlayersHaveAnswered",
@@ -12,7 +12,7 @@ export enum ECaPasseOuCaCashBottomScreensStates {
   questionMustTimeout = "questionMustTimeout",
 }
 
-export enum ECaPasseOuCaCashTopScreensStates {
+export enum CaPasseOuCaCashTopScreensStates {
   stageName_wait = "stageName_wait",
   stageName = "stageName",
   quizItemInfos = "quizItemInfos",

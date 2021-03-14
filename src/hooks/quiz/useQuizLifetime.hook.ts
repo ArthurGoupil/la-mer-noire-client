@@ -3,7 +3,7 @@ import { useQuery } from "@apollo/client";
 
 import { GET_TIMESTAMP } from "services/others.service";
 import { getCookie, setCookie } from "utils/cookies.util";
-import { ECookieName } from "constants/Cookies.constants";
+import { CookieName } from "constants/Cookies.constants";
 import { QuestionRecord } from "models/Game.model";
 interface UseQuizLifetimeProps {
   shortId: string;
@@ -32,7 +32,7 @@ export const useQuizLifetime = ({
   const [questionsRecord, setQuestionsRecord] = React.useState<Record<string, QuestionRecord>>(
     getCookie({
       prefix: shortId,
-      cookieName: ECookieName.questionsRecord,
+      cookieName: CookieName.questionsRecord,
     }) || {},
   );
 
@@ -54,7 +54,7 @@ export const useQuizLifetime = ({
   const updateQuestionsRecord = React.useCallback(() => {
     setCookie<Record<string, QuestionRecord>>({
       prefix: shortId,
-      cookieName: ECookieName.questionsRecord,
+      cookieName: CookieName.questionsRecord,
       cookieValue: questionsRecord,
     });
     setQuestionsRecord({ ...questionsRecord });

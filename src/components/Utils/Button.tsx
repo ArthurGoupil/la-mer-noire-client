@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 
-import { EStyles } from "constants/Styling.constants";
+import { Styles } from "constants/Styling.constants";
 
 interface ButtonProps {
   onClick: () => void;
@@ -20,9 +20,9 @@ export const Button: React.FC<ButtonProps> = ({
   disabled = false,
   margin = "10px",
   color = "white",
-  backgroundColor = EStyles.lightBlue,
-  hoverColor = EStyles.darken_lightBlue,
-  borderColor = EStyles.lightBlue,
+  backgroundColor = Styles.lightBlue,
+  hoverColor = Styles.darken_lightBlue,
+  borderColor = Styles.lightBlue,
 }): JSX.Element => {
   return (
     <StyledButton

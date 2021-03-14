@@ -1,6 +1,6 @@
 import React from "react";
 
-import { EUserType } from "constants/GameUserType.constants";
+import { UserType } from "constants/GameUserType.constants";
 import { HostGamePreparation } from "components/GamePreparation/HostGamePreparation";
 import { JoinGamePreparation } from "components/GamePreparation/JoinGamePreparation";
 import { FullScreenError } from "components/Utils/FullScreenError";
@@ -11,7 +11,7 @@ import { Game } from "models/Game.model";
 
 interface GamePreparationProps {
   shortId: string;
-  userType: EUserType;
+  userType: UserType;
 }
 
 export const GamePreparationContainer: React.FC<GamePreparationProps> = ({
@@ -34,7 +34,7 @@ export const GamePreparationContainer: React.FC<GamePreparationProps> = ({
     }
   }, [game]);
 
-  if (userType in EUserType && currentGameData) {
+  if (userType in UserType && currentGameData) {
     return {
       ready: {
         host: <HostGamePreparation game={currentGameData} />,

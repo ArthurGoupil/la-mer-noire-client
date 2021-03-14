@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 
-import { EStyles } from "constants/Styling.constants";
+import { Styles } from "constants/Styling.constants";
 import { Answer, PlayerData, PlayersPoints } from "models/Game.model";
 import { getStringFromAnswerType } from "utils/quiz/getStringFromAnswerType";
 import { getAnswerTypeColor } from "utils/quiz/getAnswerTypeColor.util";
@@ -39,8 +39,8 @@ export const QuestionSummary: React.FC<QuestionSummary> = ({
                   <PlayerAnswer
                     color={
                       playersAnswers[playerData.player._id].isGoodAnswer
-                        ? EStyles.good
-                        : EStyles.wrong
+                        ? Styles.good
+                        : Styles.wrong
                     }
                   >
                     {playersAnswers[playerData.player._id].answer.toUpperCase()}
@@ -103,7 +103,7 @@ const QuizAnswer = styled.span`
   font-family: "Boogaloo", cursive;
   font-size: 40px;
   line-height: 35px;
-  color: ${EStyles.good};
+  color: ${Styles.good};
   margin-left: 10px;
 `;
 
@@ -131,7 +131,7 @@ const PlayerAnswerType = styled.span<{ backgroundColor: string; paddingLeft: str
   background-color: ${(props) => props.backgroundColor};
   padding: 4px ${(props) => props.paddingLeft} 4px 9px;
   border-radius: 5px;
-  text-shadow: 3px 2px 0px ${EStyles.darkBlue};
+  text-shadow: 3px 2px 0px ${Styles.darkBlue};
   position: relative;
 `;
 
@@ -150,7 +150,7 @@ const EmptyAnswer = styled.span`
 
 const PlayerName = styled.span`
   font-weight: 600;
-  color: ${EStyles.turquoise};
+  color: ${Styles.turquoise};
   margin-right: 10px;
 `;
 
@@ -165,7 +165,7 @@ const AdditionalPoints = styled.div`
   font-family: "Boogaloo", cursive;
   font-size: 35px;
   line-height: 25px;
-  color: ${EStyles.turquoise};
+  color: ${Styles.turquoise};
   position: absolute;
   left: 0;
   padding-left: 10px;

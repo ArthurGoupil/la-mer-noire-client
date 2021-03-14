@@ -9,7 +9,7 @@ import {
 } from "services/games.service";
 import { Game } from "models/Game.model";
 import { useSound } from "hooks/others/useSound.hook";
-import { ESounds } from "constants/Sounds.constants";
+import { Sounds } from "constants/Sounds.constants";
 
 interface UseGameProps {
   shortId: string;
@@ -36,7 +36,7 @@ export const useGame = ({
   const { subscribeToMore, data: { game } = {}, networkStatus } = useQuery(GET_GAME, {
     variables: { shortId },
   });
-  const { play: playerAddedPlay } = useSound({ sound: ESounds.playerAdded });
+  const { play: playerAddedPlay } = useSound({ sound: Sounds.playerAdded });
 
   React.useEffect(() => {
     let unsubscribeStage: () => void;

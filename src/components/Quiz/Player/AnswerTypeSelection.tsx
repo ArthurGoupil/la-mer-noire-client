@@ -1,10 +1,11 @@
 import React from "react";
 import styled from "styled-components";
 
-import { AnswerType, AnswerTypeChoice } from "models/Game.model";
-import { EStyles } from "constants/Styling.constants";
+import { AnswerTypeChoice } from "models/Game.model";
+import { Styles } from "constants/Styling.constants";
 import { FullHeightLayout } from "components/Utils/FullHeightLayout";
 import { useWindowHeight } from "hooks/others/useWindowHeight.hook";
+import { AnswerType } from "constants/AnswerType.constants";
 
 interface AnswerTypeSelectionProps {
   quizItemSignature: string;
@@ -28,7 +29,7 @@ export const AnswerTypeSelection: React.FC<AnswerTypeSelectionProps> = ({
       <AnswerTypeContainer
         disabled={questionIsOver}
         className="d-flex justify-center align-center"
-        backgroundColor={EStyles.lightBlue}
+        backgroundColor={Styles.lightBlue}
         opacity={questionIsOver ? 0.6 : 1}
         onClick={() => setAnswerTypeChoice({ quizItemSignature, answerType: AnswerType.duo })}
       >
@@ -37,7 +38,7 @@ export const AnswerTypeSelection: React.FC<AnswerTypeSelectionProps> = ({
       <AnswerTypeContainer
         disabled={questionIsOver}
         className="d-flex justify-center align-center"
-        backgroundColor={EStyles.yellow}
+        backgroundColor={Styles.yellow}
         opacity={questionIsOver ? 0.6 : 1}
         onClick={() => setAnswerTypeChoice({ quizItemSignature, answerType: AnswerType.carre })}
       >
@@ -46,7 +47,7 @@ export const AnswerTypeSelection: React.FC<AnswerTypeSelectionProps> = ({
       <AnswerTypeContainer
         disabled={questionIsOver}
         className="d-flex justify-center align-center"
-        backgroundColor={EStyles.red}
+        backgroundColor={Styles.red}
         opacity={questionIsOver ? 0.6 : 1}
         onClick={() => setAnswerTypeChoice({ quizItemSignature, answerType: AnswerType.cash })}
       >
@@ -64,7 +65,7 @@ const AnswerTypeContainer = styled.button<{
   height: calc(100% / 3 - 80px / 3);
   font-family: "Boogaloo", cursive;
   font-size: 30px;
-  text-shadow: 3px 3px 0px ${EStyles.darkBlue};
+  text-shadow: 3px 3px 0px ${Styles.darkBlue};
   background-color: ${(props) => props.backgroundColor};
   margin: 10px;
   border-radius: 10px;

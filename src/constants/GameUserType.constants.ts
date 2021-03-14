@@ -1,4 +1,4 @@
-export enum EUserType {
+export enum UserType {
   join = "join",
   host = "host",
   play = "play",

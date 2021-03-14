@@ -1,4 +1,4 @@
-import { ECookieName } from "constants/Cookies.constants";
+import { CookieName } from "constants/Cookies.constants";
 import { AnswerTypeChoice } from "models/Game.model";
 import React from "react";
 import { getCookie, setCookie } from "utils/cookies.util";
@@ -16,13 +16,13 @@ export const useAnswerTypeChoice = ({
   shortId,
 }: UseAnswerTypeChoiceProps): UseAnswerTypeChoiceReturn => {
   const [answerTypeChoice, setAnswerTypeChoice] = React.useState<AnswerTypeChoice>(
-    getCookie({ prefix: shortId, cookieName: ECookieName.answerTypeChoice }),
+    getCookie({ prefix: shortId, cookieName: CookieName.answerTypeChoice }),
   );
 
   React.useEffect(() => {
     setCookie<AnswerTypeChoice>({
       prefix: shortId,
-      cookieName: ECookieName.answerTypeChoice,
+      cookieName: CookieName.answerTypeChoice,
       cookieValue: answerTypeChoice,
     });
   }, [answerTypeChoice, shortId]);

@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 
-import { EStyles } from "constants/Styling.constants";
+import { Styles } from "constants/Styling.constants";
 
 interface ErrorMessageProps {
   errorMessage: string | null;
@@ -22,7 +22,7 @@ export const ErrorMessage: React.FC<ErrorMessageProps> = ({
 };
 
 const ErrorMessageContainer = styled.div<{ margin: string }>`
-  color: ${EStyles.redOrange};
+  color: ${Styles.redOrange};
   margin: ${(props) => props.margin};
   font-size: 15px;
   text-align: center;

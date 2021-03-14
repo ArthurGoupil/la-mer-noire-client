@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 
-import { EStyles } from "constants/Styling.constants";
+import { Styles } from "constants/Styling.constants";
 import { useWindowHeight } from "hooks/others/useWindowHeight.hook";
 
 interface AnimatedBackgroundProps {
@@ -52,7 +52,7 @@ const BackgroundStripe = styled.div<{
 }>`
   width: 100%;
   height: ${(props) => props.height}px;
-  background: linear-gradient(to bottom, ${EStyles.darkBlue} 0%, ${EStyles.blue} 600%);
+  background: linear-gradient(to bottom, ${Styles.darkBlue} 0%, ${Styles.blue} 600%);
   position: absolute;
   top: 0;
   transform: ${(props) => props.scaleX};
@@ -61,25 +61,25 @@ const BackgroundStripe = styled.div<{
 
 const BackgroundStripe2 = styled(BackgroundStripe)`
   top: 20%;
-  background: linear-gradient(to bottom, ${EStyles.darkBlue} -100%, ${EStyles.blue} 500%);
+  background: linear-gradient(to bottom, ${Styles.darkBlue} -100%, ${Styles.blue} 500%);
   transition-delay: 0.2s;
 `;
 
 const BackgroundStripe3 = styled(BackgroundStripe2)`
   top: 40%;
-  background: linear-gradient(to bottom, ${EStyles.darkBlue} -200%, ${EStyles.blue} 400%);
+  background: linear-gradient(to bottom, ${Styles.darkBlue} -200%, ${Styles.blue} 400%);
   transition-delay: 0.4s;
 `;
 
 const BackgroundStripe4 = styled(BackgroundStripe2)`
   top: 60%;
-  background: linear-gradient(to bottom, ${EStyles.darkBlue} -300%, ${EStyles.blue} 300%);
+  background: linear-gradient(to bottom, ${Styles.darkBlue} -300%, ${Styles.blue} 300%);
   transition-delay: 0.6s;
 `;
 
 const BackgroundStripe5 = styled(BackgroundStripe2)`
   top: 80%;
-  background: linear-gradient(to bottom, ${EStyles.darkBlue} -400%, ${EStyles.blue} 200%);
+  background: linear-gradient(to bottom, ${Styles.darkBlue} -400%, ${Styles.blue} 200%);
   transition-delay: 0.8s;
 `;
 

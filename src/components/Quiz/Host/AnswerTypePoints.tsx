@@ -1,12 +1,12 @@
 import React from "react";
 import styled from "styled-components";
 
-import { ECaPasseOuCaCashPoints } from "constants/CaPasseOuCaCash.constants";
-import { EStyles } from "constants/Styling.constants";
+import { CaPasseOuCaCashPoints } from "constants/CaPasseOuCaCash.constants";
+import { Styles } from "constants/Styling.constants";
 import { QuizLevel } from "models/Quiz.model";
 import { getQuizLevelColor } from "utils/quiz/getQuizLevelColor.util";
 import { getAnswerTypeColor } from "utils/quiz/getAnswerTypeColor.util";
-import { AnswerType } from "models/Game.model";
+import { AnswerType } from "constants/AnswerType.constants";
 
 interface AnswerTypePointsProps {
   quizLevel: QuizLevel;
@@ -22,7 +22,7 @@ export const AnswerTypePoints: React.FC<AnswerTypePointsProps> = ({ quizLevel })
       >
         DUO
         <PointsNumber color={levelColor} className="d-flex justify-center align-center">
-          {ECaPasseOuCaCashPoints[quizLevel].duo}
+          {CaPasseOuCaCashPoints[quizLevel].duo}
         </PointsNumber>
       </AnswerTypePointsContainer>
       <AnswerTypePointsContainer
@@ -31,7 +31,7 @@ export const AnswerTypePoints: React.FC<AnswerTypePointsProps> = ({ quizLevel })
       >
         CARRÉ
         <PointsNumber color={levelColor} className="d-flex justify-center align-center">
-          {ECaPasseOuCaCashPoints[quizLevel].carre}
+          {CaPasseOuCaCashPoints[quizLevel].carre}
         </PointsNumber>
       </AnswerTypePointsContainer>
       <AnswerTypePointsContainer
@@ -41,7 +41,7 @@ export const AnswerTypePoints: React.FC<AnswerTypePointsProps> = ({ quizLevel })
       >
         CASH
         <PointsNumber color={levelColor} className="d-flex justify-center align-center">
-          {ECaPasseOuCaCashPoints[quizLevel].cash}
+          {CaPasseOuCaCashPoints[quizLevel].cash}
         </PointsNumber>
       </AnswerTypePointsContainer>
     </div>
@@ -56,14 +56,14 @@ const AnswerTypePointsContainer = styled.span<{ backgroundColor: string; noMargi
   background-color: ${(props) => props.backgroundColor};
   padding: 10px 10px;
   border-radius: 5px;
-  text-shadow: 3px 2px 0px ${EStyles.darkBlue};
+  text-shadow: 3px 2px 0px ${Styles.darkBlue};
 `;
 
 const PointsNumber = styled.div<{ color: string }>`
   min-width: 40px;
   height: 40px;
   border-radius: 20px;
-  background-color: ${EStyles.darkBlue};
+  background-color: ${Styles.darkBlue};
   color: ${(props) => props.color};
   margin-left: 10px;
   padding: 0 12px 2px 10px;
