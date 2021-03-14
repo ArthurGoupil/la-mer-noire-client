@@ -24,23 +24,25 @@ export const PlayersList: React.FC<PlayersListProps> = ({ playersList }): JSX.El
 
 const PlayersListContainer = styled.ul`
   margin-bottom: 10px;
-  max-width: 600px;
+  max-width: 90vw;
 `;
 
 const PlayersTitle = styled.div`
   font-family: "Boogaloo", cursive;
-  font-size: 30px;
-  line-height: 33px;
+  font-size: 28px;
+  line-height: 32px;
   color: ${EStyles.redOrange};
   text-align: center;
-  margin-bottom: 10px;
+  margin: 10px 0;
 `;
 
 const Player = styled.li`
   font-family: "Boogaloo", cursive;
+  font-size: 18px;
+  line-height: 22px;
   background-color: ${EStyles.darkBlue};
   text-align: center;
-  padding: 13px 18px;
+  padding: 10px 16px;
   margin: 7px;
   border-radius: 100px;
 `;

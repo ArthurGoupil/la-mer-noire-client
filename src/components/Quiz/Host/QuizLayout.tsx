@@ -149,6 +149,7 @@ const TopScreenContainer = styled.div<{ minHeight: number }>`
 
 const TopScreen = styled.div<{ opacity: number; translateX: string }>`
   width: 100%;
+  height: 100%;
   transform: ${(props) => props.translateX};
   transition: transform 1s;
   position: absolute;

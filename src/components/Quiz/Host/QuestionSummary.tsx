@@ -2,7 +2,7 @@ import React from "react";
 import styled from "styled-components";
 
 import { EStyles } from "constants/Styling.constants";
-import { Answer, PlayerData, PlayersPoints } from "models/Game.model";
+import { Answer, AnswerType, PlayerData, PlayersPoints } from "models/Game.model";
 import { getStringFromAnswerType } from "utils/quiz/getStringFromAnswerType";
 import { getAnswerTypeColor } from "utils/quiz/getAnswerTypeColor.util";
 
@@ -30,7 +30,7 @@ export const QuestionSummary: React.FC<QuestionSummary> = ({
       </AnswerContainer>
       {players.map((playerData, index) => {
         return (
-          <PlayerAnswerContainer key={index} className="d-flex">
+          <PlayerAnswerContainer key={index} className="d-flex justify-center">
             <div>
               <PlayerName>{playerData.player.name}</PlayerName>
               {playersAnswers[playerData.player._id]?.answer ? (
@@ -88,14 +88,14 @@ export const QuestionSummary: React.FC<QuestionSummary> = ({
 };
 
 const QuestionSummaryContainer = styled.div`
-  transition: opacity 0.5s;
+  width: 95%;
   position: absolute;
 `;
 
 const AnswerContainer = styled.div`
   font-size: 30px;
   line-height: 35px;
-  margin-bottom: 60px;
+  margin-bottom: 40px;
   text-align: center;
 `;
 
@@ -108,22 +108,24 @@ const QuizAnswer = styled.span`
 `;
 
 const PlayerAnswerContainer = styled.div`
-  margin-bottom: 25px;
-  font-size: 25px;
-  line-height: 30px;
+  width: 100%;
+  margin-bottom: 20px;
+  font-size: 22px;
+  line-height: 25px;
+  text-align: center;
 `;
 
 const PlayerAnswer = styled.span<{ color: string }>`
   font-family: "Boogaloo", cursive;
-  font-size: 30px;
-  line-height: 32px;
+  font-size: 25px;
+  line-height: 30px;
   margin: 0 10px;
   color: ${(props) => props.color};
 `;
 
 const PlayerAnswerType = styled.span<{ backgroundColor: string; paddingLeft: string }>`
   font-family: "Boogaloo", cursive;
-  font-size: 30px;
+  font-size: 23px;
   line-height: 30px;
   margin-left: 10px;
   background-color: ${(props) => props.backgroundColor};
@@ -161,7 +163,7 @@ const AdditionalPointsContainer = styled.div<{ width: number | undefined }>`
 
 const AdditionalPoints = styled.div`
   font-family: "Boogaloo", cursive;
-  font-size: 40px;
+  font-size: 35px;
   line-height: 25px;
   color: ${EStyles.turquoise};
   position: absolute;

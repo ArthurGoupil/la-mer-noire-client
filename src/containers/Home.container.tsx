@@ -13,10 +13,12 @@ import { ErrorMessage } from "components/Utils/ErrorMessage";
 import { useSound } from "hooks/others/useSound.hook";
 import { ESounds } from "constants/Sounds.constants";
 import { isDesktop } from "utils/isDesktop.util";
+import { Game } from "models/Game.model";
 
 export const HomeContainer: React.FC = (): JSX.Element => {
   const history = useHistory();
-  const [triggerGetGame, { data, loading, error, called }] = useLazyQuery(GET_GAME);
+  const [triggerGetGame, { data, loading, error }] = useLazyQuery(GET_GAME);
+  const [currentData, setCurrentData] = React.useState<Game>();
   const noSleep = new NoSleep();
   useSound({
     sound: ESounds.homeWater,
@@ -28,9 +30,15 @@ export const HomeContainer: React.FC = (): JSX.Element => {
 
   React.useEffect(() => {
     if (data && !error) {
-      history.push(`/games/${data.game.shortId}/join`);
+      setCurrentData(data.game);
     }
-  }, [data, error, history]);
+  }, [data, error]);
+
+  React.useEffect(() => {
+    if (currentData) {
+      history.push(`/games/${currentData.shortId}/join`);
+    }
+  }, [currentData, history]);
 
   return (
     <FullHeightLayout className="d-flex flex-column align-center justify-center">
@@ -54,7 +62,7 @@ export const HomeContainer: React.FC = (): JSX.Element => {
       </CreateGameWrapper>
       <ErrorMessage
         errorMessage="Impossible de rejoindre la partie. Vérifiez le code et réessayez."
-        isDisplayed={called && !loading && !data}
+        isDisplayed={!currentData && error !== undefined}
         margin="15px 0 0 0"
       />
       <AnimatedSubmarine />

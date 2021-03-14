@@ -38,6 +38,7 @@ export const JoinGamePreparation: React.FC<JoinGamePreparationProps> = ({
               placeholder="My lovely name"
               margin={`0 0 5px 0`}
               isLoading={loading}
+              valueMaxLength={25}
             />
             <ErrorMessage
               errorMessage={errorMessage}

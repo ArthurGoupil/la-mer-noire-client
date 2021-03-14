@@ -47,10 +47,10 @@ export const PlayersRanking: React.FC<PlayersRankingProps> = ({
   }, [playersPoints, showPreviousRanking]);
 
   return (
-    <RankingContainer>
+    <RankingContainer className="d-flex flex-column align-center justify-center">
       <RankingTitle>CLASSEMENT</RankingTitle>
-      <Flipper flipKey={JSON.stringify(playersRanking)}>
-        <ul className="list">
+      <StyledFlipper flipKey={JSON.stringify(playersRanking)}>
+        <RankingUl className="list d-flex flex-column align-center flex-wrap">
           {playersRanking.map((playerRanking, index) => {
             const playerRank =
               playersRanking[index - 1]?.current === playerRanking.current ? "-" : index + 1;
@@ -58,10 +58,11 @@ export const PlayersRanking: React.FC<PlayersRankingProps> = ({
               <Flipped key={playerRanking.playerId} flipId={playerRanking.playerId}>
                 <PlayerRankingContainer className="d-flex space-between align-center">
                   <PlayerRank className="d-flex justify-end align-center">{playerRank}</PlayerRank>
-                  <PlayerName className="d-flex justify-center align-center flex-grow">
+                  <PlayerName className="d-flex  align-center flex-grow">
                     {players
                       .find((playerData) => playerData.player._id === playerRanking.playerId)
                       ?.player.name.toUpperCase()}
+                    <InnerShadow />
                   </PlayerName>
                   <PlayerPointsContainer className="d-flex justify-center align-center">
                     <Points
@@ -76,13 +77,15 @@ export const PlayersRanking: React.FC<PlayersRankingProps> = ({
               </Flipped>
             );
           })}
-        </ul>
-      </Flipper>
+        </RankingUl>
+      </StyledFlipper>
     </RankingContainer>
   );
 };
 
 const RankingContainer = styled.div`
+  width: 60%;
+  height: 60%;
   transition: opacity 0.5s;
   z-index: 1;
 `;
@@ -95,7 +98,18 @@ const RankingTitle = styled.h2`
   line-height: 50px;
 `;
 
+const StyledFlipper = styled(Flipper)`
+  width: 100%;
+  height: 100%;
+`;
+
+const RankingUl = styled.ul`
+  width: 100%;
+  height: 100%;
+`;
+
 const PlayerRankingContainer = styled.li`
+  width: 50%;
   height: 50px;
   font-family: "Boogaloo", cursive;
   margin-bottom: 15px;
@@ -114,17 +128,31 @@ const PlayerRank = styled.span`
 `;
 
 const PlayerName = styled.span`
-  min-width: 200px;
   height: 100%;
-  font-size: 30px;
+  font-size: 25px;
   background: linear-gradient(to bottom, ${EStyles.darkBlue} 0%, ${EStyles.blue} 150%);
   border-radius: 5px;
   text-shadow: 2px 2px 0 ${EStyles.darkBlue};
   padding: 0 15px;
+  white-space: nowrap;
+  overflow: hidden;
+  position: relative;
+`;
+
+const InnerShadow = styled.div`
+  width: 50px;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  right: 0;
+  /* box-shadow: -20px 0px 15px ${EStyles.darkBlue} inset; */
+  background: linear-gradient(to left, ${EStyles.darkBlue} 20%, transparent 100%);
+  z-index: 1;
+  overflow: hidden;
 `;
 
 const PlayerPointsContainer = styled.span`
-  width: 45px;
+  min-width: 45px;
   height: 100%;
   background: linear-gradient(to bottom, ${EStyles.orange} 0%, ${EStyles.redOrange} 170%);
   margin-left: 10px;

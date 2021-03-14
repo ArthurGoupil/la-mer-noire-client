@@ -56,7 +56,7 @@ const PlayerAnswerContainer = styled.div<{ noMarginRight: boolean }>`
   font-family: "Boogaloo", cursive;
   background-color: ${EStyles.darken_blue};
   padding: 15px;
-  margin-bottom: 10px;
+  margin-bottom: 20px;
   margin-right: ${(props) => (props.noMarginRight ? 0 : "20px")};
   border-radius: 10px;
   font-weight: 500;
