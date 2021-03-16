@@ -6,6 +6,7 @@ export const CaPasseOuCaCashPoints = {
 
 export enum CaPasseOuCaCashBottomScreensStates {
   question_fetchTimestamp = "question_fetchTimestamp",
+  question_screensTransitionSound = "question_screensTransitionSound",
   question = "question",
   allPlayersHaveAnswered = "allPlayersHaveAnswered",
   questionIsTimedOut = "questionIsTimedOut",
@@ -15,12 +16,16 @@ export enum CaPasseOuCaCashBottomScreensStates {
 export enum CaPasseOuCaCashTopScreensStates {
   stageName_wait = "stageName_wait",
   stageName = "stageName",
+  stageName_topScreensBackgroundSound = "stageName_topScreensBackgroundSound",
   quizItemInfos = "quizItemInfos",
   quizItemInfos_fetchQuizItemData = "quizItemInfos_fetchQuizItemData",
   quizItemInfos_checkQuizIsReady = "quizItemInfos_checkQuizIsReady",
   quizItemInfos_showThemeSubTheme = "quizItemInfos_showThemeSubTheme",
+  questionSummary_topScreensBackgroundSound = "questionSummary_topScreensBackgroundSound",
   questionSummary = "questionSummary",
   questionSummary_points = "questionSummary_points",
+  questionSummary_screenTransitionSound = "questionSummary_screenTransitionSound",
   playersRanking_previous = "playersRanking_previous",
   playersRanking_current = "playersRanking_current",
+  playersRanking_screenTransitionSound = "playersRanking_screenTransitionSound",
 }

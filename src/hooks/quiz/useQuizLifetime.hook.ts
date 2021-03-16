@@ -11,6 +11,7 @@ interface UseQuizLifetimeProps {
   allPlayersHaveAnswered: boolean;
   duration: number;
   shouldFetchTimestampRef: boolean;
+  shouldResetRemainingTime: boolean;
 }
 
 interface UseQuizLifetimeReturn {
@@ -24,6 +25,7 @@ export const useQuizLifetime = ({
   allPlayersHaveAnswered,
   duration,
   shouldFetchTimestampRef,
+  shouldResetRemainingTime,
 }: UseQuizLifetimeProps): UseQuizLifetimeReturn => {
   const { refetch } = useQuery(GET_TIMESTAMP, {
     fetchPolicy: "no-cache",
@@ -37,6 +39,10 @@ export const useQuizLifetime = ({
   );
 
   const [remainingTime, setRemainingTime] = React.useState<number | null>(null);
+
+  React.useEffect(() => {
+    setRemainingTime(null);
+  }, [shouldResetRemainingTime]);
 
   React.useEffect(() => {
     if (questionsRecord[quizItemSignature]?.timestamp) {

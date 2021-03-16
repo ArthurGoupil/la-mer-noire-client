@@ -36,13 +36,18 @@ export const useGame = ({
   const { subscribeToMore, data: { game } = {}, networkStatus } = useQuery(GET_GAME, {
     variables: { shortId },
   });
+  const [canSubscribe, setCanSubscribe] = React.useState<boolean>(true);
   const { play: playerAddedPlay } = useSound({ sound: Sounds.playerAdded });
+
+  React.useEffect(() => {
+    return () => setCanSubscribe(false);
+  }, []);
 
   React.useEffect(() => {
     let unsubscribeStage: () => void;
     let unsubscribePlayers: () => void;
     let unsubscribeCurrentQuizItem: () => void;
-    if (subscribe.stage) {
+    if (subscribe.stage && canSubscribe) {
       unsubscribeStage = subscribeToMore({
         document: GAME_STAGE_UPDATED,
         variables: { shortId },
@@ -53,7 +58,7 @@ export const useGame = ({
         },
       });
     }
-    if (subscribe.players) {
+    if (subscribe.players && canSubscribe) {
       unsubscribePlayers = subscribeToMore({
         document: GAME_PLAYERS_UPDATED,
         variables: { shortId },
@@ -67,7 +72,7 @@ export const useGame = ({
         },
       });
     }
-    if (subscribe.currentQuizItem) {
+    if (subscribe.currentQuizItem && canSubscribe) {
       unsubscribeCurrentQuizItem = subscribeToMore({
         document: CURRENT_QUIZ_ITEM_UPDATED,
         variables: { shortId },
@@ -92,6 +97,7 @@ export const useGame = ({
     subscribe.currentQuizItem,
     playerAddedPlay,
     isHost,
+    canSubscribe,
   ]);
 
   return { game, networkStatus };

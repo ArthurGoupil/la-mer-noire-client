@@ -6,6 +6,7 @@ import { useSound } from "hooks/others/useSound.hook";
 import { Sounds } from "constants/Sounds.constants";
 
 interface TimeBarProps {
+  timeBarIsVisible: boolean;
   totalTime: number;
   remainingTime: number | null;
   isOver: boolean;
@@ -13,71 +14,87 @@ interface TimeBarProps {
   backgroundGradient: string[];
 }
 
+interface TimeBarSubContainerProps extends Omit<TimeBarProps, "timeBarIsVisible"> {
+  barContainerWidth: number;
+  remainingTime: number;
+}
+
 export const TimeBar: React.FC<TimeBarProps> = ({
+  timeBarIsVisible,
   totalTime,
   remainingTime,
   isOver,
   soundShouldStop,
   backgroundGradient,
 }): JSX.Element => {
+  const barContainerRef = React.useRef<HTMLDivElement>(null);
+
+  return (
+    <BarContainer ref={barContainerRef} className="d-flex justify-start">
+      {timeBarIsVisible && remainingTime !== null && (
+        <TimeBarSubContainer
+          remainingTime={remainingTime}
+          totalTime={totalTime}
+          isOver={isOver}
+          backgroundGradient={backgroundGradient}
+          barContainerWidth={barContainerRef.current?.clientWidth || 0}
+          soundShouldStop={soundShouldStop}
+        />
+      )}
+    </BarContainer>
+  );
+};
+
+const TimeBarSubContainer = ({
+  remainingTime,
+  totalTime,
+  isOver,
+  backgroundGradient,
+  barContainerWidth,
+  soundShouldStop,
+}: TimeBarSubContainerProps) => {
+  const barRef = React.useRef<HTMLDivElement>(null);
   const { play, stop, isPlaying } = useSound({ sound: Sounds.quizOver });
 
-  const barContainerRef = React.useRef<HTMLDivElement>(null);
-  const barRef = React.useRef<HTMLDivElement>(null);
+  const animationString =
+    isOver && remainingTime
+      ? "overTransformX 0.7s ease-out"
+      : `normalTransformX ${remainingTime}s linear`;
 
-  const getInitialWidth = (): string => {
-    if (remainingTime !== null) {
-      // 100.5 to let a margin so that TB doesn't appear full at beginning of quiz
-      return `${100.5 - (100 * remainingTime) / totalTime}%`;
-    }
-    return "0%";
-  };
-
-  const getAnimationString = (): string => {
-    if (!isOver && remainingTime) {
-      return `normalTransformX ${remainingTime}s linear`;
-    }
-    return "overTransformX 0.7s ease-out";
-  };
+  const quizOverTimeoutRef = React.useRef<NodeJS.Timeout | null>(null);
 
   React.useEffect(() => {
-    let timeout: NodeJS.Timeout | null = null;
-    if (!timeout && remainingTime && remainingTime > 5) {
-      timeout = setTimeout(() => {
+    return () => {
+      if (quizOverTimeoutRef.current) {
+        clearTimeout(quizOverTimeoutRef.current);
+      }
+    };
+  }, []);
+
+  React.useEffect(() => {
+    if (!quizOverTimeoutRef.current && !isOver && remainingTime > 5) {
+      quizOverTimeoutRef.current = setTimeout(() => {
         play();
       }, remainingTime * 1000 - 4000);
     }
 
     if (soundShouldStop) {
-      if (timeout) {
-        clearTimeout(timeout);
+      if (quizOverTimeoutRef.current) {
+        clearTimeout(quizOverTimeoutRef.current);
       } else if (isPlaying) {
         stop();
       }
     }
-
-    return () => {
-      if (timeout) {
-        clearTimeout(timeout);
-      }
-    };
-  }, [play, remainingTime, isPlaying, stop, soundShouldStop]);
+  }, [isOver, isPlaying, play, remainingTime, soundShouldStop, stop]);
 
   return (
-    <BarContainer ref={barContainerRef} className="d-flex justify-start">
-      <Bar
-        ref={barRef}
-        initialWidth={getInitialWidth()}
-        overInitialWidth={`${
-          ((barRef.current?.clientWidth || 0) /
-            ((barContainerRef.current?.clientWidth || 0) - 20)) *
-          100
-        }%`}
-        animation={getAnimationString()}
-        opacity={remainingTime !== null ? 1 : 0}
-        background={`linear-gradient(to bottom, ${backgroundGradient[0]} 20%, ${backgroundGradient[1]} 100%);`}
-      />
-    </BarContainer>
+    <Bar
+      ref={barRef}
+      initialWidth={`${100 - (100 * remainingTime) / totalTime}%`}
+      overInitialWidth={`${((barRef.current?.clientWidth || 0) / (barContainerWidth - 20)) * 100}%`}
+      animation={animationString}
+      background={`linear-gradient(to bottom, ${backgroundGradient[0]} 20%, ${backgroundGradient[1]} 100%);`}
+    />
   );
 };
 
@@ -93,14 +110,12 @@ const Bar = styled.div<{
   initialWidth: string;
   overInitialWidth: string;
   animation: string;
-  opacity: number;
   background: string;
 }>`
   width: 100%;
   height: 40px;
   background: ${(props) => props.background};
   border-radius: 5px;
-  opacity: ${(props) => props.opacity};
   transition: opacity 0.5s;
   animation: ${(props) => props.animation};
 

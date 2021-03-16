@@ -5,9 +5,8 @@ import { HostGamePreparation } from "components/GamePreparation/HostGamePreparat
 import { JoinGamePreparation } from "components/GamePreparation/JoinGamePreparation";
 import { FullScreenError } from "components/Utils/FullScreenError";
 import { useGame } from "hooks/game/useGame.hook";
-import { getGlobalNetworkStatus } from "utils/networkStatus.util";
+import { getNS } from "utils/networkStatus.util";
 import { FullHeightLoader } from "components/Utils/FullHeightLoader";
-import { Game } from "models/Game.model";
 
 interface GamePreparationProps {
   shortId: string;
@@ -26,20 +25,13 @@ export const GamePreparationContainer: React.FC<GamePreparationProps> = ({
     },
     isHost: userType === "host",
   });
-  const [currentGameData, setCurrentGameData] = React.useState<Game>();
 
-  React.useEffect(() => {
-    if (game) {
-      setCurrentGameData(game);
-    }
-  }, [game]);
-
-  if (userType in UserType && currentGameData) {
+  if (userType in UserType) {
     return {
       ready: {
-        host: <HostGamePreparation game={currentGameData} />,
-        join: <JoinGamePreparation game={currentGameData} userType={userType} />,
-        play: <JoinGamePreparation game={currentGameData} userType={userType} />,
+        host: <HostGamePreparation game={game} />,
+        join: <JoinGamePreparation game={game} userType={userType} />,
+        play: <JoinGamePreparation game={game} userType={userType} />,
       }[userType],
       loading: <FullHeightLoader />,
       error: (
@@ -49,12 +41,7 @@ export const GamePreparationContainer: React.FC<GamePreparationProps> = ({
           linkLabel="Revenir au menu principal"
         />
       ),
-    }[
-      getGlobalNetworkStatus({
-        networkStatuses: [networkStatus],
-        booleanCondition: currentGameData !== undefined,
-      })
-    ];
+    }[getNS(networkStatus)];
   }
 
   return (

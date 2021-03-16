@@ -117,7 +117,7 @@ const PlayerAnswerContainer = styled.div`
 
 const PlayerAnswer = styled.span<{ color: string }>`
   font-family: "Boogaloo", cursive;
-  font-size: 25px;
+  font-size: 30px;
   line-height: 30px;
   margin: 0 10px;
   color: ${(props) => props.color};
@@ -136,12 +136,11 @@ const PlayerAnswerType = styled.span<{ backgroundColor: string; paddingLeft: str
 `;
 
 const FirstCash = styled.img`
-  height: 25px;
-  width: 25px;
+  height: 27px;
   margin-left: 4px;
   position: absolute;
-  top: 8px;
-  right: 5px;
+  top: 4px;
+  right: 6px;
 `;
 
 const EmptyAnswer = styled.span`

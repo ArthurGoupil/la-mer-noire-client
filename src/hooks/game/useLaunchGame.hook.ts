@@ -21,7 +21,7 @@ interface UseLaunchGameReturn {
 
 export const useLaunchGame = ({ shortId, players }: useLaunchGameProps): UseLaunchGameReturn => {
   const [launchCounter, setLaunchCounter] = React.useState<number | null>(null);
-  const [updatGameStage] = useMutation(UPDATE_GAME_STAGE);
+  const [updateGameStage] = useMutation(UPDATE_GAME_STAGE);
   const { play, stop } = useSound({ sound: Sounds.gameStart, volume: 0.4 });
 
   const handleLaunchGameCounter = () => {
@@ -47,7 +47,7 @@ export const useLaunchGame = ({ shortId, players }: useLaunchGameProps): UseLaun
           }, {}),
         },
       });
-      await updatGameStage({
+      await updateGameStage({
         variables: { stage: GameStage.caPasseOuCaCash, shortId },
       });
     };
@@ -67,7 +67,7 @@ export const useLaunchGame = ({ shortId, players }: useLaunchGameProps): UseLaun
     return () => {
       clearTimeout(timeout);
     };
-  }, [launchCounter, shortId, players, updatGameStage, play]);
+  }, [launchCounter, shortId, players, updateGameStage, play]);
 
   return {
     handleLaunchGameCounter,

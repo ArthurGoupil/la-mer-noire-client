@@ -11,4 +11,8 @@ export enum Sounds {
   gameStart = "/sounds/GameStart.mp3",
   quizOver = "/sounds/QuizOver.mp3",
   quizBackground = "/sounds/QuizBackground.mp3",
+  topScreensBackground = "/sounds/TopScreensBackground.mp3",
+  topScreensBackgroundStart = "/sounds/TopScreensBackgroundStart.mp3",
+  topScreenTransition = "/sounds/TopScreenTransition.mp3",
+  screensTransition = "/sounds/ScreensTransition.mp3",
 }

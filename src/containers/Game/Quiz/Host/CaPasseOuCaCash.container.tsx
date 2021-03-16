@@ -19,6 +19,7 @@ import { PlayersRanking } from "components/Quiz/Host/PlayersRanking";
 import { CaPasseOuCaCashTopScreensStates } from "constants/CaPasseOuCaCash.constants";
 import { getCaPasseOuCaCashMasterInterpretation } from "utils/quiz/getCaPasseOuCaCashInterpretation.util";
 import { StageName } from "components/Quiz/Host/StageName";
+import { useBackgroundSounds } from "hooks/quiz/useBackgroundSounds.hook";
 
 interface CaPasseOuCaCashContainerProps {
   game: Game;
@@ -69,10 +70,13 @@ export const CaPasseOuCaCashContainer: React.FC<CaPasseOuCaCashContainerProps> =
     stageNameEnter,
     stageNameCanPlay,
     stageNameLeave,
-    clearQuestionOverSound,
+    quizOverSoundShouldStop,
+    timeBarIsVisible,
   } = getCaPasseOuCaCashMasterInterpretation({
     caPasseOuCaCashMaster,
   });
+
+  useBackgroundSounds({ caPasseOuCaCashMasterState: caPasseOuCaCashMaster.state });
 
   React.useEffect(() => {
     if (fetchQuizItemData) {
@@ -160,10 +164,11 @@ export const CaPasseOuCaCashContainer: React.FC<CaPasseOuCaCashContainerProps> =
         </div>
       </div>
       <TimeBar
+        timeBarIsVisible={timeBarIsVisible}
         totalTime={QuizDuration.caPasseOuCaCash}
         remainingTime={remainingTime}
         isOver={questionsRecord[nonNullQuizItemData.quizItemSignature]?.isDone}
-        soundShouldStop={clearQuestionOverSound}
+        soundShouldStop={quizOverSoundShouldStop}
         backgroundGradient={getQuizLevelGradient({
           quizLevel: caPasseOuCaCashMaster.quizLevel,
         })}

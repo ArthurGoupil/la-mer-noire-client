@@ -17,7 +17,6 @@ export const StageName: React.FC<StageNameProps> = ({ gameStage, canPlaySound })
   const { play, status } = useSound({
     sound: Sounds.CPOCCJingle,
     condition: canPlaySound,
-    volume: 0.8,
   });
 
   React.useEffect(() => {

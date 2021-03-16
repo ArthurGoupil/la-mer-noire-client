@@ -14,7 +14,8 @@ interface GetCaPasseOuCaCashMasterInterpretationReturn {
 
   fetchQuizItemData: boolean;
 
-  clearQuestionOverSound: boolean;
+  timeBarIsVisible: boolean;
+  quizOverSoundShouldStop: boolean;
 
   questionSummaryEnter: boolean;
   questionSummaryLeave: boolean;
@@ -38,14 +39,20 @@ export const getCaPasseOuCaCashMasterInterpretation = ({
     quizItemInfosEnter:
       caPasseOuCaCashMaster.state.includes("quizItemInfos") ||
       caPasseOuCaCashMaster.state === "question" ||
-      caPasseOuCaCashMaster.state === "question_fetchTimestamp",
+      caPasseOuCaCashMaster.state === "question_fetchTimestamp" ||
+      caPasseOuCaCashMaster.state === "question_screensTransitionSound",
     showThemeSubTheme:
       caPasseOuCaCashMaster.state === "quizItemInfos_showThemeSubTheme" ||
-      caPasseOuCaCashMaster.state === "question",
+      caPasseOuCaCashMaster.state === "question" ||
+      caPasseOuCaCashMaster.state === "question_fetchTimestamp" ||
+      caPasseOuCaCashMaster.state === "question_screensTransitionSound",
 
     fetchQuizItemData: caPasseOuCaCashMaster.state === "quizItemInfos_fetchQuizItemData",
 
-    clearQuestionOverSound: caPasseOuCaCashMaster.state === "questionMustTimeout",
+    timeBarIsVisible:
+      caPasseOuCaCashMaster.state.includes("question") ||
+      caPasseOuCaCashMaster.state === "questionSummary",
+    quizOverSoundShouldStop: caPasseOuCaCashMaster.state === "questionMustTimeout",
 
     questionSummaryEnter: caPasseOuCaCashMaster.state.includes("questionSummary"),
     questionSummaryLeave: caPasseOuCaCashMaster.state.includes("playersRanking"),

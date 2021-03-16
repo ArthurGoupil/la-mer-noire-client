@@ -11,8 +11,6 @@ import {
 } from "utils/quiz/getQuizLevelByQuestionNumber.util";
 import { useQuizLifetime } from "hooks/quiz/useQuizLifetime.hook";
 import { QuizDuration } from "constants/QuizDuration.constants";
-import { useSound } from "hooks/others/useSound.hook";
-import { Sounds } from "constants/Sounds.constants";
 
 interface UseCaPasseOuCaCashMasterProps {
   shortId: string;
@@ -44,18 +42,13 @@ export const useCaPasseOuCaCashMaster = ({
     }),
   );
 
-  const {
-    play: quizBackgroundSoundPlay,
-    fadeOutAndStop: quizBackgroundSoundFadeOutAndStop,
-    isPlaying: quizBackgroundSoundisPlaying,
-  } = useSound({ sound: Sounds.quizBackground });
-
   const { remainingTime, questionsRecord } = useQuizLifetime({
     shortId,
     quizItemSignature,
     allPlayersHaveAnswered,
     duration: QuizDuration.caPasseOuCaCash,
     shouldFetchTimestampRef: caPasseOuCaCashMaster.state === "question_fetchTimestamp",
+    shouldResetRemainingTime: caPasseOuCaCashMaster.state === "questionSummary_points",
   });
 
   React.useEffect(() => {
@@ -105,10 +98,15 @@ export const useCaPasseOuCaCashMaster = ({
       case "stageName":
         const stageNameTimeout = setTimeout(() => {
           updateCaPasseOuCaCashMaster({
-            state: "quizItemInfos",
+            state: "stageName_topScreensBackgroundSound",
           });
         }, 6000);
         return () => clearTimeout(stageNameTimeout);
+      case "stageName_topScreensBackgroundSound":
+        updateCaPasseOuCaCashMaster({
+          state: "quizItemInfos",
+        });
+        break;
       case "quizItemInfos":
         const quizItemInfosTimeout = setTimeout(() => {
           updateCaPasseOuCaCashMaster({
@@ -137,13 +135,15 @@ export const useCaPasseOuCaCashMaster = ({
         return () => clearTimeout(showThemeSubThemeTimeout);
       case "question_fetchTimestamp":
         updateCaPasseOuCaCashMaster({
+          state: "question_screensTransitionSound",
+        });
+        break;
+      case "question_screensTransitionSound":
+        updateCaPasseOuCaCashMaster({
           state: "question",
         });
         break;
       case "question":
-        if (!quizBackgroundSoundisPlaying) {
-          quizBackgroundSoundPlay();
-        }
         if (allPlayersHaveAnswered) {
           updateCaPasseOuCaCashMaster({
             state: "questionMustTimeout",
@@ -155,27 +155,26 @@ export const useCaPasseOuCaCashMaster = ({
         }
         break;
       case "questionMustTimeout":
-        if (quizBackgroundSoundisPlaying) {
-          quizBackgroundSoundFadeOutAndStop();
-        }
         const questionMustTimeoutTimeout = setTimeout(() => {
           updateCaPasseOuCaCashMaster({
-            state: "questionSummary",
+            state: "questionSummary_topScreensBackgroundSound",
             playersPoints: getPlayersPoints(),
           });
         }, 2000);
         return () => clearTimeout(questionMustTimeoutTimeout);
       case "questionIsTimedOut":
-        if (quizBackgroundSoundisPlaying) {
-          quizBackgroundSoundFadeOutAndStop();
-        }
         const questionIsTimedOutTimeout = setTimeout(() => {
           updateCaPasseOuCaCashMaster({
-            state: "questionSummary",
+            state: "questionSummary_topScreensBackgroundSound",
             playersPoints: getPlayersPoints(),
           });
         }, 1000);
         return () => clearTimeout(questionIsTimedOutTimeout);
+      case "questionSummary_topScreensBackgroundSound":
+        updateCaPasseOuCaCashMaster({
+          state: "questionSummary",
+        });
+        break;
       case "questionSummary":
         const questionSummaryTimeout = setTimeout(() => {
           updateCaPasseOuCaCashMaster({
@@ -186,10 +185,15 @@ export const useCaPasseOuCaCashMaster = ({
       case "questionSummary_points":
         const questionSummary_pointsTimeout = setTimeout(() => {
           updateCaPasseOuCaCashMaster({
-            state: "playersRanking_previous",
+            state: "questionSummary_screenTransitionSound",
           });
         }, 7000);
         return () => clearTimeout(questionSummary_pointsTimeout);
+      case "questionSummary_screenTransitionSound":
+        updateCaPasseOuCaCashMaster({
+          state: "playersRanking_previous",
+        });
+        break;
       case "playersRanking_previous":
         const playersRanking_previousTimeout = setTimeout(() => {
           updateCaPasseOuCaCashMaster({
@@ -205,11 +209,16 @@ export const useCaPasseOuCaCashMaster = ({
             updateCaPasseOuCaCashMaster({
               quizLevel: getQuizLevelByQuestionNumber({ questionNumber }),
               questionNumber,
-              state: "quizItemInfos",
+              state: "playersRanking_screenTransitionSound",
             });
           }, 5000);
         }
         return () => clearTimeout(playersRanking_currentTimeout);
+      case "playersRanking_screenTransitionSound":
+        updateCaPasseOuCaCashMaster({
+          state: "quizItemInfos",
+        });
+        break;
     }
   }, [
     allPlayersHaveAnswered,
@@ -219,9 +228,6 @@ export const useCaPasseOuCaCashMaster = ({
     caPasseOuCaCashMaster.state,
     playersAnswers,
     questionsRecord,
-    quizBackgroundSoundFadeOutAndStop,
-    quizBackgroundSoundPlay,
-    quizBackgroundSoundisPlaying,
     quizItemData,
     quizLevel,
     shortId,
