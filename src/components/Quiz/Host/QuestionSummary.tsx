@@ -32,7 +32,13 @@ export const QuestionSummary: React.FC<QuestionSummary> = ({
         return (
           <PlayerAnswerContainer key={index} className="d-flex justify-center">
             <div>
-              <PlayerName>{playerData.player.name}</PlayerName>
+              <PlayerName
+                color={
+                  playersAnswers[playerData.player._id]?.isGoodAnswer ? Styles.good : Styles.wrong
+                }
+              >
+                {playerData.player.name.toUpperCase()}
+              </PlayerName>
               {playersAnswers[playerData.player._id]?.answer ? (
                 <>
                   a répondu
@@ -115,6 +121,13 @@ const PlayerAnswerContainer = styled.div`
   text-align: center;
 `;
 
+const PlayerName = styled.span<{ color: string }>`
+  font-family: "Boogaloo", cursive;
+  font-size: 25px;
+  color: ${(props) => props.color};
+  margin-right: 10px;
+`;
+
 const PlayerAnswer = styled.span<{ color: string }>`
   font-family: "Boogaloo", cursive;
   font-size: 30px;
@@ -145,12 +158,6 @@ const FirstCash = styled.img`
 
 const EmptyAnswer = styled.span`
   color: tomato;
-`;
-
-const PlayerName = styled.span`
-  font-weight: 600;
-  color: ${Styles.turquoise};
-  margin-right: 10px;
 `;
 
 const AdditionalPointsContainer = styled.div<{ width: number | undefined }>`

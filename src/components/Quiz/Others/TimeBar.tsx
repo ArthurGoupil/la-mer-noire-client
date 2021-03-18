@@ -57,11 +57,15 @@ const TimeBarSubContainer = ({
   const barRef = React.useRef<HTMLDivElement>(null);
   const { play, stop, isPlaying } = useSound({ sound: Sounds.quizOver });
 
-  const animationStringRef = React.useRef<string>(
-    isOver && remainingTime
-      ? "overTransformX 0.7s ease-out"
-      : `normalTransformX ${remainingTime}s linear`,
+  const [animationString, setAnimationString] = React.useState<string>(
+    `normalTransformX ${remainingTime}s linear`,
   );
+
+  React.useEffect(() => {
+    if (isOver) {
+      setAnimationString("overTransformX 0.7s ease-out");
+    }
+  }, [isOver]);
 
   const quizOverTimeoutRef = React.useRef<NodeJS.Timeout | null>(null);
 
@@ -95,7 +99,7 @@ const TimeBarSubContainer = ({
       ref={barRef}
       initialWidth={`${100 - (100 * remainingTime) / duration}%`}
       overInitialWidth={`${((barRef.current?.clientWidth || 0) / (barContainerWidth - 20)) * 100}%`}
-      animation={animationStringRef.current}
+      animation={animationString}
       background={`linear-gradient(to bottom, ${backgroundGradient[0]} 20%, ${backgroundGradient[1]} 100%);`}
     />
   );
