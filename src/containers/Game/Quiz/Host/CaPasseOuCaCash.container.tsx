@@ -48,7 +48,7 @@ export const CaPasseOuCaCashContainer: React.FC<CaPasseOuCaCashContainerProps> =
     quizAnswer: nonNullQuizItemData.quiz.answer,
   });
 
-  const { caPasseOuCaCashMaster, questionsRecord, remainingTime } = useCaPasseOuCaCashMaster({
+  const { caPasseOuCaCashMaster, questionsRecord } = useCaPasseOuCaCashMaster({
     shortId: game.shortId,
     quizItemData,
     allPlayersHaveAnswered,
@@ -71,7 +71,6 @@ export const CaPasseOuCaCashContainer: React.FC<CaPasseOuCaCashContainerProps> =
     stageNameCanPlay,
     stageNameLeave,
     quizOverSoundShouldStop,
-    timeBarIsVisible,
   } = getCaPasseOuCaCashMasterInterpretation({
     caPasseOuCaCashMaster,
   });
@@ -164,10 +163,8 @@ export const CaPasseOuCaCashContainer: React.FC<CaPasseOuCaCashContainerProps> =
         </div>
       </div>
       <TimeBar
-        timeBarIsVisible={timeBarIsVisible}
-        totalTime={QuizDuration.caPasseOuCaCash}
-        remainingTime={remainingTime}
-        isOver={questionsRecord[nonNullQuizItemData.quizItemSignature]?.isDone}
+        duration={QuizDuration.caPasseOuCaCash}
+        questionRecord={questionsRecord[quizItemData?.quizItemSignature]}
         soundShouldStop={quizOverSoundShouldStop}
         backgroundGradient={getQuizLevelGradient({
           quizLevel: caPasseOuCaCashMaster.quizLevel,

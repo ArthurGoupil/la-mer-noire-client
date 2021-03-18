@@ -22,7 +22,11 @@ interface UseLaunchGameReturn {
 export const useLaunchGame = ({ shortId, players }: useLaunchGameProps): UseLaunchGameReturn => {
   const [launchCounter, setLaunchCounter] = React.useState<number | null>(null);
   const [updateGameStage] = useMutation(UPDATE_GAME_STAGE);
-  const { play, stop } = useSound({ sound: Sounds.gameStart, volume: 0.4 });
+  const { play, stop } = useSound({
+    sound: Sounds.gameStart,
+    volume: 0.4,
+    isStoppingAtUnmount: false,
+  });
 
   const handleLaunchGameCounter = () => {
     if (!launchCounter) {

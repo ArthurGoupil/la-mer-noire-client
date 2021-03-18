@@ -4,38 +4,39 @@ import styled from "styled-components";
 import { Styles } from "constants/Styling.constants";
 import { useSound } from "hooks/others/useSound.hook";
 import { Sounds } from "constants/Sounds.constants";
+import { QuestionRecord } from "models/Game.model";
 
 interface TimeBarProps {
-  timeBarIsVisible: boolean;
-  totalTime: number;
-  remainingTime: number | null;
-  isOver: boolean;
+  duration: number;
+  questionRecord: QuestionRecord;
   soundShouldStop: boolean;
   backgroundGradient: string[];
 }
 
-interface TimeBarSubContainerProps extends Omit<TimeBarProps, "timeBarIsVisible"> {
+interface TimeBarSubContainerProps extends Omit<TimeBarProps, "questionRecord"> {
   barContainerWidth: number;
+  isOver: boolean;
   remainingTime: number;
 }
 
 export const TimeBar: React.FC<TimeBarProps> = ({
-  timeBarIsVisible,
-  totalTime,
-  remainingTime,
-  isOver,
+  duration,
+  questionRecord,
   soundShouldStop,
   backgroundGradient,
 }): JSX.Element => {
   const barContainerRef = React.useRef<HTMLDivElement>(null);
+  const remainingTime = questionRecord?.timestamp
+    ? Math.round(questionRecord.timestamp + duration - Date.now() / 1000)
+    : duration;
 
   return (
     <BarContainer ref={barContainerRef} className="d-flex justify-start">
-      {timeBarIsVisible && remainingTime !== null && (
+      {questionRecord?.timestamp && (
         <TimeBarSubContainer
+          isOver={questionRecord?.isDone}
           remainingTime={remainingTime}
-          totalTime={totalTime}
-          isOver={isOver}
+          duration={duration}
           backgroundGradient={backgroundGradient}
           barContainerWidth={barContainerRef.current?.clientWidth || 0}
           soundShouldStop={soundShouldStop}
@@ -46,9 +47,9 @@ export const TimeBar: React.FC<TimeBarProps> = ({
 };
 
 const TimeBarSubContainer = ({
-  remainingTime,
-  totalTime,
   isOver,
+  remainingTime,
+  duration,
   backgroundGradient,
   barContainerWidth,
   soundShouldStop,
@@ -56,10 +57,11 @@ const TimeBarSubContainer = ({
   const barRef = React.useRef<HTMLDivElement>(null);
   const { play, stop, isPlaying } = useSound({ sound: Sounds.quizOver });
 
-  const animationString =
+  const animationStringRef = React.useRef<string>(
     isOver && remainingTime
       ? "overTransformX 0.7s ease-out"
-      : `normalTransformX ${remainingTime}s linear`;
+      : `normalTransformX ${remainingTime}s linear`,
+  );
 
   const quizOverTimeoutRef = React.useRef<NodeJS.Timeout | null>(null);
 
@@ -81,7 +83,8 @@ const TimeBarSubContainer = ({
     if (soundShouldStop) {
       if (quizOverTimeoutRef.current) {
         clearTimeout(quizOverTimeoutRef.current);
-      } else if (isPlaying) {
+      }
+      if (isPlaying) {
         stop();
       }
     }
@@ -90,9 +93,9 @@ const TimeBarSubContainer = ({
   return (
     <Bar
       ref={barRef}
-      initialWidth={`${100 - (100 * remainingTime) / totalTime}%`}
+      initialWidth={`${100 - (100 * remainingTime) / duration}%`}
       overInitialWidth={`${((barRef.current?.clientWidth || 0) / (barContainerWidth - 20)) * 100}%`}
-      animation={animationString}
+      animation={animationStringRef.current}
       background={`linear-gradient(to bottom, ${backgroundGradient[0]} 20%, ${backgroundGradient[1]} 100%);`}
     />
   );

@@ -1,3 +1,3 @@
 export enum QuizDuration {
-  caPasseOuCaCash = 35,
+  caPasseOuCaCash = 30,
 }

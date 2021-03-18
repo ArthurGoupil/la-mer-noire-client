@@ -14,7 +14,6 @@ interface GetCaPasseOuCaCashMasterInterpretationReturn {
 
   fetchQuizItemData: boolean;
 
-  timeBarIsVisible: boolean;
   quizOverSoundShouldStop: boolean;
 
   questionSummaryEnter: boolean;
@@ -49,9 +48,6 @@ export const getCaPasseOuCaCashMasterInterpretation = ({
 
     fetchQuizItemData: caPasseOuCaCashMaster.state === "quizItemInfos_fetchQuizItemData",
 
-    timeBarIsVisible:
-      caPasseOuCaCashMaster.state.includes("question") ||
-      caPasseOuCaCashMaster.state === "questionSummary",
     quizOverSoundShouldStop: caPasseOuCaCashMaster.state === "questionMustTimeout",
 
     questionSummaryEnter: caPasseOuCaCashMaster.state.includes("questionSummary"),

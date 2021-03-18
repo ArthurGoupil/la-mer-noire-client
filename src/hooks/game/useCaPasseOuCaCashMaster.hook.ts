@@ -24,7 +24,6 @@ interface UseCaPasseOuCaCashMasterProps {
 interface UseCaPasseOuCaCashMasterReturn {
   caPasseOuCaCashMaster: CaPasseOuCaCashMaster;
   questionsRecord: Record<string, QuestionRecord>;
-  remainingTime: number | null;
 }
 
 export const useCaPasseOuCaCashMaster = ({
@@ -42,13 +41,12 @@ export const useCaPasseOuCaCashMaster = ({
     }),
   );
 
-  const { remainingTime, questionsRecord } = useQuizLifetime({
+  const { questionsRecord } = useQuizLifetime({
     shortId,
     quizItemSignature,
     allPlayersHaveAnswered,
     duration: QuizDuration.caPasseOuCaCash,
-    shouldFetchTimestampRef: caPasseOuCaCashMaster.state === "question_fetchTimestamp",
-    shouldResetRemainingTime: caPasseOuCaCashMaster.state === "questionSummary_points",
+    shouldSetBaseTimestamp: caPasseOuCaCashMaster.state === "question_fetchTimestamp",
   });
 
   React.useEffect(() => {
@@ -233,5 +231,5 @@ export const useCaPasseOuCaCashMaster = ({
     shortId,
   ]);
 
-  return { caPasseOuCaCashMaster, questionsRecord, remainingTime };
+  return { caPasseOuCaCashMaster, questionsRecord };
 };

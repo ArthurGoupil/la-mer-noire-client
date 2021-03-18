@@ -7,6 +7,7 @@ interface UseSoundProps {
   loop?: boolean;
   condition?: boolean;
   volume?: number;
+  isStoppingAtUnmount?: boolean;
 }
 
 interface UseSoundReturn {
@@ -24,6 +25,7 @@ export const useSound = ({
   loop = false,
   condition = true,
   volume = 1,
+  isStoppingAtUnmount = true,
 }: UseSoundProps): UseSoundReturn => {
   const howlSound = React.useMemo(
     () =>
@@ -65,8 +67,12 @@ export const useSound = ({
         howlSound.load();
       }
     }
-    return () => howlSound.unload();
-  }, [autoplay, condition, howlSound, volume]);
+    return () => {
+      if (isStoppingAtUnmount) {
+        howlSound.stop();
+      }
+    };
+  }, [autoplay, condition, howlSound, isStoppingAtUnmount, volume]);
 
   return {
     play: () => howlSound.play(),

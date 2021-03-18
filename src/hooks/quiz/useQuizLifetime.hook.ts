@@ -1,7 +1,5 @@
 import React from "react";
-import { useQuery } from "@apollo/client";
 
-import { GET_TIMESTAMP } from "services/others.service";
 import { getCookie, setCookie } from "utils/cookies.util";
 import { CookieName } from "constants/Cookies.constants";
 import { QuestionRecord } from "models/Game.model";
@@ -10,12 +8,10 @@ interface UseQuizLifetimeProps {
   quizItemSignature: string;
   allPlayersHaveAnswered: boolean;
   duration: number;
-  shouldFetchTimestampRef: boolean;
-  shouldResetRemainingTime: boolean;
+  shouldSetBaseTimestamp: boolean;
 }
 
 interface UseQuizLifetimeReturn {
-  remainingTime: number | null;
   questionsRecord: Record<string, QuestionRecord>;
 }
 
@@ -24,38 +20,14 @@ export const useQuizLifetime = ({
   quizItemSignature,
   allPlayersHaveAnswered,
   duration,
-  shouldFetchTimestampRef,
-  shouldResetRemainingTime,
+  shouldSetBaseTimestamp,
 }: UseQuizLifetimeProps): UseQuizLifetimeReturn => {
-  const { refetch } = useQuery(GET_TIMESTAMP, {
-    fetchPolicy: "no-cache",
-    skip: true,
-  });
   const [questionsRecord, setQuestionsRecord] = React.useState<Record<string, QuestionRecord>>(
     getCookie({
       prefix: shortId,
       cookieName: CookieName.questionsRecord,
     }) || {},
   );
-
-  const [remainingTime, setRemainingTime] = React.useState<number | null>(null);
-
-  React.useEffect(() => {
-    setRemainingTime(null);
-  }, [shouldResetRemainingTime]);
-
-  React.useEffect(() => {
-    if (questionsRecord[quizItemSignature]?.timestamp) {
-      (async () => {
-        const { timestamp } = (await refetch()).data;
-        setRemainingTime(
-          (questionsRecord[quizItemSignature]?.timestamp as number) + duration - timestamp,
-        );
-      })();
-    } else {
-      setRemainingTime(null);
-    }
-  }, [duration, questionsRecord, quizItemSignature, refetch]);
 
   const updateQuestionsRecord = React.useCallback(() => {
     setCookie<Record<string, QuestionRecord>>({
@@ -67,14 +39,11 @@ export const useQuizLifetime = ({
   }, [questionsRecord, shortId]);
 
   React.useEffect(() => {
-    if (shouldFetchTimestampRef && !questionsRecord[quizItemSignature]?.timestamp) {
-      (async () => {
-        const { timestamp } = (await refetch()).data;
-        questionsRecord[quizItemSignature] = { isDone: false, timestamp };
-        updateQuestionsRecord();
-      })();
+    if (shouldSetBaseTimestamp && !questionsRecord[quizItemSignature]?.timestamp) {
+      questionsRecord[quizItemSignature] = { isDone: false, timestamp: Date.now() / 1000 };
+      updateQuestionsRecord();
     }
-  }, [questionsRecord, quizItemSignature, refetch, shouldFetchTimestampRef, updateQuestionsRecord]);
+  }, [questionsRecord, quizItemSignature, shouldSetBaseTimestamp, updateQuestionsRecord]);
 
   React.useEffect(() => {
     if (!questionsRecord[quizItemSignature]) {
@@ -91,7 +60,12 @@ export const useQuizLifetime = ({
         questionsRecord[quizItemSignature].isDone = true;
         updateQuestionsRecord();
       }
-      if (remainingTime) {
+
+      if (questionsRecord[quizItemSignature]?.timestamp) {
+        const remainingTime = Math.round(
+          (questionsRecord[quizItemSignature].timestamp as number) + duration - Date.now() / 1000,
+        );
+
         timeout = setTimeout(() => {
           questionsRecord[quizItemSignature].isDone = true;
           updateQuestionsRecord();
@@ -100,17 +74,9 @@ export const useQuizLifetime = ({
     }
 
     return () => clearTimeout(timeout);
-  }, [
-    allPlayersHaveAnswered,
-    questionsRecord,
-    quizItemSignature,
-    remainingTime,
-    shortId,
-    updateQuestionsRecord,
-  ]);
+  }, [allPlayersHaveAnswered, duration, questionsRecord, quizItemSignature, updateQuestionsRecord]);
 
   return {
-    remainingTime,
     questionsRecord,
   };
 };
