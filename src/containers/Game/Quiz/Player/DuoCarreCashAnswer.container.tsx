@@ -7,11 +7,14 @@ import { DuoAnswers } from "components/Quiz/Player/DuoAnswers";
 import { CarreAnswers } from "components/Quiz/Player/CarreAnswers";
 import { CashAnswer } from "components/Quiz/Player/CashAnswer";
 import { Game } from "models/Game.model";
-import { FullScreenError } from "components/Utils/FullScreenError";
 import { useCurrentAnswer } from "hooks/quiz/useCurrentAnswer.hook";
 import { useNonNullQuizItemData } from "hooks/quiz/useNonNullQuizItemData.hook";
 import { usePlayersAnswers } from "hooks/quiz/usePlayersAnswers.hook";
 import { AnswerType } from "constants/AnswerType.constants";
+import { FullHeightWithWaves } from "components/Quiz/Host/FullHeightWithWaves";
+import { getQuizLevelGradient } from "utils/quiz/getQuizLevelGradient.util";
+import { LMNLogo } from "components/Utils/LMNLogo";
+import { FullScreenError } from "components/Utils/FullScreenError";
 
 interface DuoCarreCashAnswerContainerProps {
   game: Game;
@@ -19,6 +22,8 @@ interface DuoCarreCashAnswerContainerProps {
   duoAnswersIndexes: DuoAnswersIndexes;
   playerId: string;
 }
+
+type ContainerStatus = "answerType" | "answer" | "error";
 
 export const DuoCarreCashAnswerContainer: React.FC<DuoCarreCashAnswerContainerProps> = ({
   game,
@@ -45,58 +50,76 @@ export const DuoCarreCashAnswerContainer: React.FC<DuoCarreCashAnswerContainerPr
     playerId,
   });
 
-  if (answerTypeChoice?.quizItemSignature !== nonNullQuizItemData.quizItemSignature) {
-    return (
-      <AnswerTypeSelection
-        quizItemSignature={nonNullQuizItemData.quizItemSignature}
-        questionIsOver={false}
-        setAnswerTypeChoice={setAnswerTypeChoice}
-      />
-    );
-  }
-
-  if (answerTypeChoice.answerType in AnswerType) {
-    return {
-      duo: (
-        <DuoAnswers
-          quizItemSignature={nonNullQuizItemData.quizItemSignature}
-          choices={duoAnswersIndexes.indexes.map(
-            (answerIndex: number) => nonNullQuizItemData.quiz.choices[answerIndex],
-          )}
-          playerId={playerId}
-          currentAnswer={currentAnswer}
-          onClick={setCurrentAnswer}
-          questionIsOver={false}
-        />
-      ),
-      carre: (
-        <CarreAnswers
-          quizItemSignature={nonNullQuizItemData.quizItemSignature}
-          choices={nonNullQuizItemData.quiz.choices}
-          playerId={playerId}
-          currentAnswer={currentAnswer}
-          onClick={setCurrentAnswer}
-          questionIsOver={false}
-        />
-      ),
-      cash: (
-        <CashAnswer
-          quizItemSignature={nonNullQuizItemData.quizItemSignature}
-          playerId={playerId}
-          answer={nonNullQuizItemData.quiz.answer}
-          currentAnswer={currentAnswer}
-          onSubmit={setCurrentAnswer}
-          questionIsOver={false}
-        />
-      ),
-    }[answerTypeChoice.answerType];
-  }
+  const getContainerStatus = (): ContainerStatus => {
+    if (answerTypeChoice?.quizItemSignature !== nonNullQuizItemData.quizItemSignature) {
+      return "answerType";
+    } else if (answerTypeChoice?.answerType in AnswerType) {
+      return "answer";
+    } else {
+      return "error";
+    }
+  };
 
   return (
-    <FullScreenError
-      errorLabel={`Erreur de type "unknown answer type".`}
-      link="/"
-      linkLabel="Revenir au menu principal"
-    />
+    <>
+      {
+        {
+          answerType: (
+            <AnswerTypeSelection
+              quizItemSignature={nonNullQuizItemData.quizItemSignature}
+              playerCanAnswer={game?.currentQuizItem?.playersCanAnswer}
+              setAnswerTypeChoice={setAnswerTypeChoice}
+            />
+          ),
+          answer: {
+            duo: (
+              <DuoAnswers
+                quizItemSignature={nonNullQuizItemData.quizItemSignature}
+                choices={duoAnswersIndexes.indexes.map(
+                  (answerIndex: number) => nonNullQuizItemData.quiz.choices[answerIndex],
+                )}
+                playerId={playerId}
+                currentAnswer={currentAnswer}
+                onClick={setCurrentAnswer}
+                playerCanAnswer={game?.currentQuizItem?.playersCanAnswer}
+              />
+            ),
+            carre: (
+              <CarreAnswers
+                quizItemSignature={nonNullQuizItemData.quizItemSignature}
+                choices={nonNullQuizItemData.quiz.choices}
+                playerId={playerId}
+                currentAnswer={currentAnswer}
+                onClick={setCurrentAnswer}
+                playerCanAnswer={game?.currentQuizItem?.playersCanAnswer}
+              />
+            ),
+            cash: (
+              <CashAnswer
+                quizItemSignature={nonNullQuizItemData.quizItemSignature}
+                playerId={playerId}
+                answer={nonNullQuizItemData.quiz.answer}
+                currentAnswer={currentAnswer}
+                onSubmit={setCurrentAnswer}
+                playerCanAnswer={game?.currentQuizItem?.playersCanAnswer}
+              />
+            ),
+          }[answerTypeChoice?.answerType],
+          error: (
+            <FullScreenError
+              errorLabel={`Erreur de type "unknown answer type".`}
+              link="/"
+              linkLabel="Revenir au menu principal"
+            />
+          ),
+        }[getContainerStatus()]
+      }
+      <FullHeightWithWaves
+        wavesBackgroundGradient={getQuizLevelGradient({ quizLevel: nonNullQuizItemData.level })}
+        opacity={game?.currentQuizItem?.playersCanAnswer ? 0 : 1}
+      >
+        <LMNLogo width="100%" />
+      </FullHeightWithWaves>
+    </>
   );
 };

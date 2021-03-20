@@ -29,6 +29,7 @@ export interface CurrentQuizItem {
   quizId: string;
   level: QuizLevel;
   quizItemId: QuizItemId;
+  playersCanAnswer: boolean;
 }
 
 export interface CurrentAnswer {

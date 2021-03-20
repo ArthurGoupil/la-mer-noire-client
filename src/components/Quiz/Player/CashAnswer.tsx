@@ -14,8 +14,8 @@ interface CashAnswerProps {
   playerId: string;
   answer: string;
   currentAnswer: CurrentAnswer | null;
-  onSubmit: (value: SetCurrentAnswerProps) => Promise<void>;
-  questionIsOver: boolean;
+  onSubmit: (value: SetCurrentAnswerProps) => void;
+  playerCanAnswer: boolean;
 }
 
 export const CashAnswer: React.FC<CashAnswerProps> = ({
@@ -24,7 +24,7 @@ export const CashAnswer: React.FC<CashAnswerProps> = ({
   answer,
   currentAnswer,
   onSubmit,
-  questionIsOver,
+  playerCanAnswer,
 }): JSX.Element => {
   const answerWords = answer.split(/ /);
   const answerWordsRefs = answerWords.map(() => React.createRef<HTMLInputElement>());
@@ -38,7 +38,7 @@ export const CashAnswer: React.FC<CashAnswerProps> = ({
   }, "");
 
   const isPossibleToAnswer =
-    quizItemSignature !== currentAnswer?.quizItemSignature && !questionIsOver;
+    quizItemSignature !== currentAnswer?.quizItemSignature && playerCanAnswer;
   const isPossibleToSubmit =
     isPossibleToAnswer &&
     givenAnswer.reduce((acc, cur, index) => {
@@ -136,12 +136,12 @@ export const CashAnswer: React.FC<CashAnswerProps> = ({
           label={
             isPossibleToAnswer
               ? "Répondre"
-              : questionIsOver && currentAnswer?.quizItemSignature !== quizItemSignature
+              : !playerCanAnswer && currentAnswer?.quizItemSignature !== quizItemSignature
               ? "Too late !"
               : "Réponse envoyée !"
           }
-          onClick={async () =>
-            await onSubmit({
+          onClick={() =>
+            onSubmit({
               answer: givenAnswer.join(" "),
               answerType: AnswerType.cash,
               playerId,

@@ -33,7 +33,7 @@ export const InputAndButton: React.FC<InputAndButtonProps> = ({
 
   return (
     <Form
-      onSubmit={async (e) => {
+      onSubmit={(e) => {
         e.preventDefault();
         if (value.length > 0) {
           handleSubmit(value.trim());

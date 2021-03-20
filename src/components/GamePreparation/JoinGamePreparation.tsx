@@ -34,7 +34,7 @@ export const JoinGamePreparation: React.FC<JoinGamePreparationProps> = ({
           <div className="d-flex flex-column align-center">
             {game.players.length < 10 && (
               <InputAndButton
-                handleSubmit={async (value) => await handlePlayerJoinGame({ name: value })}
+                handleSubmit={(value) => handlePlayerJoinGame({ name: value })}
                 buttonLabel="Rejoindre la partie"
                 placeholder="My lovely name"
                 margin={`0 0 5px 0`}

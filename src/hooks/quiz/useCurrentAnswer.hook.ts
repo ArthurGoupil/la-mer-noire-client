@@ -9,7 +9,7 @@ import { AnswerType } from "constants/AnswerType.constants";
 
 interface UseCurrentAnswerReturn {
   currentAnswer: CurrentAnswer | null;
-  setCurrentAnswer: (props: SetCurrentAnswerProps) => Promise<void>;
+  setCurrentAnswer: (props: SetCurrentAnswerProps) => void;
 }
 
 interface UseCurrentAnswerProps {
@@ -36,18 +36,14 @@ export const useCurrentAnswer = ({
     }),
   );
 
-  const setCurrentAnswer = async ({
-    answer,
-    answerType,
-    playerId,
-  }: SetCurrentAnswerProps): Promise<void> => {
+  const setCurrentAnswer = ({ answer, answerType, playerId }: SetCurrentAnswerProps): void => {
     setCurrentAnswerState({ quizItemSignature, answer, answerType });
     setCookie<CurrentAnswer | null>({
       prefix: shortId,
       cookieName: CookieName.currentAnswer,
       cookieValue: { quizItemSignature, answer, answerType },
     });
-    await giveAnswer({
+    giveAnswer({
       variables: {
         shortId,
         playerId,

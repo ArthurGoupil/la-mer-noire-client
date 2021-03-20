@@ -10,8 +10,9 @@ import { GET_QUIZ_ITEM_DATA } from "services/quizzes.service";
 import { DuoCarreCashAnswerContainer } from "./DuoCarreCashAnswer.container";
 import { QuizStage } from "constants/GameStage.constants";
 import { getGlobalNetworkStatus } from "utils/networkStatus.util";
-import { FullHeightLoader } from "components/Utils/FullHeightLoader";
 import { useDuoAnswersIndexes } from "hooks/quiz/useDuoAnswersIndexes.hook";
+import { FullHeightWithWaves } from "components/Quiz/Host/FullHeightWithWaves";
+import { LMNLogo } from "components/Utils/LMNLogo";
 
 interface PlayerProps {
   game: Game;
@@ -61,7 +62,11 @@ export const PlayerContainer: React.FC<PlayerProps> = ({ game }): JSX.Element =>
         }
       </FullHeightLayout>
     ),
-    loading: <FullHeightLoader />,
+    loading: (
+      <FullHeightWithWaves>
+        <LMNLogo width="100%" />
+      </FullHeightWithWaves>
+    ),
     error: (
       <FullScreenError
         errorLabel="Erreur lors du chargement du quiz."

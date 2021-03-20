@@ -13,8 +13,8 @@ interface AnswerChoiceProps {
   answerType: AnswerType;
   playerId: string;
   currentAnswer: CurrentAnswer | null;
-  onClick: (value: SetCurrentAnswerProps) => Promise<void>;
-  questionIsOver: boolean;
+  onClick: (value: SetCurrentAnswerProps) => void;
+  playerCanAnswer: boolean;
 }
 
 export const AnswerChoice: React.FC<AnswerChoiceProps> = ({
@@ -25,7 +25,7 @@ export const AnswerChoice: React.FC<AnswerChoiceProps> = ({
   playerId,
   currentAnswer,
   onClick,
-  questionIsOver,
+  playerCanAnswer,
 }): JSX.Element => {
   const answerIsSelected =
     currentAnswer?.answer === quizAnswer && currentAnswer?.quizItemSignature === quizItemSignature;
@@ -34,7 +34,7 @@ export const AnswerChoice: React.FC<AnswerChoiceProps> = ({
     (currentAnswer !== null &&
       currentAnswer?.answer !== quizAnswer &&
       currentAnswer?.quizItemSignature === quizItemSignature) ||
-    (!answerIsSelected && questionIsOver);
+    (!answerIsSelected && !playerCanAnswer);
 
   return (
     <AnswerButton
@@ -43,9 +43,9 @@ export const AnswerChoice: React.FC<AnswerChoiceProps> = ({
       color={color}
       answerIsSelected={answerIsSelected}
       anotherAnswerIsSelected={anotherAnswerIsSelected}
-      onClick={async () => {
+      onClick={() => {
         if (currentAnswer?.quizItemSignature !== quizItemSignature) {
-          await onClick({ answer: quizAnswer, answerType, playerId });
+          onClick({ answer: quizAnswer, answerType, playerId });
         }
       }}
     >

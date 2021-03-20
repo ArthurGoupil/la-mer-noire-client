@@ -8,7 +8,7 @@ import { StageNameMini } from "./StageNameMini";
 import { GameStage } from "constants/GameStage.constants";
 import { useWindowHeight } from "hooks/others/useWindowHeight.hook";
 import { Styles } from "constants/Styling.constants";
-import { AnimatedWaves } from "components/Utils/AnimatedWaves";
+import { FullHeightWithWaves } from "./FullHeightWithWaves";
 
 interface QuizLayoutProps {
   gameName: string;
@@ -30,11 +30,11 @@ interface GetWavesBackgroundGradientProps {
 }
 
 export const QuizLayout: React.FC<QuizLayoutProps> = ({
+  children,
   gameName,
   stage,
   topScreens,
   showTopScreen,
-  children,
 }): JSX.Element => {
   const { height: minHeight } = useWindowHeight();
   const quizLayoutRef = React.useRef<HTMLDivElement>(null);
@@ -63,34 +63,32 @@ export const QuizLayout: React.FC<QuizLayoutProps> = ({
     <ScreensWrapper height={height} minHeight={minHeight}>
       <ScreensContainer translateY={showTopScreen ? "translateY(100%)" : "translateY(0%)"}>
         <QuizLayoutContainer minHeight={minHeight} className="d-flex flex-column align-center">
-          <TopScreenAndWaveContainer display={displayTopScreen ? "block" : "none"}>
-            <AnimatedWaves backgroundGradient={getWavesBackgroundGradient({ topScreens })} />
-            <TopScreenContainer
-              minHeight={minHeight}
-              className="d-flex flex-column align-center justify-center"
-            >
-              {topScreens.map((topScreen, index) => {
-                const { shouldEnter, shouldLeave, component } = topScreen;
-                const translateX =
-                  !shouldEnter && !shouldLeave
-                    ? "translateX(-100%)"
-                    : shouldEnter
-                    ? "translateX(0)"
-                    : "translate(100%)";
+          <FullHeightWithWaves
+            wavesBackgroundGradient={getWavesBackgroundGradient({ topScreens })}
+            containerDisplay={displayTopScreen ? "block" : "none"}
+            top="-100%"
+          >
+            {topScreens.map((topScreen, index) => {
+              const { shouldEnter, shouldLeave, component } = topScreen;
+              const translateX =
+                !shouldEnter && !shouldLeave
+                  ? "translateX(-100%)"
+                  : shouldEnter
+                  ? "translateX(0)"
+                  : "translate(100%)";
 
-                return (
-                  <TopScreen
-                    key={index}
-                    opacity={displayTopScreen[index] ? 1 : 0}
-                    translateX={translateX}
-                    className="d-flex justify-center align-center"
-                  >
-                    {component}
-                  </TopScreen>
-                );
-              })}
-            </TopScreenContainer>
-          </TopScreenAndWaveContainer>
+              return (
+                <TopScreen
+                  key={index}
+                  opacity={displayTopScreen[index] ? 1 : 0}
+                  translateX={translateX}
+                  className="d-flex justify-center align-center"
+                >
+                  {component}
+                </TopScreen>
+              );
+            })}
+          </FullHeightWithWaves>
           <ChildrenContainer
             ref={quizLayoutRef}
             className="d-flex flex-column align-center flex-grow"
@@ -130,21 +128,6 @@ const QuizLayoutContainer = styled.div<{ minHeight: number }>`
   padding: 40px;
   background: linear-gradient(to bottom, ${Styles.blue}, ${Styles.darkBlue});
   position: relative;
-`;
-
-const TopScreenAndWaveContainer = styled.div<{ display: string }>`
-  width: 100%;
-  height: 100%;
-  position: absolute;
-  top: -100%;
-  display: ${(props) => props.display};
-  background: linear-gradient(to bottom, ${Styles.lightBlue} 15%, ${Styles.blue} 100%);
-`;
-
-const TopScreenContainer = styled.div<{ minHeight: number }>`
-  width: 100%;
-  height: 85%;
-  padding: 40px;
 `;
 
 const TopScreen = styled.div<{ opacity: number; translateX: string }>`

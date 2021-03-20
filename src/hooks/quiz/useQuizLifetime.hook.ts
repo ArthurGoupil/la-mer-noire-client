@@ -3,6 +3,8 @@ import React from "react";
 import { getCookie, setCookie } from "utils/cookies.util";
 import { CookieName } from "constants/Cookies.constants";
 import { QuestionRecord } from "models/Game.model";
+import { useMutation } from "@apollo/client";
+import { GET_GAME, UPDATE_PLAYERS_CAN_ANSWER } from "services/games.service";
 interface UseQuizLifetimeProps {
   shortId: string;
   quizItemSignature: string;
@@ -28,6 +30,14 @@ export const useQuizLifetime = ({
       cookieName: CookieName.questionsRecord,
     }) || {},
   );
+  const [updatePlayersCanAnswer] = useMutation(UPDATE_PLAYERS_CAN_ANSWER, {
+    refetchQueries: [
+      {
+        query: GET_GAME,
+        variables: { shortId },
+      },
+    ],
+  });
 
   const updateQuestionsRecord = React.useCallback(() => {
     setCookie<Record<string, QuestionRecord>>({
@@ -39,11 +49,23 @@ export const useQuizLifetime = ({
   }, [questionsRecord, shortId]);
 
   React.useEffect(() => {
-    if (shouldSetBaseTimestamp && !questionsRecord[quizItemSignature]?.timestamp) {
+    const setUpQuestion = async () => {
+      await updatePlayersCanAnswer({ variables: { shortId, playersCanAnswer: true } });
       questionsRecord[quizItemSignature] = { isDone: false, timestamp: Date.now() / 1000 };
       updateQuestionsRecord();
+    };
+
+    if (shouldSetBaseTimestamp && !questionsRecord[quizItemSignature]?.timestamp) {
+      setUpQuestion();
     }
-  }, [questionsRecord, quizItemSignature, shouldSetBaseTimestamp, updateQuestionsRecord]);
+  }, [
+    questionsRecord,
+    quizItemSignature,
+    shortId,
+    shouldSetBaseTimestamp,
+    updatePlayersCanAnswer,
+    updateQuestionsRecord,
+  ]);
 
   React.useEffect(() => {
     if (!questionsRecord[quizItemSignature]) {
@@ -53,12 +75,17 @@ export const useQuizLifetime = ({
   }, [questionsRecord, quizItemSignature, updateQuestionsRecord]);
 
   React.useEffect(() => {
+    const endQuestion = () => {
+      questionsRecord[quizItemSignature].isDone = true;
+      updateQuestionsRecord();
+      updatePlayersCanAnswer({ variables: { shortId, playersCanAnswer: false } });
+    };
+
     let timeout: NodeJS.Timeout;
 
     if (questionsRecord[quizItemSignature] && !questionsRecord[quizItemSignature]?.isDone) {
       if (allPlayersHaveAnswered) {
-        questionsRecord[quizItemSignature].isDone = true;
-        updateQuestionsRecord();
+        endQuestion();
       }
 
       if (questionsRecord[quizItemSignature]?.timestamp) {
@@ -67,14 +94,21 @@ export const useQuizLifetime = ({
         );
 
         timeout = setTimeout(() => {
-          questionsRecord[quizItemSignature].isDone = true;
-          updateQuestionsRecord();
+          endQuestion();
         }, remainingTime * 1000);
       }
     }
 
     return () => clearTimeout(timeout);
-  }, [allPlayersHaveAnswered, duration, questionsRecord, quizItemSignature, updateQuestionsRecord]);
+  }, [
+    allPlayersHaveAnswered,
+    duration,
+    questionsRecord,
+    quizItemSignature,
+    shortId,
+    updatePlayersCanAnswer,
+    updateQuestionsRecord,
+  ]);
 
   return {
     questionsRecord,

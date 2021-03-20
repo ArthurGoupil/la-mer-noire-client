@@ -11,8 +11,8 @@ interface CarreAnswersProps {
   choices: string[];
   playerId: string;
   currentAnswer: CurrentAnswer | null;
-  onClick: (value: SetCurrentAnswerProps) => Promise<void>;
-  questionIsOver: boolean;
+  onClick: (value: SetCurrentAnswerProps) => void;
+  playerCanAnswer: boolean;
 }
 
 export const CarreAnswers: React.FC<CarreAnswersProps> = ({
@@ -21,7 +21,7 @@ export const CarreAnswers: React.FC<CarreAnswersProps> = ({
   playerId,
   currentAnswer,
   onClick,
-  questionIsOver,
+  playerCanAnswer,
 }): JSX.Element => {
   return (
     <>
@@ -33,7 +33,7 @@ export const CarreAnswers: React.FC<CarreAnswersProps> = ({
         playerId={playerId}
         currentAnswer={currentAnswer}
         onClick={onClick}
-        questionIsOver={questionIsOver}
+        playerCanAnswer={playerCanAnswer}
       />
       <AnswerChoice
         color={Styles.yellow}
@@ -43,7 +43,7 @@ export const CarreAnswers: React.FC<CarreAnswersProps> = ({
         playerId={playerId}
         currentAnswer={currentAnswer}
         onClick={onClick}
-        questionIsOver={questionIsOver}
+        playerCanAnswer={playerCanAnswer}
       />
       <AnswerChoice
         color={Styles.redOrange}
@@ -53,7 +53,7 @@ export const CarreAnswers: React.FC<CarreAnswersProps> = ({
         playerId={playerId}
         currentAnswer={currentAnswer}
         onClick={onClick}
-        questionIsOver={questionIsOver}
+        playerCanAnswer={playerCanAnswer}
       />
       <AnswerChoice
         color={Styles.turquoise}
@@ -63,7 +63,7 @@ export const CarreAnswers: React.FC<CarreAnswersProps> = ({
         playerId={playerId}
         currentAnswer={currentAnswer}
         onClick={onClick}
-        questionIsOver={questionIsOver}
+        playerCanAnswer={playerCanAnswer}
       />
     </>
   );

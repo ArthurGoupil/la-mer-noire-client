@@ -2,7 +2,7 @@ import React from "react";
 
 import { QuestionDisplay } from "components/Quiz/Host/QuestionDisplay";
 import { Game, PlayerData } from "models/Game.model";
-import { TimeBar } from "components/Quiz/Others/TimeBar";
+import { TimeBar } from "components/Quiz/Host/TimeBar";
 import { PlayerAnswer } from "components/Quiz/Host/PlayerAnswer";
 import { useMutation } from "@apollo/client";
 import { GENERATE_NEW_CURRENT_QUIZ_ITEM, GET_GAME } from "services/games.service";
@@ -71,6 +71,8 @@ export const CaPasseOuCaCashContainer: React.FC<CaPasseOuCaCashContainerProps> =
     stageNameCanPlay,
     stageNameLeave,
     quizOverSoundShouldStop,
+    timeBarShouldAnimateToEnd,
+    displayTimeBar,
   } = getCaPasseOuCaCashMasterInterpretation({
     caPasseOuCaCashMaster,
   });
@@ -79,13 +81,12 @@ export const CaPasseOuCaCashContainer: React.FC<CaPasseOuCaCashContainerProps> =
 
   React.useEffect(() => {
     if (fetchQuizItemData) {
-      (async () =>
-        await generateNewCurrentQuizItem({
-          variables: {
-            shortId: game.shortId,
-            level: caPasseOuCaCashMaster.quizLevel,
-          },
-        }))();
+      generateNewCurrentQuizItem({
+        variables: {
+          shortId: game.shortId,
+          level: caPasseOuCaCashMaster.quizLevel,
+        },
+      });
     }
   }, [game.shortId, generateNewCurrentQuizItem, caPasseOuCaCashMaster, fetchQuizItemData]);
 
@@ -163,8 +164,10 @@ export const CaPasseOuCaCashContainer: React.FC<CaPasseOuCaCashContainerProps> =
         </div>
       </div>
       <TimeBar
+        displayTimeBar={displayTimeBar}
         duration={QuizDuration.caPasseOuCaCash}
         questionRecord={questionsRecord[quizItemData?.quizItemSignature]}
+        shouldAnimateToEnd={timeBarShouldAnimateToEnd}
         soundShouldStop={quizOverSoundShouldStop}
         backgroundGradient={getQuizLevelGradient({
           quizLevel: caPasseOuCaCashMaster.quizLevel,

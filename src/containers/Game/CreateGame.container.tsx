@@ -39,8 +39,8 @@ export const CreateGameContainer: React.FC = (): JSX.Element => {
     <FullHeightLayout className="d-flex flex-column align-center justify-center">
       <LMNLogo width="500px" margin={`0 0 20px 0`} />
       <InputAndButton
-        handleSubmit={async (value) => {
-          await handleSubmit({ name: value });
+        handleSubmit={(value) => {
+          handleSubmit({ name: value });
           noSleep.enable();
         }}
         buttonLabel="Créer la partie"

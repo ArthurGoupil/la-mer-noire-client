@@ -38,7 +38,7 @@ export const useLaunchGame = ({ shortId, players }: useLaunchGameProps): UseLaun
   };
 
   React.useEffect(() => {
-    const launchGame = async () => {
+    const launchGame = () => {
       setCookie<CaPasseOuCaCashMaster>({
         prefix: shortId,
         cookieName: CookieName.caPasseOuCaCashMaster,
@@ -51,7 +51,7 @@ export const useLaunchGame = ({ shortId, players }: useLaunchGameProps): UseLaun
           }, {}),
         },
       });
-      await updateGameStage({
+      updateGameStage({
         variables: { stage: GameStage.caPasseOuCaCash, shortId },
       });
     };
@@ -65,7 +65,7 @@ export const useLaunchGame = ({ shortId, players }: useLaunchGameProps): UseLaun
         setLaunchCounter(launchCounter - 1);
       }, 1000);
     } else if (launchCounter === 0) {
-      (async () => await launchGame())();
+      (() => launchGame())();
     }
 
     return () => {

@@ -7,21 +7,26 @@ import { Sounds } from "constants/Sounds.constants";
 import { QuestionRecord } from "models/Game.model";
 
 interface TimeBarProps {
+  displayTimeBar: boolean;
   duration: number;
   questionRecord: QuestionRecord;
+  shouldAnimateToEnd: boolean;
   soundShouldStop: boolean;
   backgroundGradient: string[];
 }
 
-interface TimeBarSubContainerProps extends Omit<TimeBarProps, "questionRecord"> {
+interface TimeBarSubContainerProps
+  extends Omit<Omit<TimeBarProps, "questionRecord">, "displayTimeBar"> {
   barContainerWidth: number;
   isOver: boolean;
   remainingTime: number;
 }
 
 export const TimeBar: React.FC<TimeBarProps> = ({
+  displayTimeBar,
   duration,
   questionRecord,
+  shouldAnimateToEnd,
   soundShouldStop,
   backgroundGradient,
 }): JSX.Element => {
@@ -32,13 +37,14 @@ export const TimeBar: React.FC<TimeBarProps> = ({
 
   return (
     <BarContainer ref={barContainerRef} className="d-flex justify-start">
-      {questionRecord?.timestamp && (
+      {displayTimeBar && questionRecord?.timestamp && (
         <TimeBarSubContainer
           isOver={questionRecord?.isDone}
           remainingTime={remainingTime}
           duration={duration}
           backgroundGradient={backgroundGradient}
           barContainerWidth={barContainerRef.current?.clientWidth || 0}
+          shouldAnimateToEnd={shouldAnimateToEnd}
           soundShouldStop={soundShouldStop}
         />
       )}
@@ -52,6 +58,7 @@ const TimeBarSubContainer = ({
   duration,
   backgroundGradient,
   barContainerWidth,
+  shouldAnimateToEnd,
   soundShouldStop,
 }: TimeBarSubContainerProps) => {
   const barRef = React.useRef<HTMLDivElement>(null);
@@ -62,10 +69,10 @@ const TimeBarSubContainer = ({
   );
 
   React.useEffect(() => {
-    if (isOver) {
+    if (shouldAnimateToEnd) {
       setAnimationString("overTransformX 0.7s ease-out");
     }
-  }, [isOver]);
+  }, [shouldAnimateToEnd]);
 
   const quizOverTimeoutRef = React.useRef<NodeJS.Timeout | null>(null);
 

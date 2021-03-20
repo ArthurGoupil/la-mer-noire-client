@@ -20,6 +20,7 @@ const gameData = `
     quizId
     level
     quizItemId
+    playersCanAnswer
   }
   createdAt
 `;
@@ -78,6 +79,12 @@ export const GIVE_ANSWER: DocumentNode = gql`
 export const GENERATE_NEW_CURRENT_QUIZ_ITEM: DocumentNode = gql`
   mutation GenerateNewCurrentQuizItem($shortId: String!, $level: String!) {
     generateNewCurrentQuizItem(shortId: $shortId, level: $level)
+  }
+`;
+
+export const UPDATE_PLAYERS_CAN_ANSWER: DocumentNode = gql`
+  mutation UpdatePlayersCanAnswer($shortId: String!, $playersCanAnswer: Boolean!) {
+    updatePlayersCanAnswer(shortId: $shortId, playersCanAnswer: $playersCanAnswer)
   }
 `;
 

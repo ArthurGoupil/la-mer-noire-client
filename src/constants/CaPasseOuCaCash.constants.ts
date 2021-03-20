@@ -8,7 +8,6 @@ export enum CaPasseOuCaCashBottomScreensStates {
   question_fetchTimestamp = "question_fetchTimestamp",
   question_screensTransitionSound = "question_screensTransitionSound",
   question = "question",
-  allPlayersHaveAnswered = "allPlayersHaveAnswered",
   questionIsTimedOut = "questionIsTimedOut",
   questionMustTimeout = "questionMustTimeout",
 }
