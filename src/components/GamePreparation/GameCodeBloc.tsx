@@ -22,7 +22,7 @@ export const GameCodeBloc: React.FC<GameCodeBlocProps> = ({ gameCode }): JSX.Ele
 };
 
 const GameCodeBlocContainer = styled.div`
-  border-radius: 10px;
+  border-radius: 30px;
   padding: 20px;
   border: 5px solid ${Styles.blue};
 `;
@@ -47,8 +47,11 @@ const LMNUrl = styled.span`
 const GameCode = styled.div`
   font-family: "Boogaloo", cursive;
   color: ${Styles.redOrange};
-  font-size: 50px;
+  font-size: 70px;
   line-height: 50px;
   margin-left: 20px;
   font-weight: bold;
+  text-shadow: -3px -3px 0 ${Styles.turquoise}, 0 -3px 0 ${Styles.turquoise},
+    3px -3px 0 ${Styles.turquoise}, 3px 0 0 ${Styles.turquoise}, 3px 3px 0 ${Styles.turquoise},
+    0 3px 0 ${Styles.turquoise}, -3px 3px 0 ${Styles.turquoise}, -3px 0 0 ${Styles.turquoise};
 `;
