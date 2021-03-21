@@ -48,7 +48,7 @@ export const QuizItemInfos: React.FC<QuizItemInfosProps> = ({
           color={levelColor}
           className="d-flex flex-column align-center justify-center"
         >
-          <ThemeSubThemeContainer style={{ textAlign: "center" }}>
+          <ThemeSubThemeContainer>
             {theme.toUpperCase()}
             <SubThemeContainer>{subTheme.toUpperCase()}</SubThemeContainer>
           </ThemeSubThemeContainer>
@@ -77,6 +77,7 @@ const QuestionLevelContainer = styled.div`
   font-size: 70px;
   line-height: 70px;
   color: ${Styles.darkBlue};
+  text-align: center;
 `;
 
 const QuestionLevel = styled.span<{ color: string }>`

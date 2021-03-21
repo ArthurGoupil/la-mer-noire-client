@@ -10,9 +10,12 @@ interface GameCodeBlocProps {
 export const GameCodeBloc: React.FC<GameCodeBlocProps> = ({ gameCode }): JSX.Element => {
   return (
     <GameCodeBlocContainer className="d-flex flex-column align-center justify-center">
-      <GameCodeContainer className="d-flex align-center">
-        <SmartphoneIcon src="/icons/phone-quiz.svg" />
-        <GameCode>{gameCode}</GameCode>
+      <GameCodeContainer className="d-flex justify-center align-center">
+        <GameCodeStroke>{gameCode}</GameCodeStroke>
+        <GameCode className="d-flex align-center">
+          <SmartphoneIcon src="/icons/phone-quiz.svg" />
+          {gameCode}
+        </GameCode>
       </GameCodeContainer>
       <CodeText>
         Rendez-vous sur <LMNUrl>lamernoire.fun</LMNUrl> pour rejoindre la partie.
@@ -28,11 +31,14 @@ const GameCodeBlocContainer = styled.div`
 `;
 
 const GameCodeContainer = styled.span`
+  height: 60px;
   margin-bottom: 20px;
 `;
 
 const SmartphoneIcon = styled.img`
   height: 50px;
+  margin-top: 5px;
+  margin-right: 20px;
 `;
 
 const CodeText = styled.div`
@@ -47,11 +53,14 @@ const LMNUrl = styled.span`
 const GameCode = styled.div`
   font-family: "Boogaloo", cursive;
   color: ${Styles.redOrange};
-  font-size: 70px;
-  line-height: 50px;
-  margin-left: 20px;
+  font-size: 60px;
+  line-height: 60px;
   font-weight: bold;
-  text-shadow: -3px -3px 0 ${Styles.turquoise}, 0 -3px 0 ${Styles.turquoise},
-    3px -3px 0 ${Styles.turquoise}, 3px 0 0 ${Styles.turquoise}, 3px 3px 0 ${Styles.turquoise},
-    0 3px 0 ${Styles.turquoise}, -3px 3px 0 ${Styles.turquoise}, -3px 0 0 ${Styles.turquoise};
+  position: absolute;
+`;
+
+const GameCodeStroke = styled(GameCode)`
+  position: absolute;
+  -webkit-text-stroke: 10px ${Styles.turquoise};
+  margin-left: 70px;
 `;
