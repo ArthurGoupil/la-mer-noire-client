@@ -11,7 +11,7 @@ import { useLazyQuery } from "@apollo/client";
 import { GET_GAME } from "services/games.service";
 import { ErrorMessage } from "components/Utils/ErrorMessage";
 import { useSound } from "hooks/others/useSound.hook";
-import { Sounds } from "constants/Sounds.constants";
+import { HostSounds } from "constants/Sounds.constants";
 import { isDesktop } from "utils/isDesktop.util";
 
 export const HomeContainer: React.FC = (): JSX.Element => {
@@ -19,7 +19,7 @@ export const HomeContainer: React.FC = (): JSX.Element => {
   const [triggerGetGame, { data, loading, error }] = useLazyQuery(GET_GAME);
   const noSleep = new NoSleep();
   useSound({
-    sound: Sounds.homeWater,
+    sound: HostSounds.homeWater,
     autoplay: true,
     loop: true,
     condition: isDesktop(),

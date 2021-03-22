@@ -7,7 +7,7 @@ import { Answer, PlayerData } from "models/Game.model";
 import { CookieName } from "constants/Cookies.constants";
 import { isValidAnswer } from "utils/quiz/isValidAnswer.util";
 import { useSound } from "hooks/others/useSound.hook";
-import { Sounds } from "constants/Sounds.constants";
+import { PlayerSounds } from "constants/Sounds.constants";
 
 interface UsePlayersAnswersProps {
   shortId: string;
@@ -33,11 +33,11 @@ export const usePlayersAnswers = ({
     variables: { shortId },
   });
 
-  const { play: playFirstCash } = useSound({ sound: Sounds.firstCash });
-  const { play: playCash } = useSound({ sound: Sounds.cash });
-  const { play: playCarre } = useSound({ sound: Sounds.carre });
-  const { play: playDuo } = useSound({ sound: Sounds.duo });
-  const { play: playWrong } = useSound({ sound: Sounds.wrong });
+  const { play: playFirstCash } = useSound({ sound: PlayerSounds.firstCash });
+  const { play: playCash } = useSound({ sound: PlayerSounds.cash });
+  const { play: playCarre } = useSound({ sound: PlayerSounds.carre });
+  const { play: playDuo } = useSound({ sound: PlayerSounds.duo });
+  const { play: playWrong } = useSound({ sound: PlayerSounds.wrong });
 
   const [playersAnswers, setPlayersAnswers] = React.useState<Record<string, Answer>>(
     getCookie({

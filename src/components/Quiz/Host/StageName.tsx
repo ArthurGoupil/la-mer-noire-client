@@ -1,5 +1,5 @@
 import { GameStage } from "constants/GameStage.constants";
-import { Sounds } from "constants/Sounds.constants";
+import { HostSounds } from "constants/Sounds.constants";
 import { Styles } from "constants/Styling.constants";
 import { useSound } from "hooks/others/useSound.hook";
 import React from "react";
@@ -15,7 +15,7 @@ export const StageName: React.FC<StageNameProps> = ({ gameStage, canPlaySound })
   const stageName = getStageName({ gameStage });
   const [showStageName, setShowStageName] = React.useState<boolean>(false);
   const { play, status } = useSound({
-    sound: Sounds.CPOCCJingle,
+    sound: HostSounds.CPOCCJingle,
     condition: canPlaySound,
   });
 

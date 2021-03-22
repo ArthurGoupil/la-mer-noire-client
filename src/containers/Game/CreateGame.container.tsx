@@ -11,7 +11,7 @@ import { AnimatedSubmarine } from "components/Utils/AnimatedSubmarine";
 import { resetCookies } from "utils/cookies.util";
 import { useSound } from "hooks/others/useSound.hook";
 import { isDesktop } from "utils/isDesktop.util";
-import { Sounds } from "constants/Sounds.constants";
+import { HostSounds } from "constants/Sounds.constants";
 
 interface HandleSubmitProps {
   name: string;
@@ -22,7 +22,7 @@ export const CreateGameContainer: React.FC = (): JSX.Element => {
   const noSleep = new NoSleep();
   const [createGame, { loading }] = useMutation(CREATE_GAME);
   useSound({
-    sound: Sounds.homeWater,
+    sound: HostSounds.homeWater,
     autoplay: true,
     loop: true,
     condition: isDesktop(),

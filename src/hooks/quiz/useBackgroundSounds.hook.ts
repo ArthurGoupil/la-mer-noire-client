@@ -5,7 +5,7 @@ import {
   CaPasseOuCaCashTopScreensStates,
 } from "constants/CaPasseOuCaCash.constants";
 import { useSound } from "hooks/others/useSound.hook";
-import { Sounds } from "constants/Sounds.constants";
+import { HostSounds } from "constants/Sounds.constants";
 
 interface UseBackgroundSoundsProps {
   caPasseOuCaCashMasterState:
@@ -20,26 +20,26 @@ export const useBackgroundSounds = ({
     play: quizBackgroundSoundPlay,
     fadeOutAndStop: quizBackgroundSoundFadeOutAndStop,
     isPlaying: quizBackgroundSoundIsPlaying,
-  } = useSound({ sound: Sounds.quizBackground });
+  } = useSound({ sound: HostSounds.quizBackground });
 
   const {
     playAndFadeIn: topScreensBackgroundPlay,
     fadeOutAndStop: topScreensBackgroundFadeOutAndStop,
     isPlaying: topScreensBackgroundIsPlaying,
-  } = useSound({ sound: Sounds.topScreensBackground });
+  } = useSound({ sound: HostSounds.topScreensBackground });
 
   const {
     playAndFadeIn: topScreensBackgroundStartPlay,
     fadeOutAndStop: topScreensBackgroundStartFadeOutAndStop,
     isPlaying: topScreensBackgroundStartIsPlaying,
-  } = useSound({ sound: Sounds.topScreensBackgroundStart });
+  } = useSound({ sound: HostSounds.topScreensBackgroundStart });
 
   const { play: playScreensTransition, isPlaying: screensTransitionIsPlaying } = useSound({
-    sound: Sounds.screensTransition,
+    sound: HostSounds.screensTransition,
   });
 
   const { play: playTopScreenTransition, isPlaying: topScreenTransitionIsPlaying } = useSound({
-    sound: Sounds.topScreenTransition,
+    sound: HostSounds.topScreenTransition,
   });
 
   React.useEffect(() => {

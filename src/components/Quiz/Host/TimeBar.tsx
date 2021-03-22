@@ -3,7 +3,7 @@ import styled from "styled-components";
 
 import { Styles } from "constants/Styling.constants";
 import { useSound } from "hooks/others/useSound.hook";
-import { Sounds } from "constants/Sounds.constants";
+import { HostSounds } from "constants/Sounds.constants";
 import { QuestionRecord } from "models/Game.model";
 
 interface TimeBarProps {
@@ -62,7 +62,7 @@ const TimeBarSubContainer = ({
   soundShouldStop,
 }: TimeBarSubContainerProps) => {
   const barRef = React.useRef<HTMLDivElement>(null);
-  const { play, stop, isPlaying } = useSound({ sound: Sounds.quizOver });
+  const { play, stop, isPlaying } = useSound({ sound: HostSounds.quizOver });
 
   const remainingTimeRef = React.useRef<number>(remainingTime);
   const [animationString, setAnimationString] = React.useState<string>(

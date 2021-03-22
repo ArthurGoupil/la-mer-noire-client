@@ -9,7 +9,7 @@ import {
 } from "services/games.service";
 import { Game } from "models/Game.model";
 import { useSound } from "hooks/others/useSound.hook";
-import { Sounds } from "constants/Sounds.constants";
+import { HostSounds } from "constants/Sounds.constants";
 
 interface UseGameProps {
   shortId: string;
@@ -37,7 +37,7 @@ export const useGame = ({
     variables: { shortId },
   });
   const [canSubscribe, setCanSubscribe] = React.useState<boolean>(true);
-  const { play: playerAddedPlay } = useSound({ sound: Sounds.playerAdded });
+  const { play: playerAddedPlay } = useSound({ sound: HostSounds.playerAdded });
 
   React.useEffect(() => {
     return () => setCanSubscribe(false);

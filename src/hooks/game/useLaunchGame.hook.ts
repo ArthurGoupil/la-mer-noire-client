@@ -7,7 +7,7 @@ import { setCookie } from "utils/cookies.util";
 import { CookieName } from "constants/Cookies.constants";
 import { CaPasseOuCaCashMaster, PlayerData, PlayersPoints } from "models/Game.model";
 import { useSound } from "hooks/others/useSound.hook";
-import { Sounds } from "constants/Sounds.constants";
+import { HostSounds } from "constants/Sounds.constants";
 
 interface useLaunchGameProps {
   shortId: string;
@@ -23,7 +23,7 @@ export const useLaunchGame = ({ shortId, players }: useLaunchGameProps): UseLaun
   const [launchCounter, setLaunchCounter] = React.useState<number | null>(null);
   const [updateGameStage] = useMutation(UPDATE_GAME_STAGE);
   const { play, stop } = useSound({
-    sound: Sounds.gameStart,
+    sound: HostSounds.gameStart,
     volume: 0.4,
     isStoppingAtUnmount: false,
   });

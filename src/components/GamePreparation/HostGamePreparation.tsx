@@ -11,7 +11,7 @@ import { Button } from "components/Utils/Button";
 import { Game } from "models/Game.model";
 import { AnimatedSubmarine } from "components/Utils/AnimatedSubmarine";
 import { useSound } from "hooks/others/useSound.hook";
-import { Sounds } from "constants/Sounds.constants";
+import { HostSounds } from "constants/Sounds.constants";
 import { FullHeightLoader } from "components/Utils/FullHeightLoader";
 
 interface HostGamePreparationProps {
@@ -24,7 +24,7 @@ export const HostGamePreparation: React.FC<HostGamePreparationProps> = ({ game }
     players: game.players,
   });
   const { status } = useSound({
-    sound: Sounds.gamePrep,
+    sound: HostSounds.gamePrep,
     autoplay: true,
     loop: true,
     volume: 0.5,
