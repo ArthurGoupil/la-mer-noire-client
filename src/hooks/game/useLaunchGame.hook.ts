@@ -52,7 +52,7 @@ export const useLaunchGame = ({ shortId, players }: useLaunchGameProps): UseLaun
         },
       });
       updateGameStage({
-        variables: { stage: GameStage.caPasseOuCaCash, shortId },
+        variables: { stage: GameStage.kidimieux, shortId },
       });
     };
 

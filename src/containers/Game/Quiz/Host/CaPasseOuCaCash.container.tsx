@@ -123,6 +123,7 @@ export const CaPasseOuCaCashContainer: React.FC<CaPasseOuCaCashContainerProps> =
     {
       component: (
         <QuizItemInfos
+          numberOfQuestions={9}
           questionNumber={caPasseOuCaCashMaster.questionNumber}
           quizLevel={caPasseOuCaCashMaster.quizLevel}
           theme={nonNullQuizItemData.theme}

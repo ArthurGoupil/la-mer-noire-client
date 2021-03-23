@@ -58,6 +58,14 @@ export const PlayerContainer: React.FC<PlayerProps> = ({ game }): JSX.Element =>
                 playerId={playerId}
               />
             ),
+            kidimieux: (
+              <DuoCarreCashAnswerContainer
+                game={game}
+                quizItemData={quizItemData}
+                duoAnswersIndexes={duoAnswersIndexes}
+                playerId={playerId}
+              />
+            ),
           }[(stage as unknown) as QuizStage]
         }
       </FullHeightLayout>

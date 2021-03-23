@@ -4,8 +4,11 @@ import {
   CaPasseOuCaCashTopScreensStates,
 } from "constants/CaPasseOuCaCash.constants";
 import { GameStage } from "constants/GameStage.constants";
+import {
+  KidimieuxBottomScreensStates,
+  KidimieuxTopScreensStates,
+} from "constants/Kidimieux.constants";
 import { Player } from "models/Player.model";
-import { QuestionNumber } from "utils/quiz/getQuizLevelByQuestionNumber.util";
 import { QuizItemId, QuizLevel } from "./Quiz.model";
 
 export interface Game {
@@ -56,8 +59,16 @@ export interface CaPasseOuCaCashMaster {
     | keyof typeof CaPasseOuCaCashBottomScreensStates
     | keyof typeof CaPasseOuCaCashTopScreensStates;
   quizLevel: QuizLevel;
-  questionNumber: QuestionNumber;
+  questionNumber: number;
   playersPoints: PlayersPoints;
+}
+
+export interface KidimieuxMaster {
+  state: keyof typeof KidimieuxBottomScreensStates | keyof typeof KidimieuxTopScreensStates;
+  quizLevel: QuizLevel;
+  questionNumber: number;
+  playersPoints: PlayersPoints;
+  currentAnswerType: AnswerType | null;
 }
 
 export interface QuestionRecord {

@@ -2,15 +2,13 @@ import React from "react";
 
 import { CaPasseOuCaCashPoints } from "constants/CaPasseOuCaCash.constants";
 import { CookieName } from "constants/Cookies.constants";
-import { CaPasseOuCaCashMaster, Answer, PlayersPoints, QuestionRecord } from "models/Game.model";
+import { CaPasseOuCaCashMaster, Answer, QuestionRecord } from "models/Game.model";
 import { QuizItemData, QuizLevel } from "models/Quiz.model";
 import { getCookie, setCookie } from "utils/cookies.util";
-import {
-  getQuizLevelByQuestionNumber,
-  QuestionNumber,
-} from "utils/quiz/getQuizLevelByQuestionNumber.util";
+import { getQuizLevelByQuestionNumber } from "utils/quiz/getQuizLevelByQuestionNumber.util";
 import { useQuizLifetime } from "hooks/quiz/useQuizLifetime.hook";
 import { QuizDuration } from "constants/QuizDuration.constants";
+import { getUpdatedPlayersPoints } from "utils/quiz/getUpdatedPlayersPoints.util";
 
 interface UseCaPasseOuCaCashMasterProps {
   shortId: string;
@@ -68,21 +66,6 @@ export const useCaPasseOuCaCashMaster = ({
         cookieValue: newCaPasseOuCaCashMaster,
       });
       setCaPasseOuCaCashMaster(newCaPasseOuCaCashMaster);
-    };
-
-    const getPlayersPoints = (): PlayersPoints => {
-      const playersPoints: PlayersPoints = caPasseOuCaCashMaster.playersPoints;
-      for (const playerId of Object.keys(caPasseOuCaCashMaster.playersPoints)) {
-        playersPoints[playerId].previous = caPasseOuCaCashMaster.playersPoints[playerId].current;
-        const additionalPoints = playersAnswers[playerId]?.isGoodAnswer
-          ? CaPasseOuCaCashPoints[quizLevel][playersAnswers[playerId].answerType] +
-            (playersAnswers[playerId].isFirstGoodCash ? 1 : 0)
-          : 0;
-
-        playersPoints[playerId].current += additionalPoints;
-      }
-
-      return playersPoints;
     };
 
     switch (caPasseOuCaCashMaster.state) {
@@ -156,7 +139,12 @@ export const useCaPasseOuCaCashMaster = ({
         const questionMustTimeoutTimeout = setTimeout(() => {
           updateCaPasseOuCaCashMaster({
             state: "questionSummary_topScreensBackgroundSound",
-            playersPoints: getPlayersPoints(),
+            playersPoints: getUpdatedPlayersPoints({
+              formerPlayersPoints: caPasseOuCaCashMaster.playersPoints,
+              quizLevel,
+              playersAnswers,
+              pointsRecord: CaPasseOuCaCashPoints,
+            }),
           });
         }, 2000);
         return () => clearTimeout(questionMustTimeoutTimeout);
@@ -164,7 +152,12 @@ export const useCaPasseOuCaCashMaster = ({
         const questionIsTimedOutTimeout = setTimeout(() => {
           updateCaPasseOuCaCashMaster({
             state: "questionSummary_topScreensBackgroundSound",
-            playersPoints: getPlayersPoints(),
+            playersPoints: getUpdatedPlayersPoints({
+              formerPlayersPoints: caPasseOuCaCashMaster.playersPoints,
+              quizLevel,
+              playersAnswers,
+              pointsRecord: CaPasseOuCaCashPoints,
+            }),
           });
         }, 1000);
         return () => clearTimeout(questionIsTimedOutTimeout);
@@ -203,7 +196,7 @@ export const useCaPasseOuCaCashMaster = ({
         let playersRanking_currentTimeout: NodeJS.Timeout;
         if (caPasseOuCaCashMaster.questionNumber < 9) {
           playersRanking_currentTimeout = setTimeout(() => {
-            const questionNumber = (caPasseOuCaCashMaster.questionNumber + 1) as QuestionNumber;
+            const questionNumber = caPasseOuCaCashMaster.questionNumber + 1;
             updateCaPasseOuCaCashMaster({
               quizLevel: getQuizLevelByQuestionNumber({ questionNumber }),
               questionNumber,
