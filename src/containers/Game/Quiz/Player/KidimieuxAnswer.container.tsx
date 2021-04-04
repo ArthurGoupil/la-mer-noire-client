@@ -1,7 +1,7 @@
 import React from "react";
 
 import { AnswerTypeSelection } from "components/Quiz/Player/AnswerTypeSelection";
-import { useAnswerTypeChoice } from "hooks/quiz/useAnswerTypeChoice.hook";
+import { useBuzzAnswerTypeChoice } from "hooks/quiz/useBuzzAnswerTypeChoice.hook";
 import { DuoAnswersIndexes, QuizItemData } from "models/Quiz.model";
 import { DuoAnswers } from "components/Quiz/Player/DuoAnswers";
 import { CarreAnswers } from "components/Quiz/Player/CarreAnswers";
@@ -9,37 +9,47 @@ import { CashAnswer } from "components/Quiz/Player/CashAnswer";
 import { Game } from "models/Game.model";
 import { useCurrentAnswer } from "hooks/quiz/useCurrentAnswer.hook";
 import { useNonNullQuizItemData } from "hooks/quiz/useNonNullQuizItemData.hook";
-import { usePlayersAnswers } from "hooks/quiz/usePlayersAnswers.hook";
-import { AnswerType } from "constants/AnswerType.constants";
 import { FullHeightWithWaves } from "components/Quiz/Host/FullHeightWithWaves";
 import { getQuizLevelGradient } from "utils/quiz/getQuizLevelGradient.util";
 import { LMNLogo } from "components/Utils/LMNLogo";
 import { FullScreenError } from "components/Utils/FullScreenError";
+import { usePlayersBuzz } from "hooks/quiz/usePlayersBuzz.hook";
+import { AnswerType } from "constants/AnswerType.constants";
+import { usePlayersAnswers } from "hooks/quiz/usePlayersAnswers.hook";
 
-interface DuoCarreCashAnswerContainerProps {
+interface KidimieuxAnswerContainerProps {
   game: Game;
   quizItemData: QuizItemData;
   duoAnswersIndexes: DuoAnswersIndexes;
   playerId: string;
 }
 
-type ContainerStatus = "answerType" | "answer" | "error";
+type ContainerStatus = "answerTypeBuzz" | "answer" | "other";
 
-export const DuoCarreCashAnswerContainer: React.FC<DuoCarreCashAnswerContainerProps> = ({
+export const KidimieuxAnswerContainer: React.FC<KidimieuxAnswerContainerProps> = ({
   game,
   quizItemData,
   duoAnswersIndexes,
   playerId,
 }): JSX.Element => {
-  const { answerTypeChoice, setAnswerTypeChoice } = useAnswerTypeChoice({
-    shortId: game.shortId,
-  });
-
   const { nonNullQuizItemData } = useNonNullQuizItemData({ quizItemData });
+
+  const { buzzAnswerTypeChoice, setBuzzAnswerTypeChoice } = useBuzzAnswerTypeChoice({
+    shortId: game.shortId,
+    playerId,
+    quizItemSignature: nonNullQuizItemData.quizItemSignature,
+  });
 
   const { currentAnswer, setCurrentAnswer } = useCurrentAnswer({
     shortId: game.shortId,
     quizItemSignature: nonNullQuizItemData.quizItemSignature,
+  });
+
+  const { playersBuzz } = usePlayersBuzz({
+    shortId: game.shortId,
+    quizItemSignature: quizItemData?.quizItemSignature,
+    players: game.players,
+    canBuzz: game.currentQuizItem.playersCanBuzz,
   });
 
   usePlayersAnswers({
@@ -51,24 +61,49 @@ export const DuoCarreCashAnswerContainer: React.FC<DuoCarreCashAnswerContainerPr
   });
 
   const getContainerStatus = (): ContainerStatus => {
-    if (answerTypeChoice?.quizItemSignature !== nonNullQuizItemData.quizItemSignature) {
-      return "answerType";
-    } else if (answerTypeChoice?.answerType in AnswerType) {
+    if (
+      game?.currentQuizItem?.playersCanAnswer &&
+      game.currentQuizItem.currentPlayers.includes(playerId)
+    ) {
       return "answer";
+    } else if (game?.currentQuizItem?.playersCanBuzz) {
+      return "answerTypeBuzz";
     } else {
-      return "error";
+      return "other";
     }
   };
+
+  const selectedAnswerType = playersBuzz[playerId]?.answer as AnswerType;
+
+  const hideDuo = Object.keys(playersBuzz).some(
+    (buzzPlayerId) =>
+      buzzPlayerId !== playerId &&
+      (playersBuzz[buzzPlayerId].answer === "duo" || playersBuzz[buzzPlayerId].answer === "carre"),
+  );
+  const hideCarre = Object.keys(playersBuzz).some(
+    (buzzPlayerId) => buzzPlayerId !== playerId && playersBuzz[buzzPlayerId].answer === "carre",
+  );
+
+  const wavesBackgroundOpacity =
+    (game?.currentQuizItem?.playersCanAnswer &&
+      game.currentQuizItem.currentPlayers.includes(playerId)) ||
+    game?.currentQuizItem?.playersCanBuzz
+      ? 0
+      : 1;
 
   return (
     <>
       {
         {
-          answerType: (
+          answerTypeBuzz: (
             <AnswerTypeSelection
               quizItemSignature={nonNullQuizItemData.quizItemSignature}
-              playerCanAnswer={game?.currentQuizItem?.playersCanAnswer}
-              setAnswerTypeChoice={setAnswerTypeChoice}
+              playerCanAnswer={game?.currentQuizItem?.playersCanBuzz && !playersBuzz[playerId]}
+              setAnswerTypeChoice={setBuzzAnswerTypeChoice}
+              isBuzz
+              selectedAnswerType={selectedAnswerType}
+              hideDuo={hideDuo}
+              hideCarre={hideCarre}
             />
           ),
           answer: {
@@ -104,19 +139,20 @@ export const DuoCarreCashAnswerContainer: React.FC<DuoCarreCashAnswerContainerPr
                 playerCanAnswer={game?.currentQuizItem?.playersCanAnswer}
               />
             ),
-          }[answerTypeChoice?.answerType],
-          error: (
-            <FullScreenError
-              errorLabel={`Erreur de type "unknown answer type".`}
-              link="/"
-              linkLabel="Revenir au menu principal"
-            />
-          ),
+            buzz: (
+              <FullScreenError
+                errorLabel={`Erreur de type "no buzz allowed".`}
+                link="/"
+                linkLabel="Revenir au menu principal"
+              />
+            ),
+          }[buzzAnswerTypeChoice?.answerType],
+          other: <div />,
         }[getContainerStatus()]
       }
       <FullHeightWithWaves
         wavesBackgroundGradient={getQuizLevelGradient({ quizLevel: nonNullQuizItemData.level })}
-        opacity={game?.currentQuizItem?.playersCanAnswer ? 0 : 1}
+        opacity={wavesBackgroundOpacity}
       >
         <LMNLogo width="100%" />
       </FullHeightWithWaves>

@@ -27,4 +27,5 @@ export enum CaPasseOuCaCashTopScreensStates {
   playersRanking_previous = "playersRanking_previous",
   playersRanking_current = "playersRanking_current",
   playersRanking_screenTransitionSound = "playersRanking_screenTransitionSound",
+  roundIsOver = "roundIsOver",
 }

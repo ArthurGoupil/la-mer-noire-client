@@ -19,7 +19,7 @@ export const QuizContainer: React.FC<QuizProps> = ({ shortId, userType }): JSX.E
     subscribe: {
       stage: true,
       players: true,
-      currentQuizItem: userType === UserType.play,
+      currentQuizItem: true,
     },
   });
 

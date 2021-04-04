@@ -6,11 +6,11 @@ import { GameStage } from "constants/GameStage.constants";
 import { getStageName } from "utils/game/getStageName.util";
 
 interface StageNameMiniProps {
-  gameStage: GameStage;
+  stage: GameStage;
 }
 
-export const StageNameMini: React.FC<StageNameMiniProps> = ({ gameStage }): JSX.Element => {
-  const stageName = getStageName({ gameStage });
+export const StageNameMini: React.FC<StageNameMiniProps> = ({ stage }): JSX.Element => {
+  const stageName = getStageName({ stage });
 
   return <Name>{stageName}</Name>;
 };

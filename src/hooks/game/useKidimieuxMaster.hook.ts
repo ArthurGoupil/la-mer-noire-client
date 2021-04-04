@@ -1,49 +1,99 @@
 import React from "react";
 
-import { CaPasseOuCaCashPoints } from "constants/CaPasseOuCaCash.constants";
 import { CookieName } from "constants/Cookies.constants";
-import { Answer, PlayersPoints, QuestionRecord, KidimieuxMaster } from "models/Game.model";
+import {
+  Answer,
+  QuestionRecord,
+  KidimieuxMaster,
+  PlayersPoints,
+  PlayerData,
+  Buzz,
+  CaPasseOuCaCashMaster,
+} from "models/Game.model";
 import { QuizItemData, QuizLevel } from "models/Quiz.model";
 import { getCookie, setCookie } from "utils/cookies.util";
 import { getQuizLevelByQuestionNumber } from "utils/quiz/getQuizLevelByQuestionNumber.util";
-import { useQuizLifetime } from "hooks/quiz/useQuizLifetime.hook";
 import { QuizDuration } from "constants/QuizDuration.constants";
+import { getUpdatedPlayersPoints } from "utils/quiz/getUpdatedPlayersPoints.util";
+import { KidimieuxPoints } from "constants/Kidimieux.constants";
+import { useQuizLifetime } from "hooks/quiz/useQuizLifetime.hook";
+import { GET_GAME, UPDATE_CURRENT_PLAYERS } from "services/games.service";
+import { useMutation } from "@apollo/client";
+import { usePlayersBuzz } from "hooks/quiz/usePlayersBuzz.hook";
+import { QuizStage } from "constants/GameStage.constants";
 
 interface UseKidimieuxMasterProps {
   shortId: string;
   quizItemData: QuizItemData;
-  allPlayersHaveAnswered: boolean;
   playersAnswers: Record<string, Answer>;
   quizItemSignature: string;
   quizLevel: QuizLevel;
+  players: PlayerData[];
+  currentPlayers: string[];
 }
 
 interface UseKidimieuxReturn {
   kidimieuxMaster: KidimieuxMaster;
   questionsRecord: Record<string, QuestionRecord>;
+  playersBuzz: Record<string, Buzz>;
 }
 
 export const useKidimieuxMaster = ({
   shortId,
   quizItemData,
-  allPlayersHaveAnswered,
   playersAnswers,
   quizItemSignature,
   quizLevel,
+  players,
+  currentPlayers,
 }: UseKidimieuxMasterProps): UseKidimieuxReturn => {
   const [kidimieuxMaster, setKidimieuxMaster] = React.useState<KidimieuxMaster>(
-    getCookie({
+    getCookie<KidimieuxMaster>({
       prefix: shortId,
       cookieName: CookieName.kidimieuxMaster,
-    }),
+    }) || {
+      state: "stageName_wait",
+      quizLevel: "beginner",
+      questionNumber: 1,
+      playersPoints: getCookie<CaPasseOuCaCashMaster>({
+        prefix: shortId,
+        cookieName: CookieName.caPasseOuCaCashMaster,
+      }).playersPoints,
+    },
   );
+
+  const [updateCurrentPlayers] = useMutation(UPDATE_CURRENT_PLAYERS, {
+    refetchQueries: [
+      {
+        query: GET_GAME,
+        variables: { shortId },
+      },
+    ],
+  });
 
   const { questionsRecord } = useQuizLifetime({
     shortId,
     quizItemSignature,
-    allPlayersHaveAnswered,
     duration: QuizDuration.kidimieux,
-    shouldSetBaseTimestamp: kidimieuxMaster.state === "question_fetchTimestamp",
+    quizIsOver: Object.keys(playersAnswers).length > 0,
+    shouldSetQuizBaseTimestamp:
+      kidimieuxMaster.state === "question_playerMustAnswer_fetchTimestamp",
+    buzzIsOver: kidimieuxMaster.state === "question_playerMustAnswer_fetchTimestamp",
+    clearBuzzTimeout:
+      kidimieuxMaster.state === "buzz_duo" ||
+      kidimieuxMaster.state === "buzz_carre" ||
+      kidimieuxMaster.state === "question_playerMustAnswer_fetchTimestamp",
+    shouldSetBuzzBaseTimestamp: kidimieuxMaster.state === "buzz_fetchTimestamp",
+  });
+
+  const { playersBuzz } = usePlayersBuzz({
+    shortId,
+    quizItemSignature: quizItemData?.quizItemSignature,
+    players,
+    canBuzz:
+      kidimieuxMaster.state === "buzz" ||
+      kidimieuxMaster.state === "buzz_duo" ||
+      kidimieuxMaster.state === "buzz_carre",
   });
 
   React.useEffect(() => {
@@ -63,7 +113,7 @@ export const useKidimieuxMaster = ({
       };
       setCookie<KidimieuxMaster>({
         prefix: shortId,
-        cookieName: CookieName.caPasseOuCaCashMaster,
+        cookieName: CookieName.kidimieuxMaster,
         cookieValue: newKidimieuxMaster,
       });
       setKidimieuxMaster(newKidimieuxMaster);
@@ -111,22 +161,102 @@ export const useKidimieuxMaster = ({
       case "quizItemInfos_showThemeSubTheme":
         const showThemeSubThemeTimeout = setTimeout(() => {
           updateKidimieuxMaster({
-            state: "question_fetchTimestamp",
+            state: "buzz_fetchTimestamp",
           });
         }, 4000);
         return () => clearTimeout(showThemeSubThemeTimeout);
-      case "question_fetchTimestamp":
+      case "buzz_fetchTimestamp":
         updateKidimieuxMaster({
-          state: "question_screensTransitionSound",
+          state: "buzz_screensTransitionSound",
         });
         break;
-      case "question_screensTransitionSound":
+      case "buzz_screensTransitionSound":
         updateKidimieuxMaster({
-          state: "question",
+          state: "buzz",
         });
         break;
-      case "question":
-        if (allPlayersHaveAnswered) {
+      case "buzz":
+        if (Object.keys(playersBuzz).length === players.length) {
+          updateKidimieuxMaster({
+            state: "question_playerMustAnswer_wait",
+          });
+        }
+        if (playersBuzz[Object.keys(playersBuzz)[0]]?.answer === "duo") {
+          updateKidimieuxMaster({
+            state: "buzz_duo",
+          });
+        } else if (playersBuzz[Object.keys(playersBuzz)[0]]?.answer === "carre") {
+          updateKidimieuxMaster({
+            state: "buzz_carre",
+          });
+        } else if (playersBuzz[Object.keys(playersBuzz)[0]]?.answer === "cash") {
+          updateKidimieuxMaster({
+            state: "question_playerMustAnswer_wait",
+          });
+        } else if (questionsRecord[quizItemData?.quizItemSignature]?.buzzIsDone) {
+          updateKidimieuxMaster({
+            state: "questionIsTimedOut",
+          });
+        }
+        break;
+      case "buzz_duo":
+        const questionDuoBuzzTimeout = setTimeout(() => {
+          updateKidimieuxMaster({
+            state: "question_playerMustAnswer_wait",
+          });
+        }, 6000);
+        if (Object.keys(playersBuzz).length === players.length) {
+          updateKidimieuxMaster({
+            state: "question_playerMustAnswer_wait",
+          });
+        }
+        if (playersBuzz[Object.keys(playersBuzz)[1]]?.answer === "carre") {
+          updateKidimieuxMaster({
+            state: "buzz_carre",
+          });
+        } else if (playersBuzz[Object.keys(playersBuzz)[1]]?.answer === "cash") {
+          updateKidimieuxMaster({
+            state: "question_playerMustAnswer_wait",
+          });
+        }
+        return () => clearTimeout(questionDuoBuzzTimeout);
+      case "buzz_carre":
+        const questionCarreBuzzTimeout = setTimeout(() => {
+          updateKidimieuxMaster({
+            state: "question_playerMustAnswer_wait",
+          });
+        }, 6000);
+        if (Object.keys(playersBuzz).length === players.length) {
+          updateKidimieuxMaster({
+            state: "question_playerMustAnswer_wait",
+          });
+        }
+        if (
+          playersBuzz[Object.keys(playersBuzz)[1]]?.answer === "cash" ||
+          playersBuzz[Object.keys(playersBuzz)[2]]?.answer === "cash"
+        ) {
+          updateKidimieuxMaster({
+            state: "question_playerMustAnswer_wait",
+          });
+        }
+        return () => clearTimeout(questionCarreBuzzTimeout);
+      case "question_playerMustAnswer_wait":
+        const playerMustAnswerWaitTimeout = setTimeout(() => {
+          const currentPlayers =
+            Object.keys(playersBuzz).length > 0 ? Object.keys(playersBuzz).slice(-1) : [];
+          updateCurrentPlayers({ variables: { shortId, currentPlayers } });
+          updateKidimieuxMaster({
+            state: "question_playerMustAnswer_fetchTimestamp",
+          });
+        }, 3000);
+        return () => clearTimeout(playerMustAnswerWaitTimeout);
+      case "question_playerMustAnswer_fetchTimestamp":
+        updateKidimieuxMaster({
+          state: "question_playerMustAnswer",
+        });
+        break;
+      case "question_playerMustAnswer":
+        if (Object.keys(playersAnswers).length > 0) {
           updateKidimieuxMaster({
             state: "questionMustTimeout",
           });
@@ -136,22 +266,38 @@ export const useKidimieuxMaster = ({
           });
         }
         break;
-      case "questionMustTimeout":
-        const questionMustTimeoutTimeout = setTimeout(() => {
-          updateKidimieuxMaster({
-            state: "questionSummary_topScreensBackgroundSound",
-            playersPoints: getPlayersPoints(),
-          });
-        }, 2000);
-        return () => clearTimeout(questionMustTimeoutTimeout);
       case "questionIsTimedOut":
         const questionIsTimedOutTimeout = setTimeout(() => {
           updateKidimieuxMaster({
             state: "questionSummary_topScreensBackgroundSound",
-            playersPoints: getPlayersPoints(),
+            playersPoints: getUpdatedPlayersPoints({
+              stage: QuizStage.kidimieux,
+              formerPlayersPoints: kidimieuxMaster.playersPoints,
+              playersAnswers,
+              playersBuzz,
+              quizLevel,
+              pointsRecord: KidimieuxPoints,
+              currentPlayers,
+            }),
           });
         }, 1000);
         return () => clearTimeout(questionIsTimedOutTimeout);
+      case "questionMustTimeout":
+        const questionMustTimeoutTimeout = setTimeout(() => {
+          updateKidimieuxMaster({
+            state: "questionSummary_topScreensBackgroundSound",
+            playersPoints: getUpdatedPlayersPoints({
+              stage: QuizStage.kidimieux,
+              formerPlayersPoints: kidimieuxMaster.playersPoints,
+              playersAnswers,
+              playersBuzz,
+              quizLevel,
+              pointsRecord: KidimieuxPoints,
+              currentPlayers,
+            }),
+          });
+        }, 2000);
+        return () => clearTimeout(questionMustTimeoutTimeout);
       case "questionSummary_topScreensBackgroundSound":
         updateKidimieuxMaster({
           state: "questionSummary",
@@ -178,6 +324,7 @@ export const useKidimieuxMaster = ({
         break;
       case "playersRanking_previous":
         const playersRanking_previousTimeout = setTimeout(() => {
+          updateCurrentPlayers({ variables: { shortId, currentPlayers: [] } });
           updateKidimieuxMaster({
             state: "playersRanking_current",
           });
@@ -185,11 +332,14 @@ export const useKidimieuxMaster = ({
         return () => clearTimeout(playersRanking_previousTimeout);
       case "playersRanking_current":
         let playersRanking_currentTimeout: NodeJS.Timeout;
-        if (caPasseOuCaCashMaster.questionNumber < 9) {
+        if (kidimieuxMaster.questionNumber < 9) {
           playersRanking_currentTimeout = setTimeout(() => {
-            const questionNumber = (caPasseOuCaCashMaster.questionNumber + 1) as QuestionNumber;
+            const questionNumber = kidimieuxMaster.questionNumber + 1;
             updateKidimieuxMaster({
-              quizLevel: getQuizLevelByQuestionNumber({ questionNumber }),
+              quizLevel: getQuizLevelByQuestionNumber({
+                stage: QuizStage.kidimieux,
+                questionNumber,
+              }),
               questionNumber,
               state: "playersRanking_screenTransitionSound",
             });
@@ -203,17 +353,21 @@ export const useKidimieuxMaster = ({
         break;
     }
   }, [
-    allPlayersHaveAnswered,
-    caPasseOuCaCashMaster.playersPoints,
-    caPasseOuCaCashMaster.questionNumber,
-    caPasseOuCaCashMaster.quizLevel,
-    caPasseOuCaCashMaster.state,
+    currentPlayers,
+    kidimieuxMaster.currentAnswerType,
+    kidimieuxMaster.playersPoints,
+    kidimieuxMaster.questionNumber,
+    kidimieuxMaster.quizLevel,
+    kidimieuxMaster.state,
+    players.length,
     playersAnswers,
+    playersBuzz,
     questionsRecord,
     quizItemData,
     quizLevel,
     shortId,
+    updateCurrentPlayers,
   ]);
 
-  return { caPasseOuCaCashMaster, questionsRecord };
+  return { kidimieuxMaster, questionsRecord, playersBuzz };
 };

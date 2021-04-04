@@ -17,7 +17,6 @@ export interface Game {
   name: string;
   stage: GameStage;
   players: [PlayerData];
-  currentPlayers: Player[];
   currentQuizItem: CurrentQuizItem;
   createdAt: string;
   updatedAd?: string;
@@ -32,7 +31,9 @@ export interface CurrentQuizItem {
   quizId: string;
   level: QuizLevel;
   quizItemId: QuizItemId;
+  currentPlayers: string[];
   playersCanAnswer: boolean;
+  playersCanBuzz: boolean;
 }
 
 export interface CurrentAnswer {
@@ -44,6 +45,11 @@ export interface CurrentAnswer {
 export interface Answer extends CurrentAnswer {
   isGoodAnswer: boolean;
   isFirstGoodCash: boolean;
+}
+
+export interface Buzz {
+  quizItemSignature: string;
+  answer: string;
 }
 
 export interface AnswerTypeChoice {
@@ -74,4 +80,6 @@ export interface KidimieuxMaster {
 export interface QuestionRecord {
   isDone: boolean;
   timestamp: number | null;
+  buzzIsDone: boolean;
+  buzzTimestamp: number | null;
 }

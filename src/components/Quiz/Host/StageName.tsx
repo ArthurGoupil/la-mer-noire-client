@@ -7,24 +7,38 @@ import styled from "styled-components";
 import { getStageName } from "utils/game/getStageName.util";
 
 interface StageNameProps {
-  gameStage: GameStage;
+  stage: GameStage;
   canPlaySound: boolean;
 }
 
-export const StageName: React.FC<StageNameProps> = ({ gameStage, canPlaySound }): JSX.Element => {
-  const stageName = getStageName({ gameStage });
+export const StageName: React.FC<StageNameProps> = ({ stage, canPlaySound }): JSX.Element => {
+  const stageName = getStageName({ stage });
   const [showStageName, setShowStageName] = React.useState<boolean>(false);
-  const { play, status } = useSound({
+  const { play: CPOCCPlay, status: CPOCCStatus } = useSound({
     sound: HostSounds.CPOCCJingle,
+    condition: canPlaySound,
+  });
+  const { play: kidimieuxPlay, status: kidimieuxStatus } = useSound({
+    sound: HostSounds.kidimieuxJingle,
     condition: canPlaySound,
   });
 
   React.useEffect(() => {
-    if (status === "ready" && canPlaySound && !showStageName) {
-      play();
-      setShowStageName(true);
+    switch (stage) {
+      case GameStage.caPasseOuCaCash:
+        if (CPOCCStatus === "ready" && canPlaySound && !showStageName) {
+          CPOCCPlay();
+          setShowStageName(true);
+        }
+        break;
+      case GameStage.kidimieux:
+        if (kidimieuxStatus === "ready" && canPlaySound && !showStageName) {
+          kidimieuxPlay();
+          setShowStageName(true);
+        }
+        break;
     }
-  }, [status, play, showStageName, canPlaySound]);
+  }, [CPOCCPlay, CPOCCStatus, canPlaySound, kidimieuxPlay, kidimieuxStatus, showStageName, stage]);
 
   return (
     <StageNameContainer

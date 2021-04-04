@@ -5,15 +5,16 @@ export const KidimieuxPoints = {
 };
 
 export enum KidimieuxBottomScreensStates {
-  question_fetchTimestamp = "question_fetchTimestamp",
-  question_screensTransitionSound = "question_screensTransitionSound",
-  question = "question",
+  buzz_fetchTimestamp = "buzz_fetchTimestamp",
+  buzz_screensTransitionSound = "buzz_screensTransitionSound",
+  buzz = "buzz",
+  buzz_duo = "buzz_duo",
+  buzz_carre = "buzz_carre",
+  question_playerMustAnswer_wait = "question_playerMustAnswer_wait",
+  question_playerMustAnswer_fetchTimestamp = "question_playerMustAnswer_fetchTimestamp",
+  question_playerMustAnswer = "question_playerMustAnswer",
   questionIsTimedOut = "questionIsTimedOut",
   questionMustTimeout = "questionMustTimeout",
-  question_duoBuzz = "question_duoBuzz",
-  question_carreBuzz = "question_carreBuzz",
-  question_cashBuzz = "question_cashBuzz",
-  playerMustAnswer = "playerMustAnswer",
 }
 
 export enum KidimieuxTopScreensStates {

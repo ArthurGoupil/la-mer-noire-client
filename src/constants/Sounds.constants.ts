@@ -10,6 +10,8 @@ export const HostSounds: Record<string, string> = {
   topScreensBackgroundStart: "/sounds/TopScreensBackgroundStart.mp3",
   topScreenTransition: "/sounds/TopScreenTransition.mp3",
   screensTransition: "/sounds/ScreensTransition.mp3",
+  kidimieuxHost: "/sounds/KidimieuxHost.mp3",
+  kidimieuxJingle: "/sounds/Kidimieux.mp3",
 };
 
 export const PlayerSounds: Record<string, string> = {

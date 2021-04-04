@@ -4,46 +4,43 @@ import styled from "styled-components";
 import { Styles } from "constants/Styling.constants";
 import { useSound } from "hooks/others/useSound.hook";
 import { HostSounds } from "constants/Sounds.constants";
-import { QuestionRecord } from "models/Game.model";
 
 interface TimeBarProps {
   displayTimeBar: boolean;
   duration: number;
-  questionRecord: QuestionRecord;
+  timestamp: number | null;
+  isOver: boolean;
   shouldAnimateToEnd: boolean;
   soundShouldStop: boolean;
   backgroundGradient: string[];
 }
 
-interface TimeBarSubContainerProps
-  extends Omit<Omit<TimeBarProps, "questionRecord">, "displayTimeBar"> {
-  barContainerWidth: number;
-  isOver: boolean;
+interface TimeBarSubContainerProps extends Omit<Omit<TimeBarProps, "timestamp">, "displayTimeBar"> {
+  barContainerWidth: number | undefined;
   remainingTime: number;
 }
 
 export const TimeBar: React.FC<TimeBarProps> = ({
   displayTimeBar,
   duration,
-  questionRecord,
+  timestamp,
+  isOver,
   shouldAnimateToEnd,
   soundShouldStop,
   backgroundGradient,
 }): JSX.Element => {
   const barContainerRef = React.useRef<HTMLDivElement>(null);
-  const remainingTime = questionRecord?.timestamp
-    ? Math.round(questionRecord.timestamp + duration - Date.now() / 1000)
-    : duration;
+  const remainingTime = timestamp ? Math.round(timestamp + duration - Date.now() / 1000) : duration;
 
   return (
     <BarContainer ref={barContainerRef} className="d-flex justify-start">
-      {displayTimeBar && questionRecord?.timestamp && (
+      {displayTimeBar && timestamp && (
         <TimeBarSubContainer
-          isOver={questionRecord?.isDone}
+          isOver={isOver}
           remainingTime={remainingTime}
           duration={duration}
           backgroundGradient={backgroundGradient}
-          barContainerWidth={barContainerRef.current?.clientWidth || 0}
+          barContainerWidth={barContainerRef.current?.clientWidth}
           shouldAnimateToEnd={shouldAnimateToEnd}
           soundShouldStop={soundShouldStop}
         />
@@ -102,11 +99,17 @@ const TimeBarSubContainer = ({
     }
   }, [isOver, isPlaying, play, soundShouldStop, stop]);
 
+  const initialWidth = `${100 - (100 * remainingTimeRef.current) / duration}%`;
+
+  const overInitialWidth = barContainerWidth
+    ? `${((barRef.current?.clientWidth || 0) / (barContainerWidth - 20)) * 100}%`
+    : "0";
+
   return (
     <Bar
       ref={barRef}
-      initialWidth={`${100 - (100 * remainingTimeRef.current) / duration}%`}
-      overInitialWidth={`${((barRef.current?.clientWidth || 0) / (barContainerWidth - 20)) * 100}%`}
+      initialWidth={initialWidth}
+      overInitialWidth={overInitialWidth}
       animation={animationString}
       background={`linear-gradient(to bottom, ${backgroundGradient[0]} 20%, ${backgroundGradient[1]} 100%);`}
     />

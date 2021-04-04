@@ -1,4 +1,5 @@
 import React from "react";
+import { useMutation } from "@apollo/client";
 
 import { CaPasseOuCaCashPoints } from "constants/CaPasseOuCaCash.constants";
 import { CookieName } from "constants/Cookies.constants";
@@ -9,6 +10,8 @@ import { getQuizLevelByQuestionNumber } from "utils/quiz/getQuizLevelByQuestionN
 import { useQuizLifetime } from "hooks/quiz/useQuizLifetime.hook";
 import { QuizDuration } from "constants/QuizDuration.constants";
 import { getUpdatedPlayersPoints } from "utils/quiz/getUpdatedPlayersPoints.util";
+import { GameStage, QuizStage } from "constants/GameStage.constants";
+import { UPDATE_GAME_STAGE } from "services/games.service";
 
 interface UseCaPasseOuCaCashMasterProps {
   shortId: string;
@@ -32,6 +35,8 @@ export const useCaPasseOuCaCashMaster = ({
   quizItemSignature,
   quizLevel,
 }: UseCaPasseOuCaCashMasterProps): UseCaPasseOuCaCashMasterReturn => {
+  const [updateGameStage] = useMutation(UPDATE_GAME_STAGE);
+
   const [caPasseOuCaCashMaster, setCaPasseOuCaCashMaster] = React.useState<CaPasseOuCaCashMaster>(
     getCookie({
       prefix: shortId,
@@ -42,9 +47,12 @@ export const useCaPasseOuCaCashMaster = ({
   const { questionsRecord } = useQuizLifetime({
     shortId,
     quizItemSignature,
-    allPlayersHaveAnswered,
     duration: QuizDuration.caPasseOuCaCash,
-    shouldSetBaseTimestamp: caPasseOuCaCashMaster.state === "question_fetchTimestamp",
+    quizIsOver: allPlayersHaveAnswered,
+    shouldSetQuizBaseTimestamp: caPasseOuCaCashMaster.state === "question_fetchTimestamp",
+    buzzIsOver: false,
+    clearBuzzTimeout: false,
+    shouldSetBuzzBaseTimestamp: false,
   });
 
   React.useEffect(() => {
@@ -140,10 +148,12 @@ export const useCaPasseOuCaCashMaster = ({
           updateCaPasseOuCaCashMaster({
             state: "questionSummary_topScreensBackgroundSound",
             playersPoints: getUpdatedPlayersPoints({
+              stage: QuizStage.caPasseOuCaCash,
               formerPlayersPoints: caPasseOuCaCashMaster.playersPoints,
               quizLevel,
               playersAnswers,
               pointsRecord: CaPasseOuCaCashPoints,
+              currentPlayers: [],
             }),
           });
         }, 2000);
@@ -153,10 +163,13 @@ export const useCaPasseOuCaCashMaster = ({
           updateCaPasseOuCaCashMaster({
             state: "questionSummary_topScreensBackgroundSound",
             playersPoints: getUpdatedPlayersPoints({
+              stage: QuizStage.caPasseOuCaCash,
+
               formerPlayersPoints: caPasseOuCaCashMaster.playersPoints,
               quizLevel,
               playersAnswers,
               pointsRecord: CaPasseOuCaCashPoints,
+              currentPlayers: [],
             }),
           });
         }, 1000);
@@ -198,16 +211,28 @@ export const useCaPasseOuCaCashMaster = ({
           playersRanking_currentTimeout = setTimeout(() => {
             const questionNumber = caPasseOuCaCashMaster.questionNumber + 1;
             updateCaPasseOuCaCashMaster({
-              quizLevel: getQuizLevelByQuestionNumber({ questionNumber }),
+              quizLevel: getQuizLevelByQuestionNumber({
+                stage: QuizStage.caPasseOuCaCash,
+                questionNumber,
+              }),
               questionNumber,
               state: "playersRanking_screenTransitionSound",
             });
           }, 5000);
+        } else {
+          updateCaPasseOuCaCashMaster({
+            state: "roundIsOver",
+          });
         }
         return () => clearTimeout(playersRanking_currentTimeout);
       case "playersRanking_screenTransitionSound":
         updateCaPasseOuCaCashMaster({
           state: "quizItemInfos",
+        });
+        break;
+      case "roundIsOver":
+        updateGameStage({
+          variables: { stage: GameStage.kidimieux, shortId },
         });
         break;
     }
@@ -222,6 +247,7 @@ export const useCaPasseOuCaCashMaster = ({
     quizItemData,
     quizLevel,
     shortId,
+    updateGameStage,
   ]);
 
   return { caPasseOuCaCashMaster, questionsRecord };

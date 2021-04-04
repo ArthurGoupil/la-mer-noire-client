@@ -17,9 +17,11 @@ import { getQuizLevelGradient } from "utils/quiz/getQuizLevelGradient.util";
 import { QuestionSummary } from "components/Quiz/Host/QuestionSummary";
 import { PlayersRanking } from "components/Quiz/Host/PlayersRanking";
 import { CaPasseOuCaCashTopScreensStates } from "constants/CaPasseOuCaCash.constants";
-import { getCaPasseOuCaCashMasterInterpretation } from "utils/quiz/getCaPasseOuCaCashInterpretation.util";
+import { getCaPasseOuCaCashMasterInterpretation } from "utils/quiz/getCaPasseOuCaCashMasterInterpretation.util";
 import { StageName } from "components/Quiz/Host/StageName";
 import { useBackgroundSounds } from "hooks/quiz/useBackgroundSounds.hook";
+import { FullWidthContainer } from "components/Utils/FullWidthContainer";
+import { QuizStage } from "constants/GameStage.constants";
 
 interface CaPasseOuCaCashContainerProps {
   game: Game;
@@ -92,18 +94,20 @@ export const CaPasseOuCaCashContainer: React.FC<CaPasseOuCaCashContainerProps> =
 
   const topScreens = [
     {
-      component: <StageName gameStage={game.stage} canPlaySound={stageNameCanPlay} />,
+      component: <StageName stage={game.stage} canPlaySound={stageNameCanPlay} />,
       shouldEnter: stageNameEnter,
       shouldLeave: stageNameLeave,
     },
     {
       component: (
         <QuestionSummary
+          stage={QuizStage.caPasseOuCaCash}
           quizAnswer={nonNullQuizItemData.quiz.answer}
           players={game.players}
           playersAnswers={playersAnswers}
           playersPoints={caPasseOuCaCashMaster.playersPoints}
-          showAdditionalPoints={showAdditionalPoints}
+          showDeltaPoints={showAdditionalPoints}
+          currentPlayers={[]}
         />
       ),
       shouldEnter: questionSummaryEnter,
@@ -146,7 +150,7 @@ export const CaPasseOuCaCashContainer: React.FC<CaPasseOuCaCashContainerProps> =
       showTopScreen={caPasseOuCaCashMaster.state in CaPasseOuCaCashTopScreensStates}
       topScreens={topScreens}
     >
-      <div className="d-flex flex-column align-center justify-center flex-grow">
+      <FullWidthContainer className="d-flex flex-column align-center justify-center flex-grow">
         <QuestionDisplay quizItem={nonNullQuizItemData.quiz} />
         <div className="d-flex justify-center flex-wrap">
           {game.players.map((playerData: PlayerData, index: number) => {
@@ -163,11 +167,12 @@ export const CaPasseOuCaCashContainer: React.FC<CaPasseOuCaCashContainerProps> =
             );
           })}
         </div>
-      </div>
+      </FullWidthContainer>
       <TimeBar
         displayTimeBar={displayTimeBar}
         duration={QuizDuration.caPasseOuCaCash}
-        questionRecord={questionsRecord[quizItemData?.quizItemSignature]}
+        timestamp={questionsRecord[quizItemData?.quizItemSignature]?.timestamp}
+        isOver={questionsRecord[quizItemData?.quizItemSignature]?.isDone}
         shouldAnimateToEnd={timeBarShouldAnimateToEnd}
         soundShouldStop={quizOverSoundShouldStop}
         backgroundGradient={getQuizLevelGradient({

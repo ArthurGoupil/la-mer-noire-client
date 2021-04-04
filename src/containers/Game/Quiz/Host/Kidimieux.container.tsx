@@ -2,13 +2,25 @@ import React from "react";
 import { useMutation } from "@apollo/client";
 
 import { Game } from "models/Game.model";
-import { QuizItemData, QuizLevel } from "models/Quiz.model";
+import { QuizItemData } from "models/Quiz.model";
 import { GENERATE_NEW_CURRENT_QUIZ_ITEM, GET_GAME } from "services/games.service";
 import { useNonNullQuizItemData } from "hooks/quiz/useNonNullQuizItemData.hook";
 import { usePlayersAnswers } from "hooks/quiz/usePlayersAnswers.hook";
 import { useKidimieuxMaster } from "hooks/game/useKidimieuxMaster.hook";
 import { QuizItemInfos } from "components/Quiz/Host/QuizItemInfos";
 import { QuizLayout } from "components/Quiz/Host/QuizLayout";
+import { getKidimieuxMasterInterpretation } from "utils/quiz/getKidimieuxMasterInterpretation.util";
+import { QuestionDisplay } from "components/Quiz/Host/QuestionDisplay";
+import { TimeBar } from "components/Quiz/Host/TimeBar";
+import { QuizDuration } from "constants/QuizDuration.constants";
+import { getQuizLevelGradient } from "utils/quiz/getQuizLevelGradient.util";
+import { KidimieuxAnswerType } from "components/Quiz/Host/KidimieuxAnswerType";
+import { FullWidthContainer } from "components/Utils/FullWidthContainer";
+import { StageName } from "components/Quiz/Host/StageName";
+import { QuestionSummary } from "components/Quiz/Host/QuestionSummary";
+import { PlayersRanking } from "components/Quiz/Host/PlayersRanking";
+import { KidimieuxTopScreensStates } from "constants/Kidimieux.constants";
+import { QuizStage } from "constants/GameStage.constants";
 
 interface KidimieuxContainerProps {
   game: Game;
@@ -30,164 +42,146 @@ export const Kidimieux: React.FC<KidimieuxContainerProps> = ({
 
   const { nonNullQuizItemData } = useNonNullQuizItemData({ quizItemData });
 
-  const { playersAnswers, allPlayersHaveAnswered } = usePlayersAnswers({
+  const { playersAnswers } = usePlayersAnswers({
     shortId: game.shortId,
     quizItemSignature: quizItemData?.quizItemSignature,
     players: game.players,
     quizAnswer: nonNullQuizItemData.quiz.answer,
   });
 
-  // const { caPasseOuCaCashMaster, questionsRecord } = useKidimieuxMaster({
-  //   shortId: game.shortId,
-  //   quizItemData,
-  //   allPlayersHaveAnswered,
-  //   playersAnswers,
-  //   quizItemSignature: nonNullQuizItemData.quizItemSignature,
-  //   quizLevel: nonNullQuizItemData.level,
-  // });
+  const { kidimieuxMaster, questionsRecord, playersBuzz } = useKidimieuxMaster({
+    shortId: game.shortId,
+    quizItemData,
+    playersAnswers,
+    quizItemSignature: nonNullQuizItemData?.quizItemSignature,
+    quizLevel: nonNullQuizItemData.level,
+    players: game.players,
+    currentPlayers: game.currentQuizItem.currentPlayers,
+  });
 
-  // const {
-  //   fetchQuizItemData,
-  //   showAdditionalPoints,
-  //   questionSummaryEnter,
-  //   questionSummaryLeave,
-  //   showPreviousRanking,
-  //   playersRankingEnter,
-  //   playersRankingLeave,
-  //   showThemeSubTheme,
-  //   quizItemInfosEnter,
-  //   stageNameEnter,
-  //   stageNameCanPlay,
-  //   stageNameLeave,
-  //   quizOverSoundShouldStop,
-  //   timeBarShouldAnimateToEnd,
-  //   displayTimeBar,
-  // } = getCaPasseOuCaCashMasterInterpretation({
-  //   caPasseOuCaCashMaster,
-  // });
+  const {
+    stageNameEnter,
+    stageNameCanPlay,
+    stageNameLeave,
+    quizItemInfosEnter,
+    showThemeSubTheme,
+    fetchQuizItemData,
+    shouldResetKidimieuxSounds,
+    playerMustAnswer,
+    showInternalTimeBar,
+    displayTimeBar,
+    timeBarTimestamp,
+    timeBarIsOver,
+    timeBarShouldAnimateToEnd,
+    timeBarSoundShouldStop,
+    questionSummaryEnter,
+    questionSummaryLeave,
+    showDeltaPoints,
+    showPreviousRanking,
+    playersRankingEnter,
+    playersRankingLeave,
+  } = getKidimieuxMasterInterpretation({
+    kidimieuxMaster,
+    playersCanAnswer: game.currentQuizItem.playersCanAnswer,
+    questionRecord: questionsRecord[quizItemData?.quizItemSignature],
+    playersBuzz,
+  });
 
-  // useBackgroundSounds({ caPasseOuCaCashMasterState: caPasseOuCaCashMaster.state });
+  React.useEffect(() => {
+    if (fetchQuizItemData) {
+      generateNewCurrentQuizItem({
+        variables: {
+          shortId: game.shortId,
+          level: kidimieuxMaster.quizLevel,
+        },
+      });
+    }
+  }, [fetchQuizItemData, game.shortId, generateNewCurrentQuizItem, kidimieuxMaster.quizLevel]);
 
-  // React.useEffect(() => {
-  //   if (fetchQuizItemData) {
-  //     generateNewCurrentQuizItem({
-  //       variables: {
-  //         shortId: game.shortId,
-  //         level: caPasseOuCaCashMaster.quizLevel,
-  //       },
-  //     });
-  //   }
-  // }, [game.shortId, generateNewCurrentQuizItem, caPasseOuCaCashMaster, fetchQuizItemData]);
+  const topScreens = [
+    {
+      component: <StageName stage={game.stage} canPlaySound={stageNameCanPlay} />,
+      shouldEnter: stageNameEnter,
+      shouldLeave: stageNameLeave,
+    },
+    {
+      component: (
+        <QuestionSummary
+          stage={QuizStage.kidimieux}
+          quizAnswer={nonNullQuizItemData.quiz.answer}
+          players={game.players}
+          playersAnswers={playersAnswers}
+          playersPoints={kidimieuxMaster.playersPoints}
+          showDeltaPoints={showDeltaPoints}
+          currentPlayers={game.currentQuizItem.currentPlayers}
+        />
+      ),
+      shouldEnter: questionSummaryEnter,
+      shouldLeave: questionSummaryLeave,
+    },
+    {
+      component: (
+        <PlayersRanking
+          playersPoints={{ ...kidimieuxMaster.playersPoints }}
+          players={game.players}
+          showPreviousRanking={showPreviousRanking}
+        />
+      ),
+      shouldEnter: playersRankingEnter,
+      shouldLeave: playersRankingLeave,
+    },
+    {
+      component: (
+        <QuizItemInfos
+          numberOfQuestions={9}
+          questionNumber={kidimieuxMaster.questionNumber}
+          quizLevel={kidimieuxMaster.quizLevel}
+          theme={nonNullQuizItemData.theme}
+          subTheme={nonNullQuizItemData.subTheme}
+          showThemeSubTheme={showThemeSubTheme}
+        />
+      ),
+      shouldEnter: quizItemInfosEnter,
+      shouldLeave: false,
+      wavesBackgroundGradient: getQuizLevelGradient({
+        quizLevel: kidimieuxMaster.quizLevel,
+      }),
+    },
+  ];
 
-  // const topScreens = [
-  //   {
-  //     component: <StageName gameStage={game.stage} canPlaySound={stageNameCanPlay} />,
-  //     shouldEnter: stageNameEnter,
-  //     shouldLeave: stageNameLeave,
-  //   },
-  //   {
-  //     component: (
-  //       <QuestionSummary
-  //         quizAnswer={nonNullQuizItemData.quiz.answer}
-  //         players={game.players}
-  //         playersAnswers={playersAnswers}
-  //         playersPoints={caPasseOuCaCashMaster.playersPoints}
-  //         showAdditionalPoints={showAdditionalPoints}
-  //       />
-  //     ),
-  //     shouldEnter: questionSummaryEnter,
-  //     shouldLeave: questionSummaryLeave,
-  //   },
-  //   {
-  //     component: (
-  //       <PlayersRanking
-  //         playersPoints={{ ...caPasseOuCaCashMaster.playersPoints }}
-  //         players={game.players}
-  //         showPreviousRanking={showPreviousRanking}
-  //       />
-  //     ),
-  //     shouldEnter: playersRankingEnter,
-  //     shouldLeave: playersRankingLeave,
-  //   },
-  //   {
-  //     component: (
-  //       <QuizItemInfos
-  //         questionNumber={caPasseOuCaCashMaster.questionNumber}
-  //         quizLevel={caPasseOuCaCashMaster.quizLevel}
-  //         theme={nonNullQuizItemData.theme}
-  //         subTheme={nonNullQuizItemData.subTheme}
-  //         showThemeSubTheme={showThemeSubTheme}
-  //       />
-  //     ),
-  //     shouldEnter: quizItemInfosEnter,
-  //     shouldLeave: false,
-  //     wavesBackgroundGradient: getQuizLevelGradient({
-  //       quizLevel: caPasseOuCaCashMaster.quizLevel,
-  //     }),
-  //   },
-  // ];
+  console.log(kidimieuxMaster.state, displayTimeBar);
 
   return (
     <QuizLayout
       stage={game.stage}
       gameName={game.name}
-      showTopScreen={true}
-      topScreens={[
-        {
-          component: (
-            <QuizItemInfos
-              numberOfQuestions={6}
-              questionNumber={caPasseOuCaCashMaster.questionNumber}
-              quizLevel={caPasseOuCaCashMaster.quizLevel}
-              theme={nonNullQuizItemData.theme}
-              subTheme={nonNullQuizItemData.subTheme}
-              showThemeSubTheme={true}
-            />
-          ),
-          shouldEnter: true,
-          shouldLeave: false,
-        },
-      ]}
+      showTopScreen={kidimieuxMaster.state in KidimieuxTopScreensStates}
+      topScreens={topScreens}
     >
-      yo
+      <FullWidthContainer className="d-flex flex-column align-center justify-center flex-grow">
+        <QuestionDisplay quizItem={nonNullQuizItemData.quiz} />
+      </FullWidthContainer>
+      <FullWidthContainer>
+        <KidimieuxAnswerType
+          players={game.players}
+          quizLevel={kidimieuxMaster.quizLevel}
+          playersBuzz={playersBuzz}
+          playerMustAnswer={playerMustAnswer}
+          showInternalTimeBar={showInternalTimeBar}
+          shouldResetKidimieuxSounds={shouldResetKidimieuxSounds}
+        />
+        <TimeBar
+          displayTimeBar={displayTimeBar}
+          duration={QuizDuration.kidimieux}
+          timestamp={timeBarTimestamp}
+          isOver={timeBarIsOver}
+          shouldAnimateToEnd={timeBarShouldAnimateToEnd}
+          soundShouldStop={timeBarSoundShouldStop}
+          backgroundGradient={getQuizLevelGradient({
+            quizLevel: kidimieuxMaster.quizLevel,
+          })}
+        />
+      </FullWidthContainer>
     </QuizLayout>
   );
-
-  // return (
-  // <QuizLayout
-  //   stage={game.stage}
-  //   gameName={game.name}
-  //   showTopScreen={caPasseOuCaCashMaster.state in CaPasseOuCaCashTopScreensStates}
-  //   topScreens={topScreens}
-  // >
-  //     <div className="d-flex flex-column align-center justify-center flex-grow">
-  //       <QuestionDisplay quizItem={nonNullQuizItemData.quiz} />
-  //       <div className="d-flex justify-center flex-wrap">
-  //         {game.players.map((playerData: PlayerData, index: number) => {
-  //           return (
-  //             <PlayerAnswer
-  //               key={index}
-  //               playerName={playerData.player.name}
-  //               answerType={playersAnswers[playerData.player._id]?.answerType}
-  //               isGoodAnswer={playersAnswers[playerData.player._id]?.isGoodAnswer}
-  //               isFirstCash={playersAnswers[playerData.player._id]?.isFirstGoodCash}
-  //               noMarginRight={index === game.players.length - 1}
-  //               questionIsOver={questionsRecord[nonNullQuizItemData.quizItemSignature]?.isDone}
-  //             />
-  //           );
-  //         })}
-  //       </div>
-  //     </div>
-  //     <TimeBar
-  //       displayTimeBar={displayTimeBar}
-  //       duration={QuizDuration.caPasseOuCaCash}
-  //       questionRecord={questionsRecord[quizItemData?.quizItemSignature]}
-  //       shouldAnimateToEnd={timeBarShouldAnimateToEnd}
-  //       soundShouldStop={quizOverSoundShouldStop}
-  //       backgroundGradient={getQuizLevelGradient({
-  //         quizLevel: caPasseOuCaCashMaster.quizLevel,
-  //       })}
-  //     />
-  //   </QuizLayout>
-  // );
 };
