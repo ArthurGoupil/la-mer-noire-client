@@ -5,7 +5,6 @@ import {
   Answer,
   QuestionRecord,
   KidimieuxMaster,
-  PlayersPoints,
   PlayerData,
   Buzz,
   CaPasseOuCaCashMaster,
