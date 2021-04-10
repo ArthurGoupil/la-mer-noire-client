@@ -27,6 +27,7 @@ export const GameContainer: React.FC = (): JSX.Element => {
     ready: {
       playersRegistration: <GamePreparationContainer shortId={shortId} userType={userType} />,
       caPasseOuCaCash: <QuizContainer shortId={shortId} userType={userType} />,
+      kidimieux: <QuizContainer shortId={shortId} userType={userType} />,
     }[game?.stage],
     loading: <FullHeightLoader />,
     error: (

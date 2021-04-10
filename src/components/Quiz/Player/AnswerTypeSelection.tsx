@@ -10,14 +10,35 @@ interface AnswerTypeSelectionProps {
   quizItemSignature: string;
   playerCanAnswer: boolean;
   setAnswerTypeChoice: React.Dispatch<React.SetStateAction<AnswerTypeChoice>>;
+  isBuzz?: boolean;
+  selectedAnswerType?: AnswerType | null;
+  disableDuo?: boolean;
+  disableCarre?: boolean;
 }
 
 export const AnswerTypeSelection: React.FC<AnswerTypeSelectionProps> = ({
   quizItemSignature,
   playerCanAnswer,
   setAnswerTypeChoice,
+  isBuzz = false,
+  selectedAnswerType = null,
+  disableDuo = false,
+  disableCarre = false,
 }): JSX.Element => {
   const { height } = useWindowHeight();
+
+  const duoIsDisabled =
+    !playerCanAnswer || (selectedAnswerType !== null && selectedAnswerType !== "duo") || disableDuo;
+  const carreIsDisabled =
+    !playerCanAnswer ||
+    (selectedAnswerType !== null && selectedAnswerType !== "carre") ||
+    disableCarre;
+  const cashIsDisabled =
+    !playerCanAnswer || (selectedAnswerType !== null && selectedAnswerType !== "cash");
+
+  const duoOpacity = duoIsDisabled && selectedAnswerType !== "duo" ? 0.6 : 1;
+  const carreOpacity = carreIsDisabled && selectedAnswerType !== "carre" ? 0.6 : 1;
+  const cashOpacity = cashIsDisabled && selectedAnswerType !== "cash" ? 0.6 : 1;
 
   return (
     <AnswerTypeSelectionContainer
@@ -25,31 +46,34 @@ export const AnswerTypeSelection: React.FC<AnswerTypeSelectionProps> = ({
       className="d-flex flex-column align-center justify-center"
     >
       <AnswerTypeContainer
-        disabled={!playerCanAnswer}
+        disabled={duoIsDisabled}
         className="d-flex justify-center align-center"
         backgroundColor={Styles.lightBlue}
-        opacity={!playerCanAnswer ? 0.6 : 1}
+        opacity={duoOpacity}
         onClick={() => setAnswerTypeChoice({ quizItemSignature, answerType: AnswerType.duo })}
+        selected={selectedAnswerType === "duo"}
       >
-        DUO
+        {isBuzz ? "BUZZ DUO" : "DUO"}
       </AnswerTypeContainer>
       <AnswerTypeContainer
-        disabled={!playerCanAnswer}
+        disabled={carreIsDisabled}
         className="d-flex justify-center align-center"
         backgroundColor={Styles.yellow}
-        opacity={!playerCanAnswer ? 0.6 : 1}
+        opacity={carreOpacity}
         onClick={() => setAnswerTypeChoice({ quizItemSignature, answerType: AnswerType.carre })}
+        selected={selectedAnswerType === "carre"}
       >
-        CARRÉ
+        {isBuzz ? "BUZZ CARRÉ" : "CARRÉ"}
       </AnswerTypeContainer>
       <AnswerTypeContainer
-        disabled={!playerCanAnswer}
+        disabled={cashIsDisabled}
         className="d-flex justify-center align-center"
         backgroundColor={Styles.red}
-        opacity={!playerCanAnswer ? 0.6 : 1}
+        opacity={cashOpacity}
         onClick={() => setAnswerTypeChoice({ quizItemSignature, answerType: AnswerType.cash })}
+        selected={selectedAnswerType === "cash"}
       >
-        CASH
+        {isBuzz ? "BUZZ CASH" : "CASH"}
       </AnswerTypeContainer>
     </AnswerTypeSelectionContainer>
   );
@@ -66,9 +90,10 @@ const AnswerTypeSelectionContainer = styled.div<{ height: number }>`
 const AnswerTypeContainer = styled.button<{
   backgroundColor: string;
   opacity: number;
+  selected: boolean;
 }>`
   width: 100%;
-  height: calc(100% / 3 - 80px / 3);
+  height: calc((100% / 3) - (80px / 3));
   font-family: "Boogaloo", cursive;
   font-size: 30px;
   text-shadow: 3px 3px 0px ${Styles.darkBlue};
@@ -77,6 +102,5 @@ const AnswerTypeContainer = styled.button<{
   border-radius: 10px;
   opacity: ${(props) => props.opacity};
   border: none;
-  // position: absolute;
-  // top: 0;
+  box-shadow: ${(props) => (props.selected ? `inset 0 0 10px 5px white` : "none")};
 `;

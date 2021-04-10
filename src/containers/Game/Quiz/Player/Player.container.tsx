@@ -7,12 +7,13 @@ import { CookieName } from "constants/Cookies.constants";
 import { FullHeightLayout } from "components/Utils/FullHeightLayout";
 import { useQuery } from "@apollo/client";
 import { GET_QUIZ_ITEM_DATA } from "services/quizzes.service";
-import { DuoCarreCashAnswerContainer } from "./DuoCarreCashAnswer.container";
+import { CaPasseOuCaCashAnswerContainer } from "./CaPasseOuCaCashAnswer.container";
 import { QuizStage } from "constants/GameStage.constants";
 import { getGlobalNetworkStatus } from "utils/networkStatus.util";
 import { useDuoAnswersIndexes } from "hooks/quiz/useDuoAnswersIndexes.hook";
 import { FullHeightWithWaves } from "components/Quiz/Host/FullHeightWithWaves";
 import { LMNLogo } from "components/Utils/LMNLogo";
+import { KidimieuxAnswerContainer } from "./KidimieuxAnswer.container";
 
 interface PlayerProps {
   game: Game;
@@ -51,7 +52,15 @@ export const PlayerContainer: React.FC<PlayerProps> = ({ game }): JSX.Element =>
         {
           {
             caPasseOuCaCash: (
-              <DuoCarreCashAnswerContainer
+              <CaPasseOuCaCashAnswerContainer
+                game={game}
+                quizItemData={quizItemData}
+                duoAnswersIndexes={duoAnswersIndexes}
+                playerId={playerId}
+              />
+            ),
+            kidimieux: (
+              <KidimieuxAnswerContainer
                 game={game}
                 quizItemData={quizItemData}
                 duoAnswersIndexes={duoAnswersIndexes}

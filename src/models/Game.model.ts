@@ -4,8 +4,11 @@ import {
   CaPasseOuCaCashTopScreensStates,
 } from "constants/CaPasseOuCaCash.constants";
 import { GameStage } from "constants/GameStage.constants";
+import {
+  KidimieuxBottomScreensStates,
+  KidimieuxTopScreensStates,
+} from "constants/Kidimieux.constants";
 import { Player } from "models/Player.model";
-import { QuestionNumber } from "utils/quiz/getQuizLevelByQuestionNumber.util";
 import { QuizItemId, QuizLevel } from "./Quiz.model";
 
 export interface Game {
@@ -14,7 +17,6 @@ export interface Game {
   name: string;
   stage: GameStage;
   players: [PlayerData];
-  currentPlayers: Player[];
   currentQuizItem: CurrentQuizItem;
   createdAt: string;
   updatedAd?: string;
@@ -29,7 +31,9 @@ export interface CurrentQuizItem {
   quizId: string;
   level: QuizLevel;
   quizItemId: QuizItemId;
+  currentPlayers: string[];
   playersCanAnswer: boolean;
+  playersCanBuzz: boolean;
 }
 
 export interface CurrentAnswer {
@@ -41,6 +45,11 @@ export interface CurrentAnswer {
 export interface Answer extends CurrentAnswer {
   isGoodAnswer: boolean;
   isFirstGoodCash: boolean;
+}
+
+export interface Buzz {
+  quizItemSignature: string;
+  answer: string;
 }
 
 export interface AnswerTypeChoice {
@@ -56,11 +65,21 @@ export interface CaPasseOuCaCashMaster {
     | keyof typeof CaPasseOuCaCashBottomScreensStates
     | keyof typeof CaPasseOuCaCashTopScreensStates;
   quizLevel: QuizLevel;
-  questionNumber: QuestionNumber;
+  questionNumber: number;
   playersPoints: PlayersPoints;
+}
+
+export interface KidimieuxMaster {
+  state: keyof typeof KidimieuxBottomScreensStates | keyof typeof KidimieuxTopScreensStates;
+  quizLevel: QuizLevel;
+  questionNumber: number;
+  playersPoints: PlayersPoints;
+  currentAnswerType: AnswerType | null;
 }
 
 export interface QuestionRecord {
   isDone: boolean;
   timestamp: number | null;
+  buzzIsDone: boolean;
+  buzzTimestamp: number | null;
 }

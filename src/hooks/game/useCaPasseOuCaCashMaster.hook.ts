@@ -1,16 +1,17 @@
 import React from "react";
+import { useMutation } from "@apollo/client";
 
 import { CaPasseOuCaCashPoints } from "constants/CaPasseOuCaCash.constants";
 import { CookieName } from "constants/Cookies.constants";
-import { CaPasseOuCaCashMaster, Answer, PlayersPoints, QuestionRecord } from "models/Game.model";
+import { CaPasseOuCaCashMaster, Answer, QuestionRecord } from "models/Game.model";
 import { QuizItemData, QuizLevel } from "models/Quiz.model";
 import { getCookie, setCookie } from "utils/cookies.util";
-import {
-  getQuizLevelByQuestionNumber,
-  QuestionNumber,
-} from "utils/quiz/getQuizLevelByQuestionNumber.util";
+import { getQuizLevelByQuestionNumber } from "utils/quiz/getQuizLevelByQuestionNumber.util";
 import { useQuizLifetime } from "hooks/quiz/useQuizLifetime.hook";
 import { QuizDuration } from "constants/QuizDuration.constants";
+import { getUpdatedPlayersPoints } from "utils/quiz/getUpdatedPlayersPoints.util";
+import { GameStage, QuizStage } from "constants/GameStage.constants";
+import { UPDATE_GAME_STAGE } from "services/games.service";
 
 interface UseCaPasseOuCaCashMasterProps {
   shortId: string;
@@ -34,6 +35,8 @@ export const useCaPasseOuCaCashMaster = ({
   quizItemSignature,
   quizLevel,
 }: UseCaPasseOuCaCashMasterProps): UseCaPasseOuCaCashMasterReturn => {
+  const [updateGameStage] = useMutation(UPDATE_GAME_STAGE);
+
   const [caPasseOuCaCashMaster, setCaPasseOuCaCashMaster] = React.useState<CaPasseOuCaCashMaster>(
     getCookie({
       prefix: shortId,
@@ -44,9 +47,12 @@ export const useCaPasseOuCaCashMaster = ({
   const { questionsRecord } = useQuizLifetime({
     shortId,
     quizItemSignature,
-    allPlayersHaveAnswered,
     duration: QuizDuration.caPasseOuCaCash,
-    shouldSetBaseTimestamp: caPasseOuCaCashMaster.state === "question_fetchTimestamp",
+    quizIsOver: allPlayersHaveAnswered,
+    shouldSetQuizBaseTimestamp: caPasseOuCaCashMaster.state === "question_fetchTimestamp",
+    buzzIsOver: false,
+    clearBuzzTimeout: false,
+    shouldSetBuzzBaseTimestamp: false,
   });
 
   React.useEffect(() => {
@@ -68,21 +74,6 @@ export const useCaPasseOuCaCashMaster = ({
         cookieValue: newCaPasseOuCaCashMaster,
       });
       setCaPasseOuCaCashMaster(newCaPasseOuCaCashMaster);
-    };
-
-    const getPlayersPoints = (): PlayersPoints => {
-      const playersPoints: PlayersPoints = caPasseOuCaCashMaster.playersPoints;
-      for (const playerId of Object.keys(caPasseOuCaCashMaster.playersPoints)) {
-        playersPoints[playerId].previous = caPasseOuCaCashMaster.playersPoints[playerId].current;
-        const additionalPoints = playersAnswers[playerId]?.isGoodAnswer
-          ? CaPasseOuCaCashPoints[quizLevel][playersAnswers[playerId].answerType] +
-            (playersAnswers[playerId].isFirstGoodCash ? 1 : 0)
-          : 0;
-
-        playersPoints[playerId].current += additionalPoints;
-      }
-
-      return playersPoints;
     };
 
     switch (caPasseOuCaCashMaster.state) {
@@ -118,7 +109,11 @@ export const useCaPasseOuCaCashMaster = ({
         });
         break;
       case "quizItemInfos_checkQuizIsReady":
-        if (quizItemData && !questionsRecord[quizItemData?.quizItemSignature]?.isDone) {
+        if (
+          quizItemData &&
+          questionsRecord[quizItemData.quizItemSignature] &&
+          !questionsRecord[quizItemData.quizItemSignature].isDone
+        ) {
           updateCaPasseOuCaCashMaster({
             state: "quizItemInfos_showThemeSubTheme",
           });
@@ -156,7 +151,14 @@ export const useCaPasseOuCaCashMaster = ({
         const questionMustTimeoutTimeout = setTimeout(() => {
           updateCaPasseOuCaCashMaster({
             state: "questionSummary_topScreensBackgroundSound",
-            playersPoints: getPlayersPoints(),
+            playersPoints: getUpdatedPlayersPoints({
+              stage: QuizStage.caPasseOuCaCash,
+              formerPlayersPoints: caPasseOuCaCashMaster.playersPoints,
+              quizLevel,
+              playersAnswers,
+              pointsRecord: CaPasseOuCaCashPoints,
+              currentPlayers: [],
+            }),
           });
         }, 2000);
         return () => clearTimeout(questionMustTimeoutTimeout);
@@ -164,7 +166,15 @@ export const useCaPasseOuCaCashMaster = ({
         const questionIsTimedOutTimeout = setTimeout(() => {
           updateCaPasseOuCaCashMaster({
             state: "questionSummary_topScreensBackgroundSound",
-            playersPoints: getPlayersPoints(),
+            playersPoints: getUpdatedPlayersPoints({
+              stage: QuizStage.caPasseOuCaCash,
+
+              formerPlayersPoints: caPasseOuCaCashMaster.playersPoints,
+              quizLevel,
+              playersAnswers,
+              pointsRecord: CaPasseOuCaCashPoints,
+              currentPlayers: [],
+            }),
           });
         }, 1000);
         return () => clearTimeout(questionIsTimedOutTimeout);
@@ -203,13 +213,23 @@ export const useCaPasseOuCaCashMaster = ({
         let playersRanking_currentTimeout: NodeJS.Timeout;
         if (caPasseOuCaCashMaster.questionNumber < 9) {
           playersRanking_currentTimeout = setTimeout(() => {
-            const questionNumber = (caPasseOuCaCashMaster.questionNumber + 1) as QuestionNumber;
+            const questionNumber = caPasseOuCaCashMaster.questionNumber + 1;
             updateCaPasseOuCaCashMaster({
-              quizLevel: getQuizLevelByQuestionNumber({ questionNumber }),
+              quizLevel: getQuizLevelByQuestionNumber({
+                stage: QuizStage.caPasseOuCaCash,
+                questionNumber,
+              }),
               questionNumber,
               state: "playersRanking_screenTransitionSound",
             });
           }, 5000);
+        } else {
+          const playersRanking_currentTimeout = setTimeout(() => {
+            updateCaPasseOuCaCashMaster({
+              state: "roundIsOver",
+            });
+          }, 6000);
+          return () => clearTimeout(playersRanking_currentTimeout);
         }
         return () => clearTimeout(playersRanking_currentTimeout);
       case "playersRanking_screenTransitionSound":
@@ -217,6 +237,13 @@ export const useCaPasseOuCaCashMaster = ({
           state: "quizItemInfos",
         });
         break;
+      case "roundIsOver":
+        const roundIsOverTimeout = setTimeout(() => {
+          updateGameStage({
+            variables: { stage: GameStage.kidimieux, shortId },
+          });
+        }, 2000);
+        return () => clearTimeout(roundIsOverTimeout);
     }
   }, [
     allPlayersHaveAnswered,
@@ -229,6 +256,7 @@ export const useCaPasseOuCaCashMaster = ({
     quizItemData,
     quizLevel,
     shortId,
+    updateGameStage,
   ]);
 
   return { caPasseOuCaCashMaster, questionsRecord };

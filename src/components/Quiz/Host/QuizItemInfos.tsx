@@ -5,13 +5,12 @@ import { Styles } from "constants/Styling.constants";
 import { QuizLevel } from "models/Quiz.model";
 import { getQuizLevelString } from "utils/quiz/getQuizLevelString.util";
 import { AnswerTypePoints } from "./AnswerTypePoints";
-import { QuestionNumber } from "utils/quiz/getQuizLevelByQuestionNumber.util";
-import { getQuestionNumberColor } from "utils/quiz/getQuestionNumberColor.util";
 import { getQuizLevelColor } from "utils/quiz/getQuizLevelColor.util";
 import { WaveSeparator } from "./WaveSeparator";
 
 interface QuizItemInfosProps {
-  questionNumber: QuestionNumber;
+  numberOfQuestions: number;
+  questionNumber: number;
   quizLevel: QuizLevel;
   theme: string;
   subTheme: string;
@@ -19,6 +18,7 @@ interface QuizItemInfosProps {
 }
 
 export const QuizItemInfos: React.FC<QuizItemInfosProps> = ({
+  numberOfQuestions,
   questionNumber,
   quizLevel,
   theme,
@@ -26,14 +26,13 @@ export const QuizItemInfos: React.FC<QuizItemInfosProps> = ({
   showThemeSubTheme,
 }): JSX.Element => {
   const themeSubThemeRef = React.useRef<HTMLDivElement>(null);
-  const questionNumberColor = getQuestionNumberColor({ questionNumber });
   const levelColor = getQuizLevelColor({ quizLevel });
   const quizLevelString = getQuizLevelString({ quizLevel }).toUpperCase();
 
   return (
     <div className="d-flex flex-column align-center justify-center">
       <QuestionNumberContainer>
-        QUESTION <Number color={questionNumberColor}>{questionNumber}</Number> SUR 9
+        QUESTION <Number color={levelColor}>{questionNumber}</Number> SUR {numberOfQuestions}
       </QuestionNumberContainer>
       <WaveSeparator />
       <QuestionLevelContainer>

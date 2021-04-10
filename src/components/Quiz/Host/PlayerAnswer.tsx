@@ -4,29 +4,25 @@ import styled from "styled-components";
 import { Styles } from "constants/Styling.constants";
 import { getStringFromAnswerType } from "utils/quiz/getStringFromAnswerType";
 import { FullWidthContainer } from "components/Utils/FullWidthContainer";
-import { AnswerType } from "constants/AnswerType.constants";
+import { Answer } from "models/Game.model";
 
 interface PlayerAnswerProps {
   playerName: string;
-  answerType: AnswerType;
-  isGoodAnswer: boolean;
-  isFirstCash: boolean;
+  playerAnswer: Answer;
   noMarginRight: boolean;
   questionIsOver: boolean;
 }
 
 export const PlayerAnswer: React.FC<PlayerAnswerProps> = ({
   playerName,
-  answerType,
-  isGoodAnswer,
-  isFirstCash,
+  playerAnswer,
   noMarginRight,
   questionIsOver,
 }): JSX.Element => {
-  const answerTypeString = getStringFromAnswerType({ answerType });
+  const answerTypeString = getStringFromAnswerType({ answerType: playerAnswer?.answerType });
 
   const answerBackgroundColor = answerTypeString
-    ? isGoodAnswer
+    ? playerAnswer?.isGoodAnswer
       ? Styles.good
       : Styles.wrong
     : !questionIsOver
@@ -45,7 +41,9 @@ export const PlayerAnswer: React.FC<PlayerAnswerProps> = ({
           fontSize={answerTypeString ? "18px" : "12px"}
         >
           {answerTypeString || (questionIsOver ? "TOO LATE !" : "EN ATTENTE")}
-          {isGoodAnswer && isFirstCash && <FirstCash src="/icons/cash-first.svg" />}
+          {playerAnswer?.isGoodAnswer && playerAnswer?.isFirstGoodCash && (
+            <FirstCash src="/icons/cash-first.svg" />
+          )}
         </AnswerTypeContainer>
       </FullWidthContainer>
     </PlayerAnswerContainer>

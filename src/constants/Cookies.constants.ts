@@ -6,4 +6,7 @@ export enum CookieName {
   duoAnswersIndexes = "duoAnswersIndexes",
   questionsRecord = "questionsRecord",
   caPasseOuCaCashMaster = "caPasseOuCaCashMaster",
+  kidimieuxMaster = "kidimieuxMaster",
+  buzzAnswerTypeChoice = "buzzAnswerTypeChoice",
+  playersBuzz = "playersBuzz",
 }

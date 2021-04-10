@@ -98,7 +98,7 @@ export const QuizLayout: React.FC<QuizLayoutProps> = ({
               <GameName gameName={gameName} />
               <EmptyDivForFullScreenIcon />
             </FullWidthContainer>
-            <StageNameMini gameStage={stage} />
+            <StageNameMini stage={stage} />
             {children}
           </ChildrenContainer>
         </QuizLayoutContainer>

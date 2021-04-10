@@ -5,50 +5,62 @@ import { Styles } from "constants/Styling.constants";
 import { Answer, PlayerData, PlayersPoints } from "models/Game.model";
 import { getStringFromAnswerType } from "utils/quiz/getStringFromAnswerType";
 import { getAnswerTypeColor } from "utils/quiz/getAnswerTypeColor.util";
+import { QuizStage } from "constants/GameStage.constants";
 
 interface QuestionSummary {
+  stage: QuizStage;
   quizAnswer: string;
   players: PlayerData[];
   playersAnswers: Record<string, Answer>;
   playersPoints: PlayersPoints;
-  showAdditionalPoints: boolean;
+  showDeltaPoints: boolean;
+  currentPlayers: string[];
 }
 
 export const QuestionSummary: React.FC<QuestionSummary> = ({
+  stage,
   quizAnswer,
   players,
   playersAnswers,
   playersPoints,
-  showAdditionalPoints,
+  showDeltaPoints,
+  currentPlayers,
 }): JSX.Element => {
   const playersAnswersRefs = React.useRef(players.map(() => React.createRef<HTMLDivElement>()));
+
+  const playersToMap =
+    stage === QuizStage.kidimieux
+      ? players.filter((playerData) => currentPlayers.includes(playerData.player._id))
+      : players;
 
   return (
     <QuestionSummaryContainer className="d-flex flex-column justify-center align-center">
       <AnswerContainer>
         La réponse était <QuizAnswer>{quizAnswer.toUpperCase()}</QuizAnswer>
       </AnswerContainer>
-      {players.map((playerData, index) => {
+      {playersToMap.map((playerData, index) => {
+        const answerColor =
+          playersAnswers[playerData.player._id] || stage === QuizStage.kidimieux
+            ? playersAnswers[playerData.player._id]?.isGoodAnswer
+              ? Styles.good
+              : Styles.wrong
+            : Styles.turquoise;
+
+        const deltaPoints =
+          playersPoints[playerData.player._id].current -
+          playersPoints[playerData.player._id].previous;
+
+        const isFirstGoodCash =
+          playersAnswers[playerData.player._id]?.isFirstGoodCash && stage !== QuizStage.kidimieux;
+
         return (
           <PlayerAnswerContainer key={index} className="d-flex justify-center">
             <div>
-              <PlayerName
-                color={
-                  playersAnswers[playerData.player._id]?.isGoodAnswer ? Styles.good : Styles.wrong
-                }
-              >
-                {playerData.player.name.toUpperCase()}
-              </PlayerName>
+              <PlayerName color={answerColor}>{playerData.player.name.toUpperCase()}</PlayerName>
               {playersAnswers[playerData.player._id]?.answer ? (
                 <>
                   a répondu
-                  <PlayerAnswer
-                    color={
-                      playersAnswers[playerData.player._id].isGoodAnswer
-                        ? Styles.good
-                        : Styles.wrong
-                    }
-                  >
+                  <PlayerAnswer color={answerColor}>
                     {playersAnswers[playerData.player._id].answer.toUpperCase()}
                   </PlayerAnswer>
                   en
@@ -56,36 +68,30 @@ export const QuestionSummary: React.FC<QuestionSummary> = ({
                     backgroundColor={getAnswerTypeColor({
                       answerType: playersAnswers[playerData.player._id].answerType,
                     })}
-                    paddingLeft={
-                      playersAnswers[playerData.player._id].isFirstGoodCash ? "35px" : "9px"
-                    }
+                    paddingLeft={isFirstGoodCash ? "35px" : "9px"}
                   >
                     {getStringFromAnswerType({
                       answerType: playersAnswers[playerData.player._id].answerType,
                     })}
-                    {playersAnswers[playerData.player._id].isFirstGoodCash && (
-                      <FirstCash src="/icons/cash-first-white.svg" />
-                    )}
+                    {isFirstGoodCash && <FirstCash src="/icons/cash-first-white.svg" />}
                   </PlayerAnswerType>
                 </>
               ) : (
-                <EmptyAnswer> n&apos;a pas répondu.</EmptyAnswer>
+                <>n&apos;a pas répondu.</>
               )}
             </div>
-            <AdditionalPointsContainer
-              width={
-                showAdditionalPoints ? playersAnswersRefs.current[index].current?.clientWidth : 0
-              }
+            <DeltaPointsContainer
+              width={showDeltaPoints ? playersAnswersRefs.current[index].current?.clientWidth : 0}
             >
-              <AdditionalPoints
+              <DeltaPoints
                 ref={playersAnswersRefs.current[index]}
+                color={answerColor}
                 className="d-flex align-center"
               >
-                +
-                {playersPoints[playerData.player._id].current -
-                  playersPoints[playerData.player._id].previous}
-              </AdditionalPoints>
-            </AdditionalPointsContainer>
+                {deltaPoints > -1 && "+"}
+                {deltaPoints}
+              </DeltaPoints>
+            </DeltaPointsContainer>
           </PlayerAnswerContainer>
         );
       })}
@@ -141,6 +147,7 @@ const PlayerAnswerType = styled.span<{ backgroundColor: string; paddingLeft: str
   font-size: 23px;
   line-height: 30px;
   margin-left: 10px;
+  margin-bottom: 5px;
   background-color: ${(props) => props.backgroundColor};
   padding: 4px ${(props) => props.paddingLeft} 4px 9px;
   border-radius: 5px;
@@ -156,22 +163,18 @@ const FirstCash = styled.img`
   right: 6px;
 `;
 
-const EmptyAnswer = styled.span`
-  color: tomato;
-`;
-
-const AdditionalPointsContainer = styled.div<{ width: number | undefined }>`
+const DeltaPointsContainer = styled.div<{ width: number | undefined }>`
   width: ${(props) => props.width}px;
   overflow: hidden;
   position: relative;
   transition: width 0.5s;
 `;
 
-const AdditionalPoints = styled.div`
+const DeltaPoints = styled.div<{ color: string }>`
   font-family: "Boogaloo", cursive;
   font-size: 35px;
   line-height: 25px;
-  color: ${Styles.turquoise};
+  color: ${(props) => props.color};
   position: absolute;
   left: 0;
   padding-left: 10px;

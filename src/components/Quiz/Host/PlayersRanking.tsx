@@ -145,14 +145,13 @@ const InnerShadow = styled.div`
   position: absolute;
   top: 0;
   right: 0;
-  /* box-shadow: -20px 0px 15px ${Styles.darkBlue} inset; */
   background: linear-gradient(to left, ${Styles.darkBlue} 20%, transparent 100%);
   z-index: 1;
   overflow: hidden;
 `;
 
 const PlayerPointsContainer = styled.span`
-  min-width: 45px;
+  min-width: 50px;
   height: 100%;
   background: linear-gradient(to bottom, ${Styles.orange} 0%, ${Styles.redOrange} 170%);
   margin-left: 10px;

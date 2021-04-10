@@ -66,6 +66,7 @@ export const usePlayersAnswers = ({
     if (
       quizItemSignature &&
       playerAnswered?.quizItemSignature === quizItemSignature &&
+      playerAnswered?.answerType !== "buzz" &&
       !playersAnswers[playerAnswered?.playerId] &&
       Object.keys(playersAnswers).length !== players.length
     ) {
@@ -107,7 +108,9 @@ export const usePlayersAnswers = ({
         };
 
         if (playerId && playerId === playerAnswered.playerId) {
+
           if (playersAnswers[playerId].isGoodAnswer) {
+
             if (isFirstGoodCash) {
               playFirstCash();
             } else if (playersAnswers[playerId].answerType === "cash") {

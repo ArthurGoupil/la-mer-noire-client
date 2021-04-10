@@ -16,7 +16,7 @@ import { getQuizLevelGradient } from "utils/quiz/getQuizLevelGradient.util";
 import { LMNLogo } from "components/Utils/LMNLogo";
 import { FullScreenError } from "components/Utils/FullScreenError";
 
-interface DuoCarreCashAnswerContainerProps {
+interface CaPasseOuCaCashAnswerContainerProps {
   game: Game;
   quizItemData: QuizItemData;
   duoAnswersIndexes: DuoAnswersIndexes;
@@ -25,7 +25,7 @@ interface DuoCarreCashAnswerContainerProps {
 
 type ContainerStatus = "answerType" | "answer" | "error";
 
-export const DuoCarreCashAnswerContainer: React.FC<DuoCarreCashAnswerContainerProps> = ({
+export const CaPasseOuCaCashAnswerContainer: React.FC<CaPasseOuCaCashAnswerContainerProps> = ({
   game,
   quizItemData,
   duoAnswersIndexes,
@@ -102,6 +102,13 @@ export const DuoCarreCashAnswerContainer: React.FC<DuoCarreCashAnswerContainerPr
                 currentAnswer={currentAnswer}
                 onSubmit={setCurrentAnswer}
                 playerCanAnswer={game?.currentQuizItem?.playersCanAnswer}
+              />
+            ),
+            buzz: (
+              <FullScreenError
+                errorLabel={`Erreur de type "no buzz allowed".`}
+                link="/"
+                linkLabel="Revenir au menu principal"
               />
             ),
           }[answerTypeChoice?.answerType],

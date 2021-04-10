@@ -12,15 +12,13 @@ const gameData = `
     }
     points
   }
-  currentPlayers {
-    _id
-    name
-  }
   currentQuizItem {
     quizId
     level
     quizItemId
+    currentPlayers
     playersCanAnswer
+    playersCanBuzz
   }
   createdAt
 `;
@@ -85,6 +83,18 @@ export const GENERATE_NEW_CURRENT_QUIZ_ITEM: DocumentNode = gql`
 export const UPDATE_PLAYERS_CAN_ANSWER: DocumentNode = gql`
   mutation UpdatePlayersCanAnswer($shortId: String!, $playersCanAnswer: Boolean!) {
     updatePlayersCanAnswer(shortId: $shortId, playersCanAnswer: $playersCanAnswer)
+  }
+`;
+
+export const UPDATE_PLAYERS_CAN_BUZZ: DocumentNode = gql`
+  mutation UpdatePlayersCanBuzz($shortId: String!, $playersCanBuzz: Boolean!) {
+    updatePlayersCanBuzz(shortId: $shortId, playersCanBuzz: $playersCanBuzz)
+  }
+`;
+
+export const UPDATE_CURRENT_PLAYERS: DocumentNode = gql`
+  mutation UpdateCurrentPlayers($shortId: String!, $currentPlayers: [ID]!) {
+    updateCurrentPlayers(shortId: $shortId, currentPlayers: $currentPlayers)
   }
 `;
 
