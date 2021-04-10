@@ -102,8 +102,8 @@ export const KidimieuxAnswerContainer: React.FC<KidimieuxAnswerContainerProps> =
               setAnswerTypeChoice={setBuzzAnswerTypeChoice}
               isBuzz
               selectedAnswerType={selectedAnswerType}
-              hideDuo={hideDuo}
-              hideCarre={hideCarre}
+              disableDuo={hideDuo}
+              disableCarre={hideCarre}
             />
           ),
           answer: {

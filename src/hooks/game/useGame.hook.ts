@@ -44,10 +44,11 @@ export const useGame = ({
   }, []);
 
   React.useEffect(() => {
-    let unsubscribeStage: () => void;
-    let unsubscribePlayers: () => void;
-    let unsubscribeCurrentQuizItem: () => void;
-    if (subscribe.stage && canSubscribe) {
+    let unsubscribeStage: (() => void) | undefined = undefined;
+    let unsubscribePlayers: (() => void) | undefined = undefined;
+    let unsubscribeCurrentQuizItem: (() => void) | undefined = undefined;
+
+    if (subscribe.stage && canSubscribe && !unsubscribeStage) {
       unsubscribeStage = subscribeToMore({
         document: GAME_STAGE_UPDATED,
         variables: { shortId },
@@ -58,7 +59,7 @@ export const useGame = ({
         },
       });
     }
-    if (subscribe.players && canSubscribe) {
+    if (subscribe.players && canSubscribe && !unsubscribePlayers) {
       unsubscribePlayers = subscribeToMore({
         document: GAME_PLAYERS_UPDATED,
         variables: { shortId },
@@ -72,7 +73,7 @@ export const useGame = ({
         },
       });
     }
-    if (subscribe.currentQuizItem && canSubscribe) {
+    if (subscribe.currentQuizItem && canSubscribe && !unsubscribeCurrentQuizItem) {
       unsubscribeCurrentQuizItem = subscribeToMore({
         document: CURRENT_QUIZ_ITEM_UPDATED,
         variables: { shortId },

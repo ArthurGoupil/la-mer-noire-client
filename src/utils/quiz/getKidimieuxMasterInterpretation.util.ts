@@ -1,10 +1,12 @@
-import { Buzz, KidimieuxMaster, QuestionRecord } from "models/Game.model";
+import { Answer, Buzz, KidimieuxMaster, QuestionRecord } from "models/Game.model";
 
 interface GetKidimieuxMasterInterpretationProps {
   kidimieuxMaster: KidimieuxMaster;
+  playersCanBuzz: boolean;
   playersCanAnswer: boolean;
   questionRecord: QuestionRecord;
   playersBuzz: Record<string, Buzz>;
+  playersAnswers: Record<string, Answer>;
 }
 
 interface GetKidimieuxMasterInterpretationReturn {
@@ -19,6 +21,7 @@ interface GetKidimieuxMasterInterpretationReturn {
   shouldResetKidimieuxSounds: boolean;
 
   playerMustAnswer: boolean;
+  kidimieuxSoundCanPlay: boolean;
   showInternalTimeBar: boolean;
 
   displayTimeBar: boolean;
@@ -38,9 +41,11 @@ interface GetKidimieuxMasterInterpretationReturn {
 
 export const getKidimieuxMasterInterpretation = ({
   kidimieuxMaster,
+  playersCanBuzz,
   playersCanAnswer,
   questionRecord,
   playersBuzz,
+  playersAnswers,
 }: GetKidimieuxMasterInterpretationProps): GetKidimieuxMasterInterpretationReturn => {
   return {
     stageNameEnter: kidimieuxMaster.state.includes("stageName"),
@@ -63,9 +68,16 @@ export const getKidimieuxMasterInterpretation = ({
     shouldResetKidimieuxSounds: kidimieuxMaster.state === "buzz_fetchTimestamp",
 
     playerMustAnswer:
-      kidimieuxMaster.state.includes("question") &&
-      !kidimieuxMaster.state.includes("questionSummary") &&
-      kidimieuxMaster.state !== "questionIsTimedOut",
+      Object.keys(playersAnswers).length > 0 ||
+      (Object.keys(playersBuzz).length > 0 && !playersCanBuzz)
+        ? kidimieuxMaster.state.includes("question") ||
+          kidimieuxMaster.state.includes("questionSummary") ||
+          kidimieuxMaster.state === "questionIsTimedOut"
+        : kidimieuxMaster.state.includes("question") &&
+          !kidimieuxMaster.state.includes("questionSummary") &&
+          kidimieuxMaster.state !== "questionIsTimedOut",
+    kidimieuxSoundCanPlay:
+      kidimieuxMaster.state === "buzz_duo" || kidimieuxMaster.state === "buzz_carre",
     showInternalTimeBar:
       kidimieuxMaster.state.includes("buzz") || kidimieuxMaster.state.includes("question"),
 

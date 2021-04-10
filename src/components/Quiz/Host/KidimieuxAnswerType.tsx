@@ -4,69 +4,93 @@ import styled from "styled-components";
 import { getAnswerTypeColor } from "utils/quiz/getAnswerTypeColor.util";
 import { AnswerType } from "constants/AnswerType.constants";
 import { Styles } from "constants/Styling.constants";
-import { Buzz, PlayerData } from "models/Game.model";
+import { Answer, Buzz, PlayerData } from "models/Game.model";
 import { KidimieuxPoints } from "constants/Kidimieux.constants";
 import { QuizLevel } from "models/Quiz.model";
 import { useSound } from "hooks/others/useSound.hook";
 import { HostSounds } from "constants/Sounds.constants";
+import { Player } from "models/Player.model";
 
 interface KidimieuxAnswerTypeProps {
   players: PlayerData[];
   quizLevel: QuizLevel;
+  playersAnswers: Record<string, Answer>;
   playersBuzz: Record<string, Buzz>;
   playerMustAnswer: boolean;
   showInternalTimeBar: boolean;
+  kidimieuxSoundCanPlay: boolean;
   shouldResetKidimieuxSounds: boolean;
 }
 
 export const KidimieuxAnswerType: React.FC<KidimieuxAnswerTypeProps> = ({
   players,
   quizLevel,
+  playersAnswers,
   playersBuzz,
   playerMustAnswer,
   showInternalTimeBar,
+  kidimieuxSoundCanPlay,
   shouldResetKidimieuxSounds,
 }): JSX.Element => {
+  const youAnswerRef = React.useRef<HTMLSpanElement>(null);
+  const duoPlayerRef = React.useRef<HTMLSpanElement>(null);
+  const carrePlayerRef = React.useRef<HTMLSpanElement>(null);
+  const cashPlayerRef = React.useRef<HTMLSpanElement>(null);
   const { play: kidimieuxPlay } = useSound({ sound: HostSounds.kidimieuxHost });
   const [duoKidimieuxHasPlayed, setDuoKidimieuxHasPlayed] = React.useState<boolean>(false);
   const [carreKidimieuxHasPlayed, setCarreKidimieuxHasPlayed] = React.useState<boolean>(false);
 
-  const duoAnswerTypeColor = getAnswerTypeColor({ answerType: AnswerType.duo });
-  const carreAnswerTypeColor = getAnswerTypeColor({ answerType: AnswerType.carre });
-  const cashAnswerTypeColor = getAnswerTypeColor({ answerType: AnswerType.cash });
-
   const playerNamesByAnswerType = Object.keys(playersBuzz).reduce(
-    (playerNamesByAnswerType: Record<string, string | undefined>, playerId: string) => {
-      const playerName = players
-        .find((playerData) => playerData.player._id === playerId)
-        ?.player.name.toUpperCase();
+    (playerNamesByAnswerType: Record<string, Player>, playerId: string) => {
+      const player = players.find((playerData) => playerData.player._id === playerId)
+        ?.player as Player;
+
       if (playersBuzz[playerId].answer === "duo") {
-        playerNamesByAnswerType.duo = playerName;
+        playerNamesByAnswerType.duo = player;
       } else if (playersBuzz[playerId].answer === "carre") {
-        playerNamesByAnswerType.carre = playerName;
+        playerNamesByAnswerType.carre = player;
       } else if (playersBuzz[playerId].answer === "cash") {
-        playerNamesByAnswerType.cash = playerName;
+        playerNamesByAnswerType.cash = player;
       }
 
       return playerNamesByAnswerType;
     },
-    { duo: undefined, carre: undefined, cash: undefined },
+    {},
   );
 
+  const duoAnswerTypeColor = playersAnswers[playerNamesByAnswerType?.duo?._id]
+    ? playersAnswers[playerNamesByAnswerType?.duo?._id]?.isGoodAnswer
+      ? Styles.good
+      : Styles.wrong
+    : getAnswerTypeColor({ answerType: AnswerType.duo });
+  const carreAnswerTypeColor = playersAnswers[playerNamesByAnswerType?.carre?._id]
+    ? playersAnswers[playerNamesByAnswerType?.carre?._id]?.isGoodAnswer
+      ? Styles.good
+      : Styles.wrong
+    : getAnswerTypeColor({ answerType: AnswerType.carre });
+  const cashAnswerTypeColor = playersAnswers[playerNamesByAnswerType?.cash?._id]
+    ? playersAnswers[playerNamesByAnswerType?.cash?._id]?.isGoodAnswer
+      ? Styles.good
+      : Styles.wrong
+    : getAnswerTypeColor({ answerType: AnswerType.cash });
+
   const duoCanAnswer =
-    playerNamesByAnswerType.duo && !playerNamesByAnswerType.carre && !playerNamesByAnswerType.cash;
+    playerNamesByAnswerType.duo !== undefined &&
+    playerNamesByAnswerType.carre === undefined &&
+    playerNamesByAnswerType.cash === undefined;
   const duoWidth = playerMustAnswer
     ? duoCanAnswer
       ? "100%"
       : "0"
     : `calc(${100 / 3}% - ${20 / 3}px)`;
-  const carreCanAnswer = playerNamesByAnswerType.carre && !playerNamesByAnswerType.cash;
+  const carreCanAnswer =
+    playerNamesByAnswerType.carre !== undefined && playerNamesByAnswerType.cash === undefined;
   const carreWidth = playerMustAnswer
     ? carreCanAnswer
       ? "100%"
       : "0"
     : `calc(${100 / 3}% - ${20 / 3}px)`;
-  const cashCanAnswer = playerNamesByAnswerType.cash;
+  const cashCanAnswer = playerNamesByAnswerType.cash !== undefined;
   const cashWidth = playerMustAnswer
     ? cashCanAnswer
       ? "100%"
@@ -74,33 +98,45 @@ export const KidimieuxAnswerType: React.FC<KidimieuxAnswerTypeProps> = ({
     : `calc(${100 / 3}% - ${20 / 3}px)`;
 
   const showDuoKidimieux =
-    playerNamesByAnswerType.duo &&
-    !playerNamesByAnswerType.carre &&
-    !playerNamesByAnswerType.cash &&
+    playerNamesByAnswerType.duo !== undefined &&
+    playerNamesByAnswerType.carre === undefined &&
+    playerNamesByAnswerType.cash === undefined &&
+    Object.keys(playersBuzz).length !== players.length &&
+    !playerMustAnswer;
+  const showCarreKidimieux =
+    playerNamesByAnswerType.carre !== undefined &&
+    playerNamesByAnswerType.cash === undefined &&
     Object.keys(playersBuzz).length !== players.length &&
     !playerMustAnswer;
 
-  const showCarreKidimieux =
-    playerNamesByAnswerType.carre &&
-    !playerNamesByAnswerType.cash &&
-    Object.keys(playersBuzz).length !== players.length &&
-    !playerMustAnswer;
+  const duoPlayerNameContainerWidth =
+    duoCanAnswer && playerMustAnswer
+      ? (duoPlayerRef.current?.clientWidth || 0) + (youAnswerRef.current?.clientWidth || 0) + 10
+      : duoPlayerRef.current?.clientWidth || 0;
+  const carrePlayerNameContainerWidth =
+    carreCanAnswer && playerMustAnswer
+      ? (carrePlayerRef.current?.clientWidth || 0) + (youAnswerRef.current?.clientWidth || 0) + 10
+      : carrePlayerRef.current?.clientWidth || 0;
+  const cashPlayerNameContainerWidth =
+    cashCanAnswer && playerMustAnswer
+      ? (cashPlayerRef.current?.clientWidth || 0) + (youAnswerRef.current?.clientWidth || 0) + 10
+      : cashPlayerRef.current?.clientWidth || 0;
 
   const isStuckToBottom = Object.keys(playersBuzz).length !== 0 && !playerMustAnswer;
 
   React.useEffect(() => {
-    if (showDuoKidimieux && !duoKidimieuxHasPlayed) {
+    if (showDuoKidimieux && !duoKidimieuxHasPlayed && kidimieuxSoundCanPlay) {
       kidimieuxPlay();
       setDuoKidimieuxHasPlayed(true);
     }
-  }, [duoKidimieuxHasPlayed, kidimieuxPlay, showDuoKidimieux]);
+  }, [duoKidimieuxHasPlayed, kidimieuxPlay, kidimieuxSoundCanPlay, showDuoKidimieux]);
 
   React.useEffect(() => {
-    if (showCarreKidimieux && !carreKidimieuxHasPlayed) {
+    if (showCarreKidimieux && !carreKidimieuxHasPlayed && kidimieuxSoundCanPlay) {
       kidimieuxPlay();
       setCarreKidimieuxHasPlayed(true);
     }
-  }, [carreKidimieuxHasPlayed, kidimieuxPlay, showCarreKidimieux]);
+  }, [carreKidimieuxHasPlayed, kidimieuxPlay, kidimieuxSoundCanPlay, showCarreKidimieux]);
 
   React.useEffect(() => {
     if (shouldResetKidimieuxSounds) {
@@ -121,7 +157,7 @@ export const KidimieuxAnswerType: React.FC<KidimieuxAnswerTypeProps> = ({
       >
         {showInternalTimeBar && (
           <InternalTimeBar
-            transform={playerNamesByAnswerType.duo ? "scaleX(1)" : "scaleX(0)"}
+            transform={playerNamesByAnswerType.duo !== undefined ? "scaleX(1)" : "scaleX(0)"}
             opacity={playerMustAnswer || Object.keys(playersBuzz).length === players.length ? 0 : 1}
           />
         )}
@@ -129,16 +165,20 @@ export const KidimieuxAnswerType: React.FC<KidimieuxAnswerTypeProps> = ({
           -{KidimieuxPoints[quizLevel].duo}
         </MalusPoints>
         <AnswerTypeTextContainer className="d-flex flex-column align-center justify-center">
-          <AnswerTypeText marginBottom={playerNamesByAnswerType.duo ? "70px" : "0"}>
+          <AnswerTypeText marginBottom={playerNamesByAnswerType.duo !== undefined ? "70px" : "0"}>
             DUO
           </AnswerTypeText>
-          <PlayerName
-            opacity={playerNamesByAnswerType.duo ? 1 : 0}
-            marginTop={playerNamesByAnswerType.duo ? "50px" : "0"}
-            color={duoAnswerTypeColor}
+          <PlayerNameContainer
+            width={duoPlayerNameContainerWidth}
+            opacity={playerNamesByAnswerType.duo !== undefined ? 1 : 0}
+            marginTop={playerNamesByAnswerType.duo !== undefined ? "50px" : "0"}
+            className="d-flex"
           >
-            {playerNamesByAnswerType.duo || ""}
-          </PlayerName>
+            <PlayerName ref={duoPlayerRef} color={duoAnswerTypeColor}>
+              {playerNamesByAnswerType?.duo?.name.toUpperCase() || ""}
+            </PlayerName>
+            <YouAnswer ref={youAnswerRef}>À TOI DE RÉPONDRE !</YouAnswer>
+          </PlayerNameContainer>
         </AnswerTypeTextContainer>
         <BonusPoints color={duoAnswerTypeColor} className="d-flex justify-center align-center">
           <Plus>+</Plus>
@@ -158,7 +198,7 @@ export const KidimieuxAnswerType: React.FC<KidimieuxAnswerTypeProps> = ({
       >
         {showInternalTimeBar && (
           <InternalTimeBar
-            transform={playerNamesByAnswerType.carre ? "scaleX(1)" : "scaleX(0)"}
+            transform={playerNamesByAnswerType.carre !== undefined ? "scaleX(1)" : "scaleX(0)"}
             opacity={playerMustAnswer || Object.keys(playersBuzz).length === players.length ? 0 : 1}
           />
         )}
@@ -166,16 +206,20 @@ export const KidimieuxAnswerType: React.FC<KidimieuxAnswerTypeProps> = ({
           -{KidimieuxPoints[quizLevel].carre}
         </MalusPoints>
         <AnswerTypeTextContainer className="d-flex flex-column align-center justify-center">
-          <AnswerTypeText marginBottom={playerNamesByAnswerType.carre ? "70px" : "0"}>
+          <AnswerTypeText marginBottom={playerNamesByAnswerType.carre !== undefined ? "70px" : "0"}>
             CARRÉ
           </AnswerTypeText>
-          <PlayerName
-            opacity={playerNamesByAnswerType.carre ? 1 : 0}
-            marginTop={playerNamesByAnswerType.carre ? "50px" : "0"}
-            color={carreAnswerTypeColor}
+          <PlayerNameContainer
+            width={carrePlayerNameContainerWidth}
+            opacity={playerNamesByAnswerType.carre !== undefined ? 1 : 0}
+            marginTop={playerNamesByAnswerType.carre !== undefined ? "50px" : "0"}
+            className="d-flex"
           >
-            {playerNamesByAnswerType.carre || ""}
-          </PlayerName>
+            <PlayerName ref={carrePlayerRef} color={carreAnswerTypeColor}>
+              {playerNamesByAnswerType?.carre?.name.toUpperCase() || ""}
+            </PlayerName>
+            <YouAnswer>À TOI DE RÉPONDRE !</YouAnswer>
+          </PlayerNameContainer>
         </AnswerTypeTextContainer>
         <BonusPoints color={carreAnswerTypeColor} className="d-flex justify-center align-center">
           <Plus>+</Plus>
@@ -197,17 +241,21 @@ export const KidimieuxAnswerType: React.FC<KidimieuxAnswerTypeProps> = ({
           -{KidimieuxPoints[quizLevel].cash}
         </MalusPoints>
         <AnswerTypeTextContainer className="d-flex flex-column align-center justify-center">
-          <AnswerTypeText marginBottom={playerNamesByAnswerType.cash ? "70px" : "0"}>
+          <AnswerTypeText marginBottom={playerNamesByAnswerType.cash !== undefined ? "70px" : "0"}>
             CASH
           </AnswerTypeText>
-          {playerNamesByAnswerType.cash && (
-            <PlayerName
-              opacity={playerNamesByAnswerType.cash ? 1 : 0}
-              marginTop={playerNamesByAnswerType.cash ? "50px" : "0"}
-              color={cashAnswerTypeColor}
+          {playerNamesByAnswerType.cash !== undefined && (
+            <PlayerNameContainer
+              width={cashPlayerNameContainerWidth}
+              opacity={playerNamesByAnswerType.cash !== undefined ? 1 : 0}
+              marginTop={playerNamesByAnswerType.cash !== undefined ? "50px" : "0"}
+              className="d-flex"
             >
-              {playerNamesByAnswerType.cash || ""}
-            </PlayerName>
+              <PlayerName ref={cashPlayerRef} color={cashAnswerTypeColor}>
+                {playerNamesByAnswerType?.cash?.name.toUpperCase() || ""}
+              </PlayerName>
+              <YouAnswer>À TOI DE RÉPONDRE !</YouAnswer>
+            </PlayerNameContainer>
           )}
         </AnswerTypeTextContainer>
         <BonusPoints color={cashAnswerTypeColor} className="d-flex justify-center align-center">
@@ -240,7 +288,7 @@ const AnswerTypeContainer = styled.div<{ width: string; backgroundColor: string 
   position: relative;
   right: 0;
   overflow: hidden;
-  transition: width 0.5s;
+  transition: width 0.5s, background-color 0.5s;
 `;
 
 const MalusPoints = styled.div`
@@ -301,21 +349,35 @@ const AnswerTypeText = styled.div<{ marginBottom: string }>`
   transform: none;
 `;
 
-const PlayerName = styled.div<{ opacity: number; marginTop: string; color: string }>`
+const PlayerNameContainer = styled.div<{ width: number; opacity: number; marginTop: string }>`
   max-width: 95%;
+  width: ${(props) => props.width}px;
   z-index: 1;
   font-family: "Boogaloo", cursive;
   font-size: 20px;
-  color: ${(props) => props.color};
-  background-color: ${Styles.darken_blue};
-  padding: 10px 13px;
-  text-shadow: 2px 2px 0px ${Styles.darkBlue};
-  border-radius: 10px;
   position: absolute;
   margin-top: ${(props) => props.marginTop};
   opacity: ${(props) => props.opacity};
-  transition: margin-top 1s, opacity 1s;
+  transition: margin-top 1s, opacity 1s, width 0.5s;
   overflow: hidden;
+  padding: 10px 0;
+  white-space: nowrap;
+`;
+
+const PlayerName = styled.span<{ color: string }>`
+  background-color: ${Styles.darken_blue};
+  text-shadow: 2px 2px 0px ${Styles.darkBlue};
+  border-radius: 10px;
+  padding: 10px 13px;
+  color: ${(props) => props.color};
+`;
+
+const YouAnswer = styled.span`
+  background-color: ${Styles.redOrange};
+  text-shadow: 2px 2px 0px ${Styles.darkBlue};
+  border-radius: 10px;
+  padding: 10px 13px;
+  margin-left: 10px;
 `;
 
 const KidimieuxContainer = styled.div<{ scaleX: string }>`

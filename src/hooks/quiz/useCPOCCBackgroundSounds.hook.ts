@@ -7,32 +7,32 @@ import {
 import { useSound } from "hooks/others/useSound.hook";
 import { HostSounds } from "constants/Sounds.constants";
 
-interface UseBackgroundSoundsProps {
+interface UseCPOCCBackgroundSoundsProps {
   caPasseOuCaCashMasterState:
     | keyof typeof CaPasseOuCaCashBottomScreensStates
     | keyof typeof CaPasseOuCaCashTopScreensStates;
 }
 
-export const useBackgroundSounds = ({
+export const useCPOCCBackgroundSounds = ({
   caPasseOuCaCashMasterState,
-}: UseBackgroundSoundsProps): void => {
+}: UseCPOCCBackgroundSoundsProps): void => {
   const {
     play: quizBackgroundSoundPlay,
     fadeOutAndStop: quizBackgroundSoundFadeOutAndStop,
     isPlaying: quizBackgroundSoundIsPlaying,
-  } = useSound({ sound: HostSounds.quizBackground });
+  } = useSound({ sound: HostSounds.quizBackgroundCPOCC });
 
   const {
     playAndFadeIn: topScreensBackgroundPlay,
     fadeOutAndStop: topScreensBackgroundFadeOutAndStop,
     isPlaying: topScreensBackgroundIsPlaying,
-  } = useSound({ sound: HostSounds.topScreensBackground });
+  } = useSound({ sound: HostSounds.topScreensBackgroundCPOCC });
 
   const {
     playAndFadeIn: topScreensBackgroundStartPlay,
     fadeOutAndStop: topScreensBackgroundStartFadeOutAndStop,
     isPlaying: topScreensBackgroundStartIsPlaying,
-  } = useSound({ sound: HostSounds.topScreensBackgroundStart });
+  } = useSound({ sound: HostSounds.topScreensBackgroundStartCPOCC });
 
   const { play: playScreensTransition, isPlaying: screensTransitionIsPlaying } = useSound({
     sound: HostSounds.screensTransition,

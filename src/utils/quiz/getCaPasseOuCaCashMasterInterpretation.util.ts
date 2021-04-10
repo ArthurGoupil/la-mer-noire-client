@@ -63,7 +63,8 @@ export const getCaPasseOuCaCashMasterInterpretation = ({
       caPasseOuCaCashMaster.state === "questionSummary_points",
     playersRankingEnter: caPasseOuCaCashMaster.state.includes("playersRanking"),
     playersRankingLeave:
-      caPasseOuCaCashMaster.state.includes("quizItemInfos") &&
-      caPasseOuCaCashMaster.questionNumber !== 1,
+      (caPasseOuCaCashMaster.state.includes("quizItemInfos") &&
+        caPasseOuCaCashMaster.questionNumber !== 1) ||
+      caPasseOuCaCashMaster.state === "roundIsOver",
   };
 };

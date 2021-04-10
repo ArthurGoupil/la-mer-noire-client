@@ -29,11 +29,8 @@ export const getQuizLevelByQuestionNumber = ({
         2: "beginner",
         3: "intermediate",
         4: "intermediate",
-        5: "intermediate",
+        5: "expert",
         6: "expert",
-        7: "expert",
-        8: "expert",
-        9: "expert",
       }[questionNumber] as QuizLevel;
   }
 };

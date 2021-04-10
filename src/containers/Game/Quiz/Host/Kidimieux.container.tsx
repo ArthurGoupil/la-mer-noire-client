@@ -21,6 +21,7 @@ import { QuestionSummary } from "components/Quiz/Host/QuestionSummary";
 import { PlayersRanking } from "components/Quiz/Host/PlayersRanking";
 import { KidimieuxTopScreensStates } from "constants/Kidimieux.constants";
 import { QuizStage } from "constants/GameStage.constants";
+import { useKidimieuxBackgroundSounds } from "hooks/quiz/useKidimieuxBackgroundSounds.hook";
 
 interface KidimieuxContainerProps {
   game: Game;
@@ -59,6 +60,8 @@ export const Kidimieux: React.FC<KidimieuxContainerProps> = ({
     currentPlayers: game.currentQuizItem.currentPlayers,
   });
 
+  useKidimieuxBackgroundSounds({ kidimieuxMasterState: kidimieuxMaster.state });
+
   const {
     stageNameEnter,
     stageNameCanPlay,
@@ -68,6 +71,7 @@ export const Kidimieux: React.FC<KidimieuxContainerProps> = ({
     fetchQuizItemData,
     shouldResetKidimieuxSounds,
     playerMustAnswer,
+    kidimieuxSoundCanPlay,
     showInternalTimeBar,
     displayTimeBar,
     timeBarTimestamp,
@@ -82,9 +86,11 @@ export const Kidimieux: React.FC<KidimieuxContainerProps> = ({
     playersRankingLeave,
   } = getKidimieuxMasterInterpretation({
     kidimieuxMaster,
+    playersCanBuzz: game.currentQuizItem.playersCanBuzz,
     playersCanAnswer: game.currentQuizItem.playersCanAnswer,
     questionRecord: questionsRecord[quizItemData?.quizItemSignature],
     playersBuzz,
+    playersAnswers,
   });
 
   React.useEffect(() => {
@@ -133,7 +139,7 @@ export const Kidimieux: React.FC<KidimieuxContainerProps> = ({
     {
       component: (
         <QuizItemInfos
-          numberOfQuestions={9}
+          numberOfQuestions={6}
           questionNumber={kidimieuxMaster.questionNumber}
           quizLevel={kidimieuxMaster.quizLevel}
           theme={nonNullQuizItemData.theme}
@@ -149,8 +155,6 @@ export const Kidimieux: React.FC<KidimieuxContainerProps> = ({
     },
   ];
 
-  console.log(kidimieuxMaster.state, displayTimeBar);
-
   return (
     <QuizLayout
       stage={game.stage}
@@ -165,9 +169,11 @@ export const Kidimieux: React.FC<KidimieuxContainerProps> = ({
         <KidimieuxAnswerType
           players={game.players}
           quizLevel={kidimieuxMaster.quizLevel}
+          playersAnswers={playersAnswers}
           playersBuzz={playersBuzz}
           playerMustAnswer={playerMustAnswer}
           showInternalTimeBar={showInternalTimeBar}
+          kidimieuxSoundCanPlay={kidimieuxSoundCanPlay}
           shouldResetKidimieuxSounds={shouldResetKidimieuxSounds}
         />
         <TimeBar

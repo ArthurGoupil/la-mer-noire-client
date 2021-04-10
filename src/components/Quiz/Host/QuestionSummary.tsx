@@ -39,11 +39,12 @@ export const QuestionSummary: React.FC<QuestionSummary> = ({
         La réponse était <QuizAnswer>{quizAnswer.toUpperCase()}</QuizAnswer>
       </AnswerContainer>
       {playersToMap.map((playerData, index) => {
-        const answerColor = playersAnswers[playerData.player._id]
-          ? playersAnswers[playerData.player._id]?.isGoodAnswer
-            ? Styles.good
-            : Styles.wrong
-          : Styles.turquoise;
+        const answerColor =
+          playersAnswers[playerData.player._id] || stage === QuizStage.kidimieux
+            ? playersAnswers[playerData.player._id]?.isGoodAnswer
+              ? Styles.good
+              : Styles.wrong
+            : Styles.turquoise;
 
         const deltaPoints =
           playersPoints[playerData.player._id].current -
@@ -76,7 +77,7 @@ export const QuestionSummary: React.FC<QuestionSummary> = ({
                   </PlayerAnswerType>
                 </>
               ) : (
-                <EmptyAnswer> n&apos;a pas répondu.</EmptyAnswer>
+                <>n&apos;a pas répondu.</>
               )}
             </div>
             <DeltaPointsContainer
@@ -146,6 +147,7 @@ const PlayerAnswerType = styled.span<{ backgroundColor: string; paddingLeft: str
   font-size: 23px;
   line-height: 30px;
   margin-left: 10px;
+  margin-bottom: 5px;
   background-color: ${(props) => props.backgroundColor};
   padding: 4px ${(props) => props.paddingLeft} 4px 9px;
   border-radius: 5px;
@@ -159,10 +161,6 @@ const FirstCash = styled.img`
   position: absolute;
   top: 4px;
   right: 6px;
-`;
-
-const EmptyAnswer = styled.span`
-  color: tomato;
 `;
 
 const DeltaPointsContainer = styled.div<{ width: number | undefined }>`

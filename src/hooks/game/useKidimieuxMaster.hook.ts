@@ -151,7 +151,11 @@ export const useKidimieuxMaster = ({
         });
         break;
       case "quizItemInfos_checkQuizIsReady":
-        if (quizItemData && !questionsRecord[quizItemData?.quizItemSignature]?.isDone) {
+        if (
+          quizItemData &&
+          questionsRecord[quizItemData.quizItemSignature] &&
+          !questionsRecord[quizItemData.quizItemSignature].isDone
+        ) {
           updateKidimieuxMaster({
             state: "quizItemInfos_showThemeSubTheme",
           });
@@ -331,7 +335,7 @@ export const useKidimieuxMaster = ({
         return () => clearTimeout(playersRanking_previousTimeout);
       case "playersRanking_current":
         let playersRanking_currentTimeout: NodeJS.Timeout;
-        if (kidimieuxMaster.questionNumber < 9) {
+        if (kidimieuxMaster.questionNumber < 6) {
           playersRanking_currentTimeout = setTimeout(() => {
             const questionNumber = kidimieuxMaster.questionNumber + 1;
             updateKidimieuxMaster({

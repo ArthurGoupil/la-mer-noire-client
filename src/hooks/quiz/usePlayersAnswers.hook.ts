@@ -108,10 +108,8 @@ export const usePlayersAnswers = ({
         };
 
         if (playerId && playerId === playerAnswered.playerId) {
-          console.log("1");
 
           if (playersAnswers[playerId].isGoodAnswer) {
-            console.log("2");
 
             if (isFirstGoodCash) {
               playFirstCash();

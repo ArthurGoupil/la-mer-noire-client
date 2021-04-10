@@ -63,7 +63,7 @@ const TimeBarSubContainer = ({
 
   const remainingTimeRef = React.useRef<number>(remainingTime);
   const [animationString, setAnimationString] = React.useState<string>(
-    `normalTransformX ${remainingTimeRef.current}s linear`,
+    `normalTransformX ${remainingTimeRef.current || duration}s linear`,
   );
 
   React.useEffect(() => {
@@ -99,7 +99,7 @@ const TimeBarSubContainer = ({
     }
   }, [isOver, isPlaying, play, soundShouldStop, stop]);
 
-  const initialWidth = `${100 - (100 * remainingTimeRef.current) / duration}%`;
+  const initialWidth = `${100 - (100 * (remainingTimeRef.current || duration)) / duration}%`;
 
   const overInitialWidth = barContainerWidth
     ? `${((barRef.current?.clientWidth || 0) / (barContainerWidth - 20)) * 100}%`
@@ -110,7 +110,7 @@ const TimeBarSubContainer = ({
       ref={barRef}
       initialWidth={initialWidth}
       overInitialWidth={overInitialWidth}
-      animation={animationString}
+      animation={animationString || `normalTransformX ${duration}s linear`}
       background={`linear-gradient(to bottom, ${backgroundGradient[0]} 20%, ${backgroundGradient[1]} 100%);`}
     />
   );

@@ -19,7 +19,7 @@ import { PlayersRanking } from "components/Quiz/Host/PlayersRanking";
 import { CaPasseOuCaCashTopScreensStates } from "constants/CaPasseOuCaCash.constants";
 import { getCaPasseOuCaCashMasterInterpretation } from "utils/quiz/getCaPasseOuCaCashMasterInterpretation.util";
 import { StageName } from "components/Quiz/Host/StageName";
-import { useBackgroundSounds } from "hooks/quiz/useBackgroundSounds.hook";
+import { useCPOCCBackgroundSounds } from "hooks/quiz/useCPOCCBackgroundSounds.hook";
 import { FullWidthContainer } from "components/Utils/FullWidthContainer";
 import { QuizStage } from "constants/GameStage.constants";
 
@@ -79,7 +79,7 @@ export const CaPasseOuCaCashContainer: React.FC<CaPasseOuCaCashContainerProps> =
     caPasseOuCaCashMaster,
   });
 
-  useBackgroundSounds({ caPasseOuCaCashMasterState: caPasseOuCaCashMaster.state });
+  useCPOCCBackgroundSounds({ caPasseOuCaCashMasterState: caPasseOuCaCashMaster.state });
 
   React.useEffect(() => {
     if (fetchQuizItemData) {
@@ -158,9 +158,7 @@ export const CaPasseOuCaCashContainer: React.FC<CaPasseOuCaCashContainerProps> =
               <PlayerAnswer
                 key={index}
                 playerName={playerData.player.name}
-                answerType={playersAnswers[playerData.player._id]?.answerType}
-                isGoodAnswer={playersAnswers[playerData.player._id]?.isGoodAnswer}
-                isFirstCash={playersAnswers[playerData.player._id]?.isFirstGoodCash}
+                playerAnswer={playersAnswers[playerData.player._id]}
                 noMarginRight={index === game.players.length - 1}
                 questionIsOver={questionsRecord[nonNullQuizItemData.quizItemSignature]?.isDone}
               />

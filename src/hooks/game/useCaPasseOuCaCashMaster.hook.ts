@@ -109,7 +109,11 @@ export const useCaPasseOuCaCashMaster = ({
         });
         break;
       case "quizItemInfos_checkQuizIsReady":
-        if (quizItemData && !questionsRecord[quizItemData?.quizItemSignature]?.isDone) {
+        if (
+          quizItemData &&
+          questionsRecord[quizItemData.quizItemSignature] &&
+          !questionsRecord[quizItemData.quizItemSignature].isDone
+        ) {
           updateCaPasseOuCaCashMaster({
             state: "quizItemInfos_showThemeSubTheme",
           });
@@ -220,9 +224,12 @@ export const useCaPasseOuCaCashMaster = ({
             });
           }, 5000);
         } else {
-          updateCaPasseOuCaCashMaster({
-            state: "roundIsOver",
-          });
+          const playersRanking_currentTimeout = setTimeout(() => {
+            updateCaPasseOuCaCashMaster({
+              state: "roundIsOver",
+            });
+          }, 6000);
+          return () => clearTimeout(playersRanking_currentTimeout);
         }
         return () => clearTimeout(playersRanking_currentTimeout);
       case "playersRanking_screenTransitionSound":
@@ -231,10 +238,12 @@ export const useCaPasseOuCaCashMaster = ({
         });
         break;
       case "roundIsOver":
-        updateGameStage({
-          variables: { stage: GameStage.kidimieux, shortId },
-        });
-        break;
+        const roundIsOverTimeout = setTimeout(() => {
+          updateGameStage({
+            variables: { stage: GameStage.kidimieux, shortId },
+          });
+        }, 2000);
+        return () => clearTimeout(roundIsOverTimeout);
     }
   }, [
     allPlayersHaveAnswered,

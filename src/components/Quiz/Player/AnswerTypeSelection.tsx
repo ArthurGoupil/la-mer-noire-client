@@ -12,8 +12,8 @@ interface AnswerTypeSelectionProps {
   setAnswerTypeChoice: React.Dispatch<React.SetStateAction<AnswerTypeChoice>>;
   isBuzz?: boolean;
   selectedAnswerType?: AnswerType | null;
-  hideDuo?: boolean;
-  hideCarre?: boolean;
+  disableDuo?: boolean;
+  disableCarre?: boolean;
 }
 
 export const AnswerTypeSelection: React.FC<AnswerTypeSelectionProps> = ({
@@ -22,55 +22,49 @@ export const AnswerTypeSelection: React.FC<AnswerTypeSelectionProps> = ({
   setAnswerTypeChoice,
   isBuzz = false,
   selectedAnswerType = null,
-  hideDuo = false,
-  hideCarre = false,
+  disableDuo = false,
+  disableCarre = false,
 }): JSX.Element => {
   const { height } = useWindowHeight();
 
   const duoIsDisabled =
-    !playerCanAnswer || (selectedAnswerType !== null && selectedAnswerType !== "duo");
+    !playerCanAnswer || (selectedAnswerType !== null && selectedAnswerType !== "duo") || disableDuo;
   const carreIsDisabled =
-    !playerCanAnswer || (selectedAnswerType !== null && selectedAnswerType !== "carre");
+    !playerCanAnswer ||
+    (selectedAnswerType !== null && selectedAnswerType !== "carre") ||
+    disableCarre;
   const cashIsDisabled =
     !playerCanAnswer || (selectedAnswerType !== null && selectedAnswerType !== "cash");
 
-  const duoOpacity = duoIsDisabled && !isBuzz ? 0.6 : 1;
-  const carreOpacity = carreIsDisabled && !isBuzz ? 0.6 : 1;
-  const cashOpacity = cashIsDisabled && !isBuzz ? 0.6 : 1;
-
-  const answerTypesNumber = hideDuo && hideCarre ? 1 : hideDuo || hideCarre ? 2 : 3;
+  const duoOpacity = duoIsDisabled && selectedAnswerType !== "duo" ? 0.6 : 1;
+  const carreOpacity = carreIsDisabled && selectedAnswerType !== "carre" ? 0.6 : 1;
+  const cashOpacity = cashIsDisabled && selectedAnswerType !== "cash" ? 0.6 : 1;
 
   return (
     <AnswerTypeSelectionContainer
       height={height}
       className="d-flex flex-column align-center justify-center"
     >
-      {!hideDuo && (
-        <AnswerTypeContainer
-          disabled={duoIsDisabled}
-          className="d-flex justify-center align-center"
-          backgroundColor={Styles.lightBlue}
-          opacity={duoOpacity}
-          onClick={() => setAnswerTypeChoice({ quizItemSignature, answerType: AnswerType.duo })}
-          selected={selectedAnswerType === "duo"}
-          answerTypesNumber={answerTypesNumber}
-        >
-          {isBuzz ? "BUZZ DUO" : "DUO"}
-        </AnswerTypeContainer>
-      )}
-      {!hideCarre && (
-        <AnswerTypeContainer
-          disabled={carreIsDisabled}
-          className="d-flex justify-center align-center"
-          backgroundColor={Styles.yellow}
-          opacity={carreOpacity}
-          onClick={() => setAnswerTypeChoice({ quizItemSignature, answerType: AnswerType.carre })}
-          selected={selectedAnswerType === "carre"}
-          answerTypesNumber={answerTypesNumber}
-        >
-          {isBuzz ? "BUZZ CARRÉ" : "CARRÉ"}
-        </AnswerTypeContainer>
-      )}
+      <AnswerTypeContainer
+        disabled={duoIsDisabled}
+        className="d-flex justify-center align-center"
+        backgroundColor={Styles.lightBlue}
+        opacity={duoOpacity}
+        onClick={() => setAnswerTypeChoice({ quizItemSignature, answerType: AnswerType.duo })}
+        selected={selectedAnswerType === "duo"}
+      >
+        {isBuzz ? "BUZZ DUO" : "DUO"}
+      </AnswerTypeContainer>
+      <AnswerTypeContainer
+        disabled={carreIsDisabled}
+        className="d-flex justify-center align-center"
+        backgroundColor={Styles.yellow}
+        opacity={carreOpacity}
+        onClick={() => setAnswerTypeChoice({ quizItemSignature, answerType: AnswerType.carre })}
+        selected={selectedAnswerType === "carre"}
+      >
+        {isBuzz ? "BUZZ CARRÉ" : "CARRÉ"}
+      </AnswerTypeContainer>
       <AnswerTypeContainer
         disabled={cashIsDisabled}
         className="d-flex justify-center align-center"
@@ -78,7 +72,6 @@ export const AnswerTypeSelection: React.FC<AnswerTypeSelectionProps> = ({
         opacity={cashOpacity}
         onClick={() => setAnswerTypeChoice({ quizItemSignature, answerType: AnswerType.cash })}
         selected={selectedAnswerType === "cash"}
-        answerTypesNumber={answerTypesNumber}
       >
         {isBuzz ? "BUZZ CASH" : "CASH"}
       </AnswerTypeContainer>
@@ -98,11 +91,9 @@ const AnswerTypeContainer = styled.button<{
   backgroundColor: string;
   opacity: number;
   selected: boolean;
-  answerTypesNumber: number;
 }>`
   width: 100%;
-  height: ${(props) =>
-    `calc(100% / ${props.answerTypesNumber} - 80px / ${props.answerTypesNumber})`};
+  height: calc((100% / 3) - (80px / 3));
   font-family: "Boogaloo", cursive;
   font-size: 30px;
   text-shadow: 3px 3px 0px ${Styles.darkBlue};
