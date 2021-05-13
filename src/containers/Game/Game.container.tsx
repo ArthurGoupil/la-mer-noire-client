@@ -8,6 +8,7 @@ import { FullHeightLoader } from "components/Utils/FullHeightLoader";
 import { GamePreparationContainer } from "./GamePreparation/GamePreparation.container";
 import { QuizContainer } from "containers/Game/Quiz/Quiz.container";
 import { getNS } from "utils/networkStatus.util";
+import { QuizStage } from "constants/GameStage.constants";
 
 interface Params {
   shortId: string;
@@ -23,12 +24,13 @@ export const GameContainer: React.FC = (): JSX.Element => {
     },
   });
 
+  const gameContainerName = game?.stage in QuizStage ? "quiz" : "gamePreparation";
+
   return {
     ready: {
-      playersRegistration: <GamePreparationContainer shortId={shortId} userType={userType} />,
-      caPasseOuCaCash: <QuizContainer shortId={shortId} userType={userType} />,
-      kidimieux: <QuizContainer shortId={shortId} userType={userType} />,
-    }[game?.stage],
+      gamePreparation: <GamePreparationContainer shortId={shortId} userType={userType} />,
+      quiz: <QuizContainer shortId={shortId} userType={userType} />,
+    }[gameContainerName],
     loading: <FullHeightLoader />,
     error: (
       <FullScreenError

@@ -16,7 +16,7 @@ export interface Game {
   shortId: string;
   name: string;
   stage: GameStage;
-  players: [PlayerData];
+  players: PlayerData[];
   currentQuizItem: CurrentQuizItem;
   createdAt: string;
   updatedAd?: string;

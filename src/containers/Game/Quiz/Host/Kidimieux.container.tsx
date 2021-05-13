@@ -28,7 +28,7 @@ interface KidimieuxContainerProps {
   quizItemData: QuizItemData;
 }
 
-export const Kidimieux: React.FC<KidimieuxContainerProps> = ({
+export const KidimieuxContainer: React.FC<KidimieuxContainerProps> = ({
   game,
   quizItemData,
 }): JSX.Element => {

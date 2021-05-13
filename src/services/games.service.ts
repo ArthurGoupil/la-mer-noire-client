@@ -20,6 +20,11 @@ const gameData = `
     playersCanAnswer
     playersCanBuzz
   }
+  scubadoobidooQuizItemSignatures {
+    quizId
+    level
+    quizItemId
+  }
   createdAt
 `;
 

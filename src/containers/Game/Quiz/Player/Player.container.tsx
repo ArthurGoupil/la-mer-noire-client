@@ -14,6 +14,7 @@ import { useDuoAnswersIndexes } from "hooks/quiz/useDuoAnswersIndexes.hook";
 import { FullHeightWithWaves } from "components/Quiz/Host/FullHeightWithWaves";
 import { LMNLogo } from "components/Utils/LMNLogo";
 import { KidimieuxAnswerContainer } from "./KidimieuxAnswer.container";
+import { ScubadoobidooAnswerContainer } from "./ScubadoobidooAnswer.container";
 
 interface PlayerProps {
   game: Game;
@@ -46,6 +47,8 @@ export const PlayerContainer: React.FC<PlayerProps> = ({ game }): JSX.Element =>
     booleanCondition: duoAnswersIndexes !== undefined,
   });
 
+  console.log(networkStatus);
+
   return {
     ready: (
       <FullHeightLayout className="d-flex flex-column align-center" padding="10px 20px">
@@ -67,6 +70,7 @@ export const PlayerContainer: React.FC<PlayerProps> = ({ game }): JSX.Element =>
                 playerId={playerId}
               />
             ),
+            scubadoobidoo: <ScubadoobidooAnswerContainer />,
           }[(stage as unknown) as QuizStage]
         }
       </FullHeightLayout>
