@@ -4,7 +4,7 @@ import { DocumentNode, gql } from "@apollo/client";
 
 export const GET_QUIZ_ITEM_DATA: DocumentNode = gql`
   query QuizItemData($quizId: ID!, $level: String!, $quizItemId: Int!) {
-    quizItemData(quizId: $quizId, level: $level, quizItemId: $quizItemId) {
+    quizItemData(quizItemSignature: { quizId: $quizId, level: $level, quizItemId: $quizItemId }) {
       quizItemSignature
       category {
         _id
