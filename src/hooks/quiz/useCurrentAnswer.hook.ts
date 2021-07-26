@@ -15,17 +15,20 @@ interface UseCurrentAnswerReturn {
 interface UseCurrentAnswerProps {
   shortId: string;
   quizItemSignature: string;
+  answerCallback?: () => void;
 }
 
 export interface SetCurrentAnswerProps {
   answer: string;
   answerType: AnswerType;
   playerId: string;
+  correctAnswer?: string;
 }
 
 export const useCurrentAnswer = ({
   shortId,
   quizItemSignature,
+  answerCallback,
 }: UseCurrentAnswerProps): UseCurrentAnswerReturn => {
   const [giveAnswer] = useMutation(GIVE_ANSWER);
 
@@ -36,7 +39,12 @@ export const useCurrentAnswer = ({
     }),
   );
 
-  const setCurrentAnswer = ({ answer, answerType, playerId }: SetCurrentAnswerProps): void => {
+  const setCurrentAnswer = ({
+    answer,
+    answerType,
+    playerId,
+    correctAnswer,
+  }: SetCurrentAnswerProps): void => {
     setCurrentAnswerState({ quizItemSignature, answer, answerType });
     setCookie<CurrentAnswer | null>({
       prefix: shortId,
@@ -50,8 +58,12 @@ export const useCurrentAnswer = ({
         quizItemSignature,
         answer,
         answerType,
+        correctAnswer,
       },
     });
+    if (answerCallback) {
+      answerCallback();
+    }
   };
 
   return { currentAnswer, setCurrentAnswer };

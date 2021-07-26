@@ -8,31 +8,33 @@ import { AnswerType } from "constants/AnswerType.constants";
 
 interface AnswerChoiceProps {
   color: string;
-  quizAnswer: string;
+  choice: string;
   quizItemSignature: string;
   answerType: AnswerType;
   playerId: string;
   currentAnswer: CurrentAnswer | null;
   onClick: (value: SetCurrentAnswerProps) => void;
   playerCanAnswer: boolean;
+  correctAnswer?: string;
 }
 
 export const AnswerChoice: React.FC<AnswerChoiceProps> = ({
   color,
-  quizAnswer,
+  choice,
   quizItemSignature,
   answerType,
   playerId,
   currentAnswer,
   onClick,
   playerCanAnswer,
+  correctAnswer,
 }): JSX.Element => {
   const answerIsSelected =
-    currentAnswer?.answer === quizAnswer && currentAnswer?.quizItemSignature === quizItemSignature;
+    currentAnswer?.answer === choice && currentAnswer?.quizItemSignature === quizItemSignature;
 
   const anotherAnswerIsSelected =
     (currentAnswer !== null &&
-      currentAnswer?.answer !== quizAnswer &&
+      currentAnswer?.answer !== choice &&
       currentAnswer?.quizItemSignature === quizItemSignature) ||
     (!answerIsSelected && !playerCanAnswer);
 
@@ -45,11 +47,11 @@ export const AnswerChoice: React.FC<AnswerChoiceProps> = ({
       anotherAnswerIsSelected={anotherAnswerIsSelected}
       onClick={() => {
         if (currentAnswer?.quizItemSignature !== quizItemSignature) {
-          onClick({ answer: quizAnswer, answerType, playerId });
+          onClick({ answer: choice, answerType, playerId, correctAnswer });
         }
       }}
     >
-      {quizAnswer}
+      {choice}
     </AnswerButton>
   );
 };

@@ -9,7 +9,7 @@ import { QuizStage } from "constants/GameStage.constants";
 
 interface QuestionSummary {
   stage: QuizStage;
-  quizAnswer: string;
+  correctAnswer: string;
   players: PlayerData[];
   playersAnswers: Record<string, Answer>;
   playersPoints: PlayersPoints;
@@ -19,7 +19,7 @@ interface QuestionSummary {
 
 export const QuestionSummary: React.FC<QuestionSummary> = ({
   stage,
-  quizAnswer,
+  correctAnswer,
   players,
   playersAnswers,
   playersPoints,
@@ -36,7 +36,7 @@ export const QuestionSummary: React.FC<QuestionSummary> = ({
   return (
     <QuestionSummaryContainer className="d-flex flex-column justify-center align-center">
       <AnswerContainer>
-        La réponse était <QuizAnswer>{quizAnswer.toUpperCase()}</QuizAnswer>
+        La réponse était <CorrectAnswer>{correctAnswer.toUpperCase()}</CorrectAnswer>
       </AnswerContainer>
       {playersToMap.map((playerData, index) => {
         const answerColor =
@@ -111,7 +111,7 @@ const AnswerContainer = styled.div`
   text-align: center;
 `;
 
-const QuizAnswer = styled.span`
+const CorrectAnswer = styled.span`
   font-family: "Boogaloo", cursive;
   font-size: 40px;
   line-height: 35px;

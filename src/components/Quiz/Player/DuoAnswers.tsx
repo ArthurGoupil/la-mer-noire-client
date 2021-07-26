@@ -27,7 +27,7 @@ export const DuoAnswers: React.FC<CarreAnswersProps> = ({
     <>
       <AnswerChoice
         color={Styles.darkBlue}
-        quizAnswer={choices[0]}
+        choice={choices[0]}
         answerType={AnswerType.duo}
         quizItemSignature={quizItemSignature}
         playerId={playerId}
@@ -37,7 +37,7 @@ export const DuoAnswers: React.FC<CarreAnswersProps> = ({
       />
       <AnswerChoice
         color={Styles.yellow}
-        quizAnswer={choices[1]}
+        choice={choices[1]}
         answerType={AnswerType.duo}
         quizItemSignature={quizItemSignature}
         playerId={playerId}

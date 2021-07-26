@@ -6,7 +6,8 @@ import { GET_QUIZ_ITEM_DATA } from "services/quizzes.service";
 import { CaPasseOuCaCashContainer } from "./CaPasseOuCaCash.container";
 import { QuizStage } from "constants/GameStage.constants";
 import { QuizItemId, QuizLevel } from "models/Quiz.model";
-import { Kidimieux } from "./Kidimieux.container";
+import { KidimieuxContainer } from "./Kidimieux.container";
+import { ScubadoobidooContainer } from "./Scubadoobidoo.container";
 
 interface HostProps {
   game: Game;
@@ -28,6 +29,7 @@ export const HostContainer: React.FC<HostProps> = ({ game }): JSX.Element => {
 
   return {
     caPasseOuCaCash: <CaPasseOuCaCashContainer game={game} quizItemData={quizItemData} />,
-    kidimieux: <Kidimieux game={game} quizItemData={quizItemData} />,
-  }[(stage as unknown) as QuizStage];
+    kidimieux: <KidimieuxContainer game={game} quizItemData={quizItemData} />,
+    scubadoobidoo: <ScubadoobidooContainer game={game} />,
+  }[stage as unknown as QuizStage];
 };

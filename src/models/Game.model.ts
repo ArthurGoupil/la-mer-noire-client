@@ -8,15 +8,20 @@ import {
   KidimieuxBottomScreensStates,
   KidimieuxTopScreensStates,
 } from "constants/Kidimieux.constants";
+import {
+  ScubadoobidooBottomScreensStates,
+  ScubadoobidooTopScreensStates,
+} from "constants/Scubadoobidoo.constants";
 import { Player } from "models/Player.model";
-import { QuizItemId, QuizLevel } from "./Quiz.model";
+import { QuizItemId, QuizLevel, QuizItemSignature } from "./Quiz.model";
 
 export interface Game {
   _id: string;
   shortId: string;
   name: string;
   stage: GameStage;
-  players: [PlayerData];
+  players: PlayerData[];
+  scubadoobidooQuizItemSignatures: QuizItemSignature[];
   currentQuizItem: CurrentQuizItem;
   createdAt: string;
   updatedAd?: string;
@@ -77,9 +82,20 @@ export interface KidimieuxMaster {
   currentAnswerType: AnswerType | null;
 }
 
+export type ScubadoobidooState =
+  | keyof typeof ScubadoobidooBottomScreensStates
+  | keyof typeof ScubadoobidooTopScreensStates;
+
 export interface QuestionRecord {
   isDone: boolean;
   timestamp: number | null;
   buzzIsDone: boolean;
   buzzTimestamp: number | null;
+}
+
+export interface PlayerAnswersSummary {
+  answers: number;
+  goodAnswers: number;
+  answersFactor: number;
+  doneQuizItemSignatures: string[];
 }

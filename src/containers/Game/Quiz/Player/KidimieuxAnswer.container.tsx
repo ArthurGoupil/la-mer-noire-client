@@ -56,7 +56,7 @@ export const KidimieuxAnswerContainer: React.FC<KidimieuxAnswerContainerProps> =
     shortId: game.shortId,
     quizItemSignature: quizItemData?.quizItemSignature,
     players: game.players,
-    quizAnswer: nonNullQuizItemData.quiz.answer,
+    correctAnswer: nonNullQuizItemData.quiz.answer,
     playerId,
   });
 

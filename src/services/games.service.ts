@@ -20,6 +20,11 @@ const gameData = `
     playersCanAnswer
     playersCanBuzz
   }
+  scubadoobidooQuizItemSignatures {
+    quizId
+    level
+    quizItemId
+  }
   createdAt
 `;
 
@@ -63,6 +68,7 @@ export const GIVE_ANSWER: DocumentNode = gql`
     $quizItemSignature: String!
     $answer: String!
     $answerType: String!
+    $correctAnswer: String
   ) {
     giveAnswer(
       shortId: $shortId
@@ -70,6 +76,7 @@ export const GIVE_ANSWER: DocumentNode = gql`
       quizItemSignature: $quizItemSignature
       answer: $answer
       answerType: $answerType
+      correctAnswer: $correctAnswer
     )
   }
 `;
@@ -132,6 +139,7 @@ export const PLAYER_ANSWERED: DocumentNode = gql`
       quizItemSignature
       answer
       answerType
+      correctAnswer
     }
   }
 `;

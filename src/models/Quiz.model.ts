@@ -37,3 +37,9 @@ export interface DuoAnswersIndexes {
   quizItemSignature: string;
   indexes: number[];
 }
+
+export interface QuizItemSignature {
+  quizId: string;
+  level: QuizLevel;
+  quizItemId: QuizItemId;
+}

@@ -9,4 +9,9 @@ export enum CookieName {
   kidimieuxMaster = "kidimieuxMaster",
   buzzAnswerTypeChoice = "buzzAnswerTypeChoice",
   playersBuzz = "playersBuzz",
+  scubaDiversNumbers = "scubaDiversNumbers",
+  racePlayersAnswers = "racePlayersAnswers",
+  scubaCurrentIndex = "scubaCurrentIndex",
+  scubaRanking = "scubaRanking",
+  scubadoobidooState = "scubadoobidooState",
 }

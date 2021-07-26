@@ -11,7 +11,7 @@ import { useQuizLifetime } from "hooks/quiz/useQuizLifetime.hook";
 import { QuizDuration } from "constants/QuizDuration.constants";
 import { getUpdatedPlayersPoints } from "utils/quiz/getUpdatedPlayersPoints.util";
 import { GameStage, QuizStage } from "constants/GameStage.constants";
-import { UPDATE_GAME_STAGE } from "services/games.service";
+import { GET_GAME, UPDATE_GAME_STAGE, UPDATE_PLAYERS_CAN_ANSWER } from "services/games.service";
 
 interface UseCaPasseOuCaCashMasterProps {
   shortId: string;
@@ -36,6 +36,15 @@ export const useCaPasseOuCaCashMaster = ({
   quizLevel,
 }: UseCaPasseOuCaCashMasterProps): UseCaPasseOuCaCashMasterReturn => {
   const [updateGameStage] = useMutation(UPDATE_GAME_STAGE);
+
+  const [updatePlayersCanAnswer] = useMutation(UPDATE_PLAYERS_CAN_ANSWER, {
+    refetchQueries: [
+      {
+        query: GET_GAME,
+        variables: { shortId },
+      },
+    ],
+  });
 
   const [caPasseOuCaCashMaster, setCaPasseOuCaCashMaster] = React.useState<CaPasseOuCaCashMaster>(
     getCookie({
@@ -240,7 +249,10 @@ export const useCaPasseOuCaCashMaster = ({
       case "roundIsOver":
         const roundIsOverTimeout = setTimeout(() => {
           updateGameStage({
-            variables: { stage: GameStage.kidimieux, shortId },
+            variables: { stage: GameStage.scubadoobidoo, shortId },
+          });
+          updatePlayersCanAnswer({
+            variables: { shortId, playersCanAnswer: false },
           });
         }, 2000);
         return () => clearTimeout(roundIsOverTimeout);
@@ -257,6 +269,7 @@ export const useCaPasseOuCaCashMaster = ({
     quizLevel,
     shortId,
     updateGameStage,
+    updatePlayersCanAnswer,
   ]);
 
   return { caPasseOuCaCashMaster, questionsRecord };

@@ -17,7 +17,7 @@ import { getQuizLevelGradient } from "utils/quiz/getQuizLevelGradient.util";
 import { QuestionSummary } from "components/Quiz/Host/QuestionSummary";
 import { PlayersRanking } from "components/Quiz/Host/PlayersRanking";
 import { CaPasseOuCaCashTopScreensStates } from "constants/CaPasseOuCaCash.constants";
-import { getCaPasseOuCaCashMasterInterpretation } from "utils/quiz/getCaPasseOuCaCashMasterInterpretation.util";
+import { getCaPasseOuCaCashMasterInterpretation } from "utils/game/getCaPasseOuCaCashMasterInterpretation.util";
 import { StageName } from "components/Quiz/Host/StageName";
 import { useCPOCCBackgroundSounds } from "hooks/quiz/useCPOCCBackgroundSounds.hook";
 import { FullWidthContainer } from "components/Utils/FullWidthContainer";
@@ -47,7 +47,7 @@ export const CaPasseOuCaCashContainer: React.FC<CaPasseOuCaCashContainerProps> =
     shortId: game.shortId,
     quizItemSignature: quizItemData?.quizItemSignature,
     players: game.players,
-    quizAnswer: nonNullQuizItemData.quiz.answer,
+    correctAnswer: nonNullQuizItemData.quiz.answer,
   });
 
   const { caPasseOuCaCashMaster, questionsRecord } = useCaPasseOuCaCashMaster({
@@ -102,7 +102,7 @@ export const CaPasseOuCaCashContainer: React.FC<CaPasseOuCaCashContainerProps> =
       component: (
         <QuestionSummary
           stage={QuizStage.caPasseOuCaCash}
-          quizAnswer={nonNullQuizItemData.quiz.answer}
+          correctAnswer={nonNullQuizItemData.quiz.answer}
           players={game.players}
           playersAnswers={playersAnswers}
           playersPoints={caPasseOuCaCashMaster.playersPoints}

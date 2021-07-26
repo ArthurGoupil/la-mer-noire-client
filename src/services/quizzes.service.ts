@@ -23,3 +23,25 @@ export const GET_QUIZ_ITEM_DATA: DocumentNode = gql`
     }
   }
 `;
+
+export const GET_QUIZZES_ITEMS_DATA: DocumentNode = gql`
+  query QuizzesItemsData($quizItemsSignatures: [QuizItemSignatureInput]) {
+    quizzesItemsData(quizItemsSignatures: $quizItemsSignatures) {
+      quizItemSignature
+      category {
+        _id
+        name
+      }
+      theme
+      subTheme
+      level
+      quiz {
+        quizItemId
+        question
+        choices
+        answer
+        anecdote
+      }
+    }
+  }
+`;

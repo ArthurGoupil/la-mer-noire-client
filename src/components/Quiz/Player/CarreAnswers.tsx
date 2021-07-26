@@ -13,6 +13,7 @@ interface CarreAnswersProps {
   currentAnswer: CurrentAnswer | null;
   onClick: (value: SetCurrentAnswerProps) => void;
   playerCanAnswer: boolean;
+  correctAnswer?: string;
 }
 
 export const CarreAnswers: React.FC<CarreAnswersProps> = ({
@@ -22,48 +23,53 @@ export const CarreAnswers: React.FC<CarreAnswersProps> = ({
   currentAnswer,
   onClick,
   playerCanAnswer,
+  correctAnswer,
 }): JSX.Element => {
   return (
     <>
       <AnswerChoice
         color={Styles.darkBlue}
-        quizAnswer={choices[0]}
+        choice={choices[0]}
         quizItemSignature={quizItemSignature}
         answerType={AnswerType.carre}
         playerId={playerId}
         currentAnswer={currentAnswer}
         onClick={onClick}
         playerCanAnswer={playerCanAnswer}
+        correctAnswer={correctAnswer}
       />
       <AnswerChoice
         color={Styles.yellow}
-        quizAnswer={choices[1]}
+        choice={choices[1]}
         quizItemSignature={quizItemSignature}
         answerType={AnswerType.carre}
         playerId={playerId}
         currentAnswer={currentAnswer}
         onClick={onClick}
         playerCanAnswer={playerCanAnswer}
+        correctAnswer={correctAnswer}
       />
       <AnswerChoice
         color={Styles.redOrange}
-        quizAnswer={choices[2]}
+        choice={choices[2]}
         quizItemSignature={quizItemSignature}
         answerType={AnswerType.carre}
         playerId={playerId}
         currentAnswer={currentAnswer}
         onClick={onClick}
         playerCanAnswer={playerCanAnswer}
+        correctAnswer={correctAnswer}
       />
       <AnswerChoice
         color={Styles.turquoise}
-        quizAnswer={choices[3]}
+        choice={choices[3]}
         quizItemSignature={quizItemSignature}
         answerType={AnswerType.carre}
         playerId={playerId}
         currentAnswer={currentAnswer}
         onClick={onClick}
         playerCanAnswer={playerCanAnswer}
+        correctAnswer={correctAnswer}
       />
     </>
   );

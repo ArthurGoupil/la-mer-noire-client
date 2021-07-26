@@ -13,7 +13,7 @@ interface UsePlayersAnswersProps {
   shortId: string;
   quizItemSignature: string;
   players: PlayerData[];
-  quizAnswer: string;
+  correctAnswer: string;
   playerId?: string;
 }
 
@@ -26,7 +26,7 @@ export const usePlayersAnswers = ({
   shortId,
   quizItemSignature,
   players,
-  quizAnswer,
+  correctAnswer,
   playerId,
 }: UsePlayersAnswersProps): UsePlayersAnswersReturn => {
   const { data: { playerAnswered } = {} } = useSubscription(PLAYER_ANSWERED, {
@@ -75,7 +75,7 @@ export const usePlayersAnswers = ({
         playerAnswered?.quizItemSignature === quizItemSignature
       ) {
         const isGoodAnswer = isValidAnswer({
-          answer: quizAnswer,
+          correctAnswer,
           givenAnswer: playerAnswered.answer,
           givenAnswerType: playerAnswered.answerType,
         });
@@ -100,7 +100,7 @@ export const usePlayersAnswers = ({
           answer: playerAnswered.answer,
           answerType: playerAnswered.answerType,
           isGoodAnswer: isValidAnswer({
-            answer: quizAnswer,
+            correctAnswer,
             givenAnswer: playerAnswered.answer,
             givenAnswerType: playerAnswered.answerType,
           }),
@@ -108,9 +108,7 @@ export const usePlayersAnswers = ({
         };
 
         if (playerId && playerId === playerAnswered.playerId) {
-
           if (playersAnswers[playerId].isGoodAnswer) {
-
             if (isFirstGoodCash) {
               playFirstCash();
             } else if (playersAnswers[playerId].answerType === "cash") {
@@ -141,18 +139,21 @@ export const usePlayersAnswers = ({
       });
     }
   }, [
-    playerAnswered,
-    quizItemSignature,
-    players,
-    shortId,
-    playersAnswers,
-    quizAnswer,
-    playerId,
-    playFirstCash,
-    playCash,
+    correctAnswer,
     playCarre,
+    playCash,
     playDuo,
+    playFirstCash,
     playWrong,
+    playerAnswered.answer,
+    playerAnswered.answerType,
+    playerAnswered.playerId,
+    playerAnswered?.quizItemSignature,
+    playerId,
+    players.length,
+    playersAnswers,
+    quizItemSignature,
+    shortId,
   ]);
 
   return { playersAnswers, allPlayersHaveAnswered };

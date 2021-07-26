@@ -46,7 +46,7 @@ export const CaPasseOuCaCashAnswerContainer: React.FC<CaPasseOuCaCashAnswerConta
     shortId: game.shortId,
     quizItemSignature: quizItemData?.quizItemSignature,
     players: game.players,
-    quizAnswer: nonNullQuizItemData.quiz.answer,
+    correctAnswer: nonNullQuizItemData.quiz.answer,
     playerId,
   });
 

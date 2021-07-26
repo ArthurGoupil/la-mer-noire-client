@@ -6,14 +6,15 @@ import { getCookie } from "utils/cookies.util";
 import { CookieName } from "constants/Cookies.constants";
 import { FullHeightLayout } from "components/Utils/FullHeightLayout";
 import { useQuery } from "@apollo/client";
-import { GET_QUIZ_ITEM_DATA } from "services/quizzes.service";
+import { GET_QUIZZES_ITEMS_DATA, GET_QUIZ_ITEM_DATA } from "services/quizzes.service";
 import { CaPasseOuCaCashAnswerContainer } from "./CaPasseOuCaCashAnswer.container";
 import { QuizStage } from "constants/GameStage.constants";
-import { getGlobalNetworkStatus } from "utils/networkStatus.util";
+import { getGlobalNetworkStatus, getNS, NS } from "utils/networkStatus.util";
 import { useDuoAnswersIndexes } from "hooks/quiz/useDuoAnswersIndexes.hook";
 import { FullHeightWithWaves } from "components/Quiz/Host/FullHeightWithWaves";
 import { LMNLogo } from "components/Utils/LMNLogo";
 import { KidimieuxAnswerContainer } from "./KidimieuxAnswer.container";
+import { ScubadoobidooAnswerContainer } from "./ScubadoobidooAnswer.container";
 
 interface PlayerProps {
   game: Game;
@@ -33,7 +34,21 @@ export const PlayerContainer: React.FC<PlayerProps> = ({ game }): JSX.Element =>
     networkStatus: quizItemDataNetworkStatus,
   } = useQuery(GET_QUIZ_ITEM_DATA, {
     variables: { quizId, level, quizItemId },
-    skip: !quizId || !level || !quizItemId,
+    skip: !quizId || !level || !quizItemId || stage === "scubadoobidoo",
+  });
+
+  const {
+    data: { quizzesItemsData } = { quizzesItemsData: null },
+    networkStatus: quizzesItemsDataNetworkStatus,
+  } = useQuery(GET_QUIZZES_ITEMS_DATA, {
+    variables: {
+      quizItemsSignatures: game.scubadoobidooQuizItemSignatures.map((quizItemSignature) => ({
+        quizId: quizItemSignature.quizId,
+        level: quizItemSignature.level,
+        quizItemId: quizItemSignature.quizItemId,
+      })),
+    },
+    skip: stage !== "scubadoobidoo" || !game?.scubadoobidooQuizItemSignatures,
   });
 
   const { duoAnswersIndexes } = useDuoAnswersIndexes({
@@ -41,10 +56,16 @@ export const PlayerContainer: React.FC<PlayerProps> = ({ game }): JSX.Element =>
     quizItemData,
   });
 
-  const networkStatus = getGlobalNetworkStatus({
-    networkStatuses: [quizItemDataNetworkStatus],
-    booleanCondition: duoAnswersIndexes !== undefined,
-  });
+  let networkStatus: NS;
+
+  if (stage === "scubadoobidoo") {
+    networkStatus = getNS(quizzesItemsDataNetworkStatus);
+  } else {
+    networkStatus = getGlobalNetworkStatus({
+      networkStatuses: [quizItemDataNetworkStatus],
+      booleanCondition: duoAnswersIndexes !== undefined,
+    });
+  }
 
   return {
     ready: (
@@ -67,7 +88,14 @@ export const PlayerContainer: React.FC<PlayerProps> = ({ game }): JSX.Element =>
                 playerId={playerId}
               />
             ),
-          }[(stage as unknown) as QuizStage]
+            scubadoobidoo: (
+              <ScubadoobidooAnswerContainer
+                game={game}
+                playerId={playerId}
+                quizzesItemsData={quizzesItemsData}
+              />
+            ),
+          }[stage as unknown as QuizStage]
         }
       </FullHeightLayout>
     ),

@@ -9,7 +9,7 @@ import { usePlayersAnswers } from "hooks/quiz/usePlayersAnswers.hook";
 import { useKidimieuxMaster } from "hooks/game/useKidimieuxMaster.hook";
 import { QuizItemInfos } from "components/Quiz/Host/QuizItemInfos";
 import { QuizLayout } from "components/Quiz/Host/QuizLayout";
-import { getKidimieuxMasterInterpretation } from "utils/quiz/getKidimieuxMasterInterpretation.util";
+import { getKidimieuxMasterInterpretation } from "utils/game/getKidimieuxMasterInterpretation.util";
 import { QuestionDisplay } from "components/Quiz/Host/QuestionDisplay";
 import { TimeBar } from "components/Quiz/Host/TimeBar";
 import { QuizDuration } from "constants/QuizDuration.constants";
@@ -28,7 +28,7 @@ interface KidimieuxContainerProps {
   quizItemData: QuizItemData;
 }
 
-export const Kidimieux: React.FC<KidimieuxContainerProps> = ({
+export const KidimieuxContainer: React.FC<KidimieuxContainerProps> = ({
   game,
   quizItemData,
 }): JSX.Element => {
@@ -47,7 +47,7 @@ export const Kidimieux: React.FC<KidimieuxContainerProps> = ({
     shortId: game.shortId,
     quizItemSignature: quizItemData?.quizItemSignature,
     players: game.players,
-    quizAnswer: nonNullQuizItemData.quiz.answer,
+    correctAnswer: nonNullQuizItemData.quiz.answer,
   });
 
   const { kidimieuxMaster, questionsRecord, playersBuzz } = useKidimieuxMaster({
@@ -114,7 +114,7 @@ export const Kidimieux: React.FC<KidimieuxContainerProps> = ({
       component: (
         <QuestionSummary
           stage={QuizStage.kidimieux}
-          quizAnswer={nonNullQuizItemData.quiz.answer}
+          correctAnswer={nonNullQuizItemData.quiz.answer}
           players={game.players}
           playersAnswers={playersAnswers}
           playersPoints={kidimieuxMaster.playersPoints}

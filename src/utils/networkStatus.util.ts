@@ -5,7 +5,7 @@ interface GetGlobalNetworkStatusProps {
   booleanCondition?: boolean;
 }
 
-type NS = "ready" | "loading" | "error";
+export type NS = "ready" | "loading" | "error";
 
 export const getNS = (networkStatus: NetworkStatus): NS => {
   switch (networkStatus) {
